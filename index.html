@@ -3,240 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Eco de la Verdad - Reto Bíblico Católico</title>
+    <title>El Eco de la Verdad - Maratón Bíblica Suprema</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #0ea5e9; --secondary: #0369a1; --accent: #38bdf8;
-            --error: #ef4444; --success: #10b981;
+            --primary: #0284c7; --secondary: #0369a1; --accent: #38bdf8;
+            --error: #f43f5e; --success: #10b981; --warning: #f59e0b;
+            --bg-deep: #030712; --card-bg: rgba(15, 23, 42, 0.75);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #030712 70%);
             color: #f8fafc; min-height: 100vh; overflow-x: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem;
         }
 
         .font-epic { font-family: 'Cinzel', serif; }
 
+        /* EFECTO GLASSMORPHISM DE ALTA GAMA */
         .card-glass {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 1.75rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative; overflow: hidden;
         }
 
+        .card-glass::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.05), transparent);
+            transition: 0.5s;
+        }
+        .card-glass:hover::before { left: 100%; }
+
+        /* BOTONES PROFESIONALES */
         .btn-modern {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white; border: none; border-radius: 0.75rem;
-            transition: all 0.3s ease; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
-            text-transform: uppercase; font-weight: 900; letter-spacing: 2px;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: white; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 1rem;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
+            box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4);
+            text-transform: uppercase; font-weight: 800; letter-spacing: 1.5px;
         }
 
         .btn-modern:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.6);
-            background: linear-gradient(to right, var(--accent), var(--primary));
+            box-shadow: 0 8px 30px rgba(56, 189, 248, 0.6);
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            border-color: #fff;
+        }
+
+        .btn-notebook {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            box-shadow: 0 4px 20px rgba(217, 119, 6, 0.4);
+            border-color: rgba(251, 191, 36, 0.4);
+        }
+        .btn-notebook:hover {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.6);
         }
 
         .input-game {
-            background: rgba(0, 0, 0, 0.5); border: 2px solid #38bdf8;
-            color: white; text-align: center; border-radius: 0.75rem;
-            transition: all 0.3s; width: 100%; padding: 1rem; font-size: 1.2rem; font-weight: bold;
+            background: rgba(3, 7, 18, 0.6); border: 2px solid rgba(56, 189, 248, 0.4);
+            color: white; text-align: center; border-radius: 1rem;
+            transition: all 0.3s ease; width: 100%; padding: 1.1rem; font-size: 1.25rem; font-weight: 700;
         }
-        .input-game:focus { outline: none; border-color: #fde047; box-shadow: 0 0 15px rgba(253, 224, 71, 0.5); }
+        .input-game:focus { outline: none; border-color: #fde047; box-shadow: 0 0 25px rgba(253, 224, 71, 0.4); }
 
-        .screen { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        .screen { display: none; opacity: 0; transition: opacity 0.6s ease-in-out; width: 100%; max-width: 50rem; }
         .screen.active { display: flex; opacity: 1; }
 
-        /* ALERTA ROJA (Intercambio Exprés de 10s) */
+        /* ALERTA ROJA CINEMÁTICA */
         .red-alert-bg {
-            background: radial-gradient(circle at center, #7f1d1d 0%, #450a0a 100%) !important;
-            animation: pulse-alert-bg 1s infinite alternate;
+            background: radial-gradient(circle at center, #991b1b 0%, #450a0a 70%, #030712 100%) !important;
+            animation: pulse-alert-bg 1.2s infinite alternate;
         }
         @keyframes pulse-alert-bg {
-            0% { background: radial-gradient(circle at center, #7f1d1d 0%, #450a0a 100%); }
-            100% { background: radial-gradient(circle at center, #b91c1c 0%, #450a0a 100%); }
+            0% { background: radial-gradient(circle at center, #991b1b 0%, #450a0a 70%, #030712 100%); }
+            100% { background: radial-gradient(circle at center, #dc2626 0%, #7f1d1d 70%, #030712 100%); }
         }
         
-        .error-shake { animation: shake 0.5s; border-color: var(--error) !important; box-shadow: 0 0 20px rgba(239,68,68,0.5) !important; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+        .error-shake { animation: shake 0.4s ease-in-out; border-color: var(--error) !important; box-shadow: 0 0 20px rgba(244, 63, 94, 0.6) !important; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+
+        /* ICONOS FLOTANTES DECORATIVOS */
+        .floating-icon { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
     </style>
 </head>
-<body class="flex flex-col p-4 justify-center items-center">
+<body>
 
-    <!-- 1. PANTALLA INICIAL: SELECCIÓN DE GRUPO -->
-    <div id="screen-intro" class="screen active flex-col items-center justify-center w-full max-w-4xl text-center py-10">
-        <h1 class="text-5xl md:text-7xl font-black mb-4 font-epic text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-400">
+    <!-- 1. PANTALLA INICIAL: SELECCIÓN DE EQUIPO -->
+    <div id="screen-intro" class="screen active flex-col items-center justify-center text-center py-6">
+        <div class="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-bold tracking-widest uppercase shadow-lg">
+            <i class="fas fa-shield-halved text-cyan-400"></i> Mes de la Biblia • Confirmación
+        </div>
+        <h1 class="text-4xl md:text-6xl font-black mb-4 font-epic text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400 drop-shadow-md">
             EL ECO DE LA VERDAD
         </h1>
-        <p class="text-blue-200 text-lg mb-10 font-medium">Seleccionen su subgrupo para iniciar el recorrido de 4 misiones bíblicas.</p>
+        <p class="text-slate-300 text-base md:text-lg mb-8 font-normal max-w-2xl leading-relaxed">
+            Maratón de 10 misiones extremas combinando validación digital, desafíos en cuaderno y dramatizaciones grupales.
+        </p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-            <button onclick="selectTeam(1)" class="card-glass p-8 hover:scale-105 transition-all text-center border-orange-500/50 cursor-pointer">
-                <i class="fas fa-fire text-5xl text-orange-500 mb-4 drop-shadow-[0_0_15px_rgba(249,115,22,0.8)]"></i>
-                <h3 class="text-xl font-black uppercase text-white font-epic">Huellas de Fuego</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 w-full">
+            <button onclick="selectTeam(1)" class="card-glass p-6 hover:scale-105 transition-all text-center border-orange-500/40 cursor-pointer group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-2xl text-white mb-4 shadow-[0_0_20px_rgba(249,115,22,0.5)] group-hover:scale-110 transition-transform">
+                    <i class="fas fa-fire floating-icon"></i>
+                </div>
+                <h3 class="text-lg font-extrabold uppercase text-white font-epic tracking-wider">Huellas de Fuego</h3>
+                <span class="text-xs text-orange-400 font-semibold mt-1 block">Subgrupo 1</span>
             </button>
-            <button onclick="selectTeam(2)" class="card-glass p-8 hover:scale-105 transition-all text-center border-yellow-500/50 cursor-pointer">
-                <i class="fas fa-bolt text-5xl text-yellow-400 mb-4 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]"></i>
-                <h3 class="text-xl font-black uppercase text-white font-epic">Voceros de la Luz</h3>
+            <button onclick="selectTeam(2)" class="card-glass p-6 hover:scale-105 transition-all text-center border-yellow-500/40 cursor-pointer group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-2xl text-white mb-4 shadow-[0_0_20px_rgba(250,204,21,0.5)] group-hover:scale-110 transition-transform">
+                    <i class="fas fa-bolt floating-icon"></i>
+                </div>
+                <h3 class="text-lg font-extrabold uppercase text-white font-epic tracking-wider">Voceros de la Luz</h3>
+                <span class="text-xs text-yellow-300 font-semibold mt-1 block">Subgrupo 2</span>
             </button>
-            <button onclick="selectTeam(3)" class="card-glass p-8 hover:scale-105 transition-all text-center border-red-500/50 cursor-pointer">
-                <i class="fas fa-heart text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]"></i>
-                <h3 class="text-xl font-black uppercase text-white font-epic">Latido Eterno</h3>
+            <button onclick="selectTeam(3)" class="card-glass p-6 hover:scale-105 transition-all text-center border-red-500/40 cursor-pointer group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-rose-500 to-red-700 flex items-center justify-center text-2xl text-white mb-4 shadow-[0_0_20px_rgba(244,63,94,0.5)] group-hover:scale-110 transition-transform">
+                    <i class="fas fa-heart floating-icon"></i>
+                </div>
+                <h3 class="text-lg font-extrabold uppercase text-white font-epic tracking-wider">Latido Eterno</h3>
+                <span class="text-xs text-rose-300 font-semibold mt-1 block">Subgrupo 3</span>
             </button>
         </div>
     </div>
 
     <!-- 2. PANTALLA DE REGISTRO DE NOMBRES -->
-    <div id="screen-lobby" class="screen flex-col items-center justify-center w-full max-w-2xl text-center">
+    <div id="screen-lobby" class="screen flex-col items-center justify-center text-center">
         <div class="card-glass p-8 w-full">
-            <h2 id="lobby-title" class="text-3xl font-epic font-black text-cyan-400 mb-6 uppercase">Subgrupo</h2>
-            <p class="text-slate-300 mb-4">Escriban los nombres de los integrantes separados por comas (para el sorteo dinámico de viajeros):</p>
-            <textarea id="team-names" class="input-game mb-6 h-32" placeholder="Ej: Juan, Maria, Pedro..."></textarea>
-            <button onclick="startTeamGame()" class="btn-modern w-full py-4 text-xl"><i class="fas fa-play mr-2"></i> Comenzar las 4 Misiones</button>
+            <div id="lobby-icon-container" class="w-14 h-14 mx-auto rounded-2xl bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-2xl text-cyan-400 mb-4 shadow-md">
+                <i class="fas fa-users-line"></i>
+            </div>
+            <h2 id="lobby-title" class="text-2xl md:text-3xl font-epic font-black text-cyan-300 mb-3 uppercase">Subgrupo</h2>
+            <p class="text-slate-300 text-sm mb-6 leading-relaxed">
+                Escriban los nombres de los integrantes separados por comas. El sistema los usará para los <strong class="text-yellow-400">sorteos aleatorios de intercambio exprés</strong> durante la maratón:
+            </p>
+            <textarea id="team-names" class="input-game mb-6 h-28 resize-none text-base" placeholder="Ej: Juan Pérez, María Gómez, Carlos..."></textarea>
+            <button onclick="startTeamGame()" class="btn-modern w-full py-4 text-base"><i class="fas fa-rocket mr-2"></i> Comenzar las 10 Misiones</button>
         </div>
     </div>
 
-    <!-- 3. PANTALLA DE JUEGO SECUENCIAL (4 MISIONES) -->
-    <div id="screen-game" class="screen flex-col w-full max-w-4xl flex-grow z-10">
-        <header class="card-glass p-4 mb-6 flex justify-between items-center bg-slate-900/90 border-b-2 border-cyan-500/50">
-            <span id="game-team-name" class="text-cyan-400 font-black text-uppercase font-epic">Equipo</span>
-            <span id="mission-counter" class="text-yellow-300 font-bold uppercase tracking-widest text-sm bg-black/40 px-3 py-1 rounded border border-yellow-500/40">Misión 1 de 4</span>
+    <!-- 3. PANTALLA DE JUEGO PRINCIPAL -->
+    <div id="screen-game" class="screen flex-col flex-grow z-10 my-4">
+        <header class="card-glass p-4 mb-5 flex justify-between items-center bg-slate-900/90 border-b-2 border-cyan-500/40">
+            <div class="flex items-center gap-3">
+                <div id="header-team-icon" class="w-10 h-10 rounded-xl bg-cyan-950 border border-cyan-500 flex items-center justify-center text-cyan-400 text-base">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <span id="game-team-name" class="text-cyan-300 font-extrabold uppercase font-epic text-sm md:text-base">Equipo</span>
+            </div>
+            <span id="mission-counter" class="text-yellow-300 font-bold uppercase tracking-widest text-xs md:text-sm bg-black/50 px-3 py-1.5 rounded-xl border border-yellow-500/40 shadow-inner">Misión 1 / 10</span>
         </header>
 
-        <main class="card-glass p-6 md:p-10 flex-grow mb-6 text-center">
-            <div id="mission-icon-container" class="mb-4">
-                <i id="mission-icon" class="fas fa-book-bible text-5xl text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]"></i>
-            </div>
-            <h2 id="mission-title-text" class="text-2xl md:text-3xl font-epic font-black text-white mb-4">Título de Misión</h2>
-            
-            <div class="bg-slate-900/90 border border-cyan-500/30 p-6 rounded-xl text-left mb-6 shadow-inner">
-                <div id="mission-badge" class="inline-block bg-cyan-900 text-cyan-300 px-3 py-1 rounded text-xs font-bold mb-3 border border-cyan-500">BIBLIOTECA</div>
-                <p id="mission-desc" class="text-lg md:text-xl text-blue-100 leading-relaxed font-medium">Descripción de la misión...</p>
+        <main class="card-glass p-6 md:p-8 flex-grow mb-2 text-center flex flex-col justify-between">
+            <div>
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-900/90 border border-cyan-500/30 text-cyan-400 text-2xl mb-4 shadow-[0_0_15px_rgba(56,189,248,0.3)]">
+                    <i id="mission-type-icon" class="fas fa-book-bible"></i>
+                </div>
+                <h2 id="mission-title-text" class="text-xl md:text-2xl font-epic font-black text-white mb-3">Título de Misión</h2>
+                
+                <div class="bg-slate-950/80 border border-cyan-500/30 p-5 rounded-2xl text-left mb-6 shadow-inner">
+                    <div id="mission-badge" class="inline-flex items-center gap-1.5 bg-cyan-950 text-cyan-300 px-3 py-1 rounded-lg text-xs font-bold mb-3 border border-cyan-500/50">
+                        <i class="fas fa-code"></i> DIGITAL
+                    </div>
+                    <p id="mission-desc" class="text-base md:text-lg text-blue-100 leading-relaxed font-medium">Descripción...</p>
+                </div>
             </div>
 
-            <div class="max-w-md mx-auto">
-                <input type="text" id="mission-answer" class="input-game text-xl uppercase tracking-widest mb-4" placeholder="RESPUESTA O CÓDIGO">
-                <button onclick="validateMission()" class="btn-modern w-full py-4 text-lg"><i class="fas fa-check mr-2"></i> Enviar Respuesta</button>
-                <p id="mission-error" class="mt-3 font-bold text-error hidden">Respuesta incorrecta. Analicen bien el texto o busquen en su Biblia Católica.</p>
+            <div>
+                <div id="mission-action-area" class="max-w-md mx-auto"></div>
+                <p id="mission-error" class="mt-3 font-bold text-rose-400 text-sm hidden bg-rose-950/40 py-2 rounded-xl border border-rose-500/40">
+                    <i class="fas fa-triangle-exclamation mr-1"></i> Respuesta incorrecta. Analicen el texto o busquen en su Biblia.
+                </p>
             </div>
         </main>
     </div>
 
     <!-- 4. PANTALLA ALERTA ROJA: INTERCAMBIO EXPRÉS (10 SEGUNDOS) -->
-    <div id="screen-alert" class="screen flex-col items-center justify-center w-full h-full min-h-[80vh] text-center z-50">
-        <i class="fas fa-crown text-7xl text-yellow-300 mb-4 drop-shadow-[0_0_25px_rgba(250,204,21,0.9)] animate-bounce"></i>
-        <h1 class="text-4xl md:text-6xl font-black font-epic text-white mb-2 tracking-widest drop-shadow-2xl">
-            ¡MISIÓN CUMPLIDA!
-        </h1>
-        <p class="text-xl text-yellow-300 font-bold mb-6">Intercambio exprés de viajeros en <span id="countdown" class="text-3xl text-white font-mono bg-black/50 px-3 py-1 rounded">10</span> seg</p>
-        
-        <div class="card-glass p-6 md:p-8 text-center bg-black/70 border-2 border-white max-w-2xl">
-            <p class="text-lg text-white mb-4">El sistema ha seleccionado al azar a los siguientes integrantes para moverse a otro grupo:</p>
-            <div id="selected-travelers" class="bg-cyan-950/90 p-5 rounded-xl border border-cyan-400 text-2xl font-black text-cyan-300 uppercase mb-4 tracking-wide">
+    <div id="screen-alert" class="screen flex-col items-center justify-center text-center z-50 py-6">
+        <div class="card-glass p-8 md:p-10 text-center bg-black/85 border-2 border-red-500 shadow-[0_0_50px_rgba(239,68,68,0.5)] max-w-xl w-full">
+            <div class="w-20 h-20 mx-auto rounded-3xl bg-red-600/30 border border-red-500 flex items-center justify-center text-4xl text-red-400 mb-4 animate-bounce shadow-[0_0_25px_rgba(239,68,68,0.8)]">
+                <i class="fas fa-people-arrows"></i>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black font-epic text-white mb-2 tracking-wider drop-shadow-lg">
+                ¡INTERCAMBIO EXPRÉS!
+            </h1>
+            <p class="text-lg text-yellow-300 font-bold mb-6">
+                Los viajeros seleccionados deben rotar en <span id="countdown" class="text-2xl text-white font-mono bg-red-950/80 px-3 py-1 rounded-xl border border-red-500">10</span> seg
+            </p>
+            
+            <p class="text-sm text-slate-300 mb-2">El sistema eligió al azar a los siguientes integrantes:</p>
+            <div id="selected-travelers" class="bg-slate-950 p-4 rounded-xl border border-cyan-400/60 text-xl font-black text-cyan-300 uppercase mb-5 tracking-wide shadow-inner">
                 Seleccionando...
             </div>
-            <p class="text-sm text-yellow-200">Destino inmediato: <strong id="swap-target" class="text-white font-epic text-lg">---</strong></p>
+            
+            <div class="bg-red-950/30 p-3.5 rounded-xl border border-red-500/40 text-xs md:text-sm text-red-200 mb-6 font-semibold">
+                <i class="fas fa-triangle-exclamation mr-1"></i> Destino inmediato: <strong id="swap-target" class="text-white font-epic text-base">---</strong>
+            </div>
+
+            <button onclick="resumeGameAfterSwap()" class="btn-modern w-full py-4 text-base bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+                <i class="fas fa-play mr-2"></i> ¡Viajeros listos! Continuar Maratón
+            </button>
         </div>
     </div>
 
-    <!-- LÓGICA AMPLIADA Y SECUENCIAL -->
+    <!-- 5. PANTALLA FINAL: VICTORIA GLOBAL -->
+    <div id="screen-final" class="screen flex-col items-center justify-center text-center py-6">
+        <div class="card-glass p-8 md:p-12 text-center border-t-4 border-yellow-400 w-full">
+            <div class="w-20 h-20 mx-auto rounded-3xl bg-yellow-500/20 border border-yellow-400 flex items-center justify-center text-4xl text-yellow-400 mb-4 animate-bounce shadow-[0_0_30px_rgba(250,204,21,0.6)]">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black font-epic text-transparent bg-clip-text bg-gradient-to-r from-white to-yellow-300 mb-3 uppercase">
+                ¡Maratón Concluida!
+            </h1>
+            <p class="text-slate-200 text-base md:text-lg leading-relaxed mb-6">
+                ¡Magnífico trabajo! Han superado las 10 misiones extremas combinando sabiduría bíblica, agilidad en el cuaderno y una dramatización grupal memorable.
+            </p>
+            <div class="bg-amber-950/50 p-4 rounded-2xl border border-amber-500/40 text-amber-200 font-semibold text-xs md:text-sm mb-8 text-left flex items-start gap-3">
+                <i class="fas fa-award text-2xl text-yellow-400 mt-0.5"></i>
+                <span>Presenten su evaluación final de dramatización y su cuaderno de trabajo ante el tribunal de coordinadores de la feria para sellar su puntaje oficial.</span>
+            </div>
+            <button onclick="location.reload()" class="btn-modern px-8 py-4 text-sm bg-slate-800 border border-slate-600 hover:border-cyan-400">
+                <i class="fas fa-rotate-left mr-2"></i> Reiniciar Maratón
+            </button>
+        </div>
+    </div>
+
+    <!-- LÓGICA TÉCNICA Y FLUIDA -->
     <script>
-        // --- BASE DE DATOS DE 4 MISIONES POR EQUIPO ---
         const teamMissions = {
-            1: { // Huellas de Fuego (Enfoque en el Pentateuco, Profetas y Apocalipsis)
+            1: {
                 nombre: "Huellas de Fuego", icono: "fa-fire",
                 missions: [
-                    {
-                        badge: "ESTRUCTURA BÍBLICA",
-                        title: "Misión 1: La Base de la Ley",
-                        desc: "Los primeros 5 libros de la Biblia forman la base de la Alianza (Pentateuco). Busquen el índice de su Biblia Católica, sumen cuántos libros tiene el Antiguo Testamento y escriban el número.",
-                        answer: "46"
-                    },
-                    {
-                        badge: "PROFETAS",
-                        title: "Misión 2: El Viento del Espíritu",
-                        desc: "Busquen en el profeta Isaías el capítulo 40, versículo 31. El texto dice que los que esperan en el Señor renovarán sus fuerzas; subirán con alas como las de... ¿Qué animal menciona exactamente?",
-                        answer: "aguilas"
-                    },
-                    {
-                        badge: "NUEVO TESTAMENTO",
-                        title: "Misión 3: El Fuego de Pentecostés",
-                        desc: "Busquen en el libro de los Hechos de los Apóstoles el capítulo 2, versículo 3. Aparecieron lenguas repartidas, como de... ¿En forma de qué elemento se repartió el Espíritu Santo sobre ellos?",
-                        answer: "fuego"
-                    },
-                    {
-                        badge: "RETO FINAL",
-                        title: "Misión 4: La Palabra Secreta del Juicio",
-                        desc: "Busquen la última cita clave: Apocalipsis 3, 16. Dice: 'Pero como eres tibio... estoy por ________ de mi boca'. Escriban la palabra exacta que falta para completar la misión.",
-                        answer: "vomitarte"
-                    }
+                    { type: "digital", badge: "DIGITAL • PENTATEUCO", icon: "fa-book-bible", title: "Misión 1: Libros del Antiguo Testamento", desc: "Verifiquen el índice de su Biblia Católica, sumen cuántos libros integran el Antiguo Testamento y escriban la cifra exacta.", answer: "46" },
+                    { type: "notebook", badge: "CUADERNO • PROFESÍA", icon: "fa-pen-nib", title: "Misión 2: Línea del Tiempo de los Profetas", desc: "Tienen 3 minutos en su cuaderno: Dibujen una línea de tiempo rápida con 3 grandes profetas (Isaías, Jeremías, Ezequiel) y anoten una frase clave de cada uno.", time: 180 },
+                    { type: "digital", badge: "DIGITAL • PROFETAS", icon: "fa-feather", title: "Misión 3: El Vuelo del Águila", desc: "Busquen en Isaías 40, 31. Los que esperan en el Señor renovarán sus fuerzas; subirán con alas como... ¿Qué animal menciona?", answer: "aguilas" },
+                    { type: "notebook", badge: "CUADERNO • HISTORIA", icon: "fa-scroll", title: "Misión 4: Esquema de Alianzas", desc: "Tienen 2 minutos para trazar en el cuaderno un esquema rápido de las 4 grandes alianzas de Dios en el Antiguo Testamento (Noé, Abraham, Moisés, David).", time: 120 },
+                    { type: "digital", badge: "DIGITAL • NUEVO TESTAMENTO", icon: "fa-dove", title: "Misión 5: Pentecostés y el Fuego", desc: "Busquen en Hechos de los Apóstoles 2, 3. Aparecieron lenguas repartidas, como de... ¿En forma de qué elemento bajó el Espíritu?", answer: "fuego" },
+                    { type: "notebook", badge: "CUADERNO • PASIÓN", icon: "fa-cross", title: "Misión 6: Las 7 Palabras en la Cruz", desc: "Escriban en su cuaderno las últimas palabras de Jesús en la cruz según los Evangelios. Cuando las tengan anotadas, pulsen continuar.", time: 240 },
+                    { type: "digital", badge: "DIGITAL • CARTAS", icon: "fa-envelope-open-text", title: "Misión 7: El Fruto del Espíritu", desc: "Busquen en Gálatas 5, 22. El primer fruto que menciona el apóstol Pablo es el... ¿Qué virtud encabeza la lista?", answer: "amor" },
+                    { type: "notebook", badge: "CUADERNO • PARÁBOLAS", icon: "fa-book-open", title: "Misión 8: Bosquejo de Bienaventuranzas", desc: "Tienen 2 minutos para escribir en el cuaderno el resumen de la primera Bienaventuranza del Sermón del Monte.", time: 120 },
+                    { type: "digital", badge: "DIGITAL • APOCALIPSIS", icon: "fa-triangle-exclamation", title: "Misión 9: La Advertencia Final", desc: "Busquen Apocalipsis 3, 16. Dice: 'Pero como eres tibio... estoy por ________ de mi boca'. Escriban la palabra exacta.", answer: "vomitarte" },
+                    { type: "action", badge: "CLÍMAX GRUPAL • DRAMATIZACIÓN", icon: "fa-masks-theater", title: "Misión 10: El Juicio Escénico de la Palabra", desc: "¡Reto Final Absoluto! Preparen una dramatización muda de 45 segundos representando el pasaje de la Tempestad Calmada usando expresiones corporales y objetos del aula.", time: 240 }
                 ]
             },
-            2: { // Voceros de la Luz (Enfoque en Sabiduría, Salmos y Evangelios)
+            2: {
                 nombre: "Voceros de la Luz", icono: "fa-bolt",
                 missions: [
-                    {
-                        badge: "ESTRUCTURA BÍBLICA",
-                        title: "Misión 1: La Biblioteca Cristiana",
-                        desc: "La Biblia Católica contiene un número exacto de libros en total entre el Antiguo y el Nuevo Testamento. Sume ambos para descubrir la cifra clave de la biblioteca.",
-                        answer: "73"
-                    },
-                    {
-                        badge: "SALMOS",
-                        title: "Misión 2: La Brújula del Sendero",
-                        desc: "Busquen el Salmo 119, versículo 105. Dice de memoria: 'Tu palabra es una _______ para mis pasos'. Escriban la palabra que falta.",
-                        answer: "lampara"
-                    },
-                    {
-                        badge: "EVANGELIOS",
-                        title: "Misión 3: El Sermón del Monte",
-                        desc: "Busquen en el Evangelio de Mateo, capítulo 5, versículo 14. Jesús le dice a sus discípulos: 'Ustedes son la ___ del mundo'. ¿Qué elemento brillante menciona?",
-                        answer: "luz"
-                    },
-                    {
-                        badge: "RETO FINAL",
-                        title: "Misión 4: El Sello de la Identidad",
-                        desc: "Busquen el libro del profeta Isaías, capítulo 43, versículo 1. Dice: 'No temas... te he llamado por tu ________, tú eres mío'. Escriban la palabra que falta.",
-                        answer: "nombre"
-                    }
+                    { type: "digital", badge: "DIGITAL • ESTRUCTURA", icon: "fa-book-bible", title: "Misión 1: La Biblioteca Completa", desc: "Sume los libros del Antiguo y Nuevo Testamento en la Biblia Católica para descubrir la cifra total de la biblioteca.", answer: "73" },
+                    { type: "notebook", badge: "CUADERNO • GÉNEROS", icon: "fa-pen-nib", title: "Misión 2: Clasificación de Sapienciales", desc: "En su cuaderno, listen los libros del género Sapiencial (Job, Salmos, Proverbios, Eclesiastés, Cantar, Sabiduría, Eclesiástico). Tienen 3 minutos.", time: 180 },
+                    { type: "digital", badge: "DIGITAL • SALMOS", icon: "fa-lightbulb", title: "Misión 3: La Lámpara del Camino", desc: "Busquen el Salmo 119, 105. 'Tu palabra es una _______ para mis pasos'. Escriban la palabra faltante.", answer: "lampara" },
+                    { type: "notebook", badge: "CUADERNO • ACRÓSTICO", icon: "fa-scroll", title: "Misión 4: Acróstico de la Palabra", desc: "Escriban en el cuaderno la palabra 'BIBLIA' hacia abajo y creen un acróstico con valores de fe en 2 minutos.", time: 120 },
+                    { type: "digital", badge: "DIGITAL • EVANGELIOS", icon: "fa-sun", title: "Misión 5: Sal y Luz del Mundo", desc: "Busquen en Mateo 5, 14. Jesús dice: 'Ustedes son la ___ del mundo'. ¿Qué palabra completa la frase?", answer: "luz" },
+                    { type: "notebook", badge: "CUADERNO • DISCIPULADO", icon: "fa-person-walking-arrow-right", title: "Misión 6: Las Condiciones del Seguimiento", desc: "Anoten en su cuaderno 3 exigencias que pide Jesús para ser su discípulo según los Evangelios.", time: 200 },
+                    { type: "digital", badge: "DIGITAL • PROFETAS", icon: "fa-id-card", title: "Misión 7: El Sello de Identidad", desc: "Busquen en Isaías 43, 1. 'No temas... te he llamado por tu ________, tú eres mío'. Escriban la palabra que falta.", answer: "nombre" },
+                    { type: "notebook", badge: "CUADERNO • CARTAS", icon: "fa-envelope", title: "Misión 8: Las Columnas de la Iglesia", desc: "Escriban en el cuaderno los nombres de 3 cartas escritas por el apóstol Pablo a las primeras comunidades.", time: 150 },
+                    { type: "digital", badge: "DIGITAL • CARTAS", icon: "fa-shield", title: "Misión 9: La Armadura Espiritual", desc: "Busquen en Efesios 6, 14. ¿Qué elemento de la armadura espiritual se ajusta primero a la cintura?", answer: "verdad" },
+                    { type: "action", badge: "CLÍMAX GRUPAL • CORO / CANTO", icon: "fa-music", title: "Misión 10: El Himno de los Voceros", desc: "¡Reto Final Absoluto! Inventen un coro musical de 30 segundos con palmas y ritmo alegre proclamando el lema del Mes de la Biblia.", time: 240 }
                 ]
             },
-            3: { // Latido Eterno (Enfoque en Cartas, Vida y Alianza)
+            3: {
                 nombre: "Latido Eterno", icono: "fa-heart",
                 missions: [
-                    {
-                        badge: "ESTRUCTURA BÍBLICA",
-                        title: "Misión 1: Los Pilares del Nuevo Testamento",
-                        desc: "El Nuevo Testamento relata la vida de Jesús y el nacimiento de la Iglesia. Busquen en el índice cuántos libros componen exclusivamente el Nuevo Testamento y escriban el número.",
-                        answer: "27"
-                    },
-                    {
-                        badge: "CARTAS APOSTÓLICAS",
-                        title: "Misión 2: El Mandamiento Principal",
-                        desc: "Busquen en la Primera Carta de Juan, capítulo 4, versículo 8. El texto afirma con contundencia una sola verdad sobre Dios. Escriban esa palabra de 4 letras.",
-                        answer: "amor"
-                    },
-                    {
-                        badge: "LOS EVANGELIOS",
-                        title: "Misión 3: La Roca de la Iglesia",
-                        desc: "Busquen en el Evangelio de Mateo, capítulo 16, versículo 18. Jesús le dice a Pedro: 'Y sobre esta ________ edificaré mi Iglesia'. Escriban la palabra clave.",
-                        answer: "piedra"
-                    },
-                    {
-                        badge: "RETO FINAL",
-                        title: "Misión 4: La Fuente de la Vida",
-                        desc: "Busquen en el Evangelio de Juan, capítulo 14, versículo 6. Jesús declara: 'Yo soy el Camino, la Verdad y la...'. ¿Cuál es la última palabra de esta gran declaración?",
-                        answer: "vida"
-                    }
+                    { type: "digital", badge: "DIGITAL • NUEVO TESTAMENTO", icon: "fa-book-bible", title: "Misión 1: El Nuevo Testamento", desc: "Busquen cuántos libros componen exclusivamente el Nuevo Testamento en su Biblia Católica y anoten la cifra.", answer: "27" },
+                    { type: "notebook", badge: "CUADERNO • EVANGELISTAS", icon: "fa-pen-nib", title: "Misión 2: Símbolos de los Cuatro", desc: "Dibujen en el cuaderno los 4 símbolos tradicionales de los evangelistas (Hombre, León, Toro, Águila) en 3 minutos.", time: 180 },
+                    { type: "digital", badge: "DIGITAL • CARTAS", icon: "fa-hand-holding-heart", title: "Misión 3: La Esencia Divina", desc: "Busquen en la Primera Carta de Juan 4, 8. El texto afirma una sola palabra como la definición de Dios.", answer: "amor" },
+                    { type: "notebook", badge: "CUADERNO • HISTORIA", icon: "fa-scroll", title: "Misión 4: Bosquejo de Hechos", desc: "Anoten en el cuaderno 3 momentos clave del capítulo 2 del libro de los Hechos de los Apóstoles.", time: 120 },
+                    { type: "digital", badge: "DIGITAL • EVANGELIOS", icon: "fa-mountain", title: "Misión 5: La Roca de Pedro", desc: "Busquen en Mateo 16, 18. 'Y sobre esta ________ edificaré mi Iglesia'. Escriban la palabra clave.", answer: "piedra" },
+                    { type: "notebook", badge: "CUADERNO • MILAGROS", icon: "fa-wine-glass", title: "Misión 6: Resumen de Caná", desc: "Escriban en el cuaderno una reflexión de 3 líneas sobre el primer milagro de Jesús en las Bodas de Caná.", time: 200 },
+                    { type: "digital", badge: "DIGITAL • VIDA Y VERDAD", icon: "fa-seedling", title: "Misión 7: El Camino Absoluto", desc: "Busquen en Juan 14, 6. Jesús declara: 'Yo soy el Camino, la Verdad y la...'. ¿Cuál es la última palabra?", answer: "vida" },
+                    { type: "notebook", badge: "CUADERNO • ALIANZA", icon: "fa-ring", title: "Misión 8: Los Sacramentos en la Biblia", desc: "Anoten en el cuaderno dos citas bíblicas donde Jesús instituya o mencione los sacramentos (Bautismo o Eucaristía).", time: 150 },
+                    { type: "digital", badge: "DIGITAL • ESPÍRITU", icon: "fa-wind", title: "Misión 9: La Fuerza de lo Alto", desc: "Busquen en Hechos 1, 8. 'Recibiréis la fuerza del ________ Santo que vendrá sobre vosotros'.", answer: "espiritu" },
+                    { type: "action", badge: "CLÍMAX GRUPAL • PARÁBOLA VIVA", icon: "fa-masks-theater", title: "Misión 10: La Parábola del Sembrador en Vivo", desc: "¡Reto Final Absoluto! Realicen una dramatización viviente de 45 segundos de la Parábola del Sembrador utilizando objetos que tengan en el entorno.", time: 240 }
                 ]
             }
         };
@@ -245,6 +290,7 @@
         let currentMissionIndex = 0;
         let teamNamesList = [];
         let countdownInterval;
+        let notebookTimerInterval;
 
         function switchScreen(hideId, showId) {
             const hideEl = document.getElementById(hideId);
@@ -254,19 +300,21 @@
                 hideEl.classList.remove('active'); hideEl.style.display = 'none';
                 showEl.style.display = 'flex';
                 setTimeout(() => { showEl.classList.add('active'); showEl.style.opacity = '1'; }, 50);
-            }, 500);
+            }, 400);
         }
 
         function selectTeam(teamId) {
             myTeamId = teamId;
-            document.getElementById('lobby-title').innerHTML = `<i class="fas ${teamMissions[teamId].icono} mr-2"></i> ${teamMissions[teamId].nombre}`;
+            const team = teamMissions[teamId];
+            document.getElementById('lobby-title').innerText = team.nombre;
+            document.getElementById('lobby-icon-container').innerHTML = `<i class="fas ${team.icono}"></i>`;
             switchScreen('screen-intro', 'screen-lobby');
         }
 
         function startTeamGame() {
             const rawNames = document.getElementById('team-names').value.trim();
             if (rawNames === "") {
-                alert("Por favor escriban al menos un nombre para el sorteo de viajeros.");
+                alert("Por favor escriban al menos un nombre para las alertas sorpresa de viajeros.");
                 return;
             }
             teamNamesList = rawNames.split(',').map(n => n.trim()).filter(n => n !== "");
@@ -280,16 +328,58 @@
             const team = teamMissions[myTeamId];
             const mission = team.missions[currentMissionIndex];
 
-            document.getElementById('game-team-name').innerHTML = `<i class="fas ${team.icono} mr-2"></i> ${team.nombre}`;
-            document.getElementById('mission-counter').innerText = `Misión ${currentMissionIndex + 1} de ${team.missions.length}`;
-            document.getElementById('mission-badge').innerText = mission.badge;
+            document.getElementById('game-team-name').innerText = team.nombre;
+            document.getElementById('header-team-icon').innerHTML = `<i class="fas ${team.icono}"></i>`;
+            document.getElementById('mission-counter').innerText = `Misión ${currentMissionIndex + 1} / ${team.missions.length}`;
+            document.getElementById('mission-badge').innerHTML = `<i class="fas ${mission.icon} mr-1"></i> ${mission.badge}`;
+            document.getElementById('mission-type-icon').className = `fas ${mission.icon}`;
             document.getElementById('mission-title-text').innerText = mission.title;
             document.getElementById('mission-desc').innerText = mission.desc;
 
-            const input = document.getElementById('mission-answer');
-            input.value = "";
-            input.disabled = false;
+            const actionArea = document.getElementById('mission-action-area');
             document.getElementById('mission-error').classList.add('hidden');
+            clearInterval(notebookTimerInterval);
+
+            if (mission.type === "digital") {
+                actionArea.innerHTML = `
+                    <input type="text" id="mission-answer" class="input-game uppercase tracking-widest mb-4" placeholder="ESCRIBE LA RESPUESTA">
+                    <button onclick="validateMission()" class="btn-modern w-full py-4 text-base"><i class="fas fa-check-circle mr-2"></i> Validar Respuesta</button>
+                `;
+            } else if (mission.type === "notebook") {
+                actionArea.innerHTML = `
+                    <div class="bg-amber-950/40 border border-amber-500/40 p-4 rounded-2xl mb-4 text-center shadow-inner">
+                        <p class="text-amber-300 font-bold mb-1 text-xs uppercase tracking-wider"><i class="fas fa-clock mr-1"></i> Tiempo asignado en cuaderno:</p>
+                        <div id="notebook-timer" class="text-3xl font-mono font-black text-white">03:00</div>
+                    </div>
+                    <button onclick="advanceMission()" class="btn-modern btn-notebook w-full py-4 text-base"><i class="fas fa-check-double mr-2"></i> ¡Reto en Cuaderno Concluido!</button>
+                `;
+                startNotebookTimer(mission.time);
+            } else if (mission.type === "action") {
+                actionArea.innerHTML = `
+                    <div class="bg-emerald-950/40 border border-emerald-500/40 p-4 rounded-2xl mb-4 text-center shadow-inner">
+                        <p class="text-emerald-300 font-bold mb-1 text-xs uppercase tracking-wider"><i class="fas fa-users mr-1"></i> Preparación del Clímax Grupal:</p>
+                        <div id="notebook-timer" class="text-3xl font-mono font-black text-white">04:00</div>
+                    </div>
+                    <button onclick="advanceMission()" class="btn-modern bg-emerald-600 hover:bg-emerald-500 w-full py-4 text-base shadow-[0_0_20px_rgba(16,185,129,0.4)]"><i class="fas fa-star mr-2"></i> ¡Gran Actuación Presentada!</button>
+                `;
+                startNotebookTimer(mission.time);
+            }
+        }
+
+        function startNotebookTimer(seconds) {
+            let timeLeft = seconds;
+            const timerEl = document.getElementById('notebook-timer');
+            clearInterval(notebookTimerInterval);
+            notebookTimerInterval = setInterval(() => {
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                timerEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                if (timeLeft <= 0) {
+                    clearInterval(notebookTimerInterval);
+                    timerEl.innerText = "¡TIEMPO!";
+                }
+                timeLeft--;
+            }, 1000);
         }
 
         function validateMission() {
@@ -301,15 +391,7 @@
             let userVal = input.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 
             if (userVal === mission.answer) {
-                // Correcto, avanzamos a la siguiente misión o ganamos
-                currentMissionIndex++;
-                if (currentMissionIndex < team.missions.length) {
-                    // Cargar siguiente misión con un efecto visual limpio
-                    loadMission();
-                } else {
-                    // ¡Completaron las 4 misiones! Victoria de este equipo
-                    triggerVictoryAlert();
-                }
+                advanceMission();
             } else {
                 input.classList.add('error-shake');
                 error.classList.remove('hidden');
@@ -317,10 +399,24 @@
             }
         }
 
-        function triggerVictoryAlert() {
+        function advanceMission() {
+            const team = teamMissions[myTeamId];
+            currentMissionIndex++;
+
+            // Disparar Intercambio Exprés de 10 segundos al terminar la Misión 3 y la Misión 6
+            if (currentMissionIndex === 3 || currentMissionIndex === 6) {
+                triggerSwapAlert();
+            } else if (currentMissionIndex < team.missions.length) {
+                loadMission();
+            } else {
+                // ¡Misión 10 completada! Pantalla de triunfo global
+                switchScreen('screen-game', 'screen-final');
+            }
+        }
+
+        function triggerSwapAlert() {
             document.body.classList.add('red-alert-bg');
 
-            // Seleccionar aleatoriamente entre 1 y 2 personas de la lista de este equipo
             let selectedTravelers = "Todo el equipo";
             if (teamNamesList.length > 0) {
                 let shuffled = [...teamNamesList].sort(() => 0.5 - Math.random());
@@ -329,17 +425,11 @@
             }
             document.getElementById('selected-travelers').innerText = selectedTravelers;
 
-            // Definir destino de rotación (1 -> 2, 2 -> 3, 3 -> 1)
             let targetTeam = myTeamId === 1 ? 2 : (myTeamId === 2 ? 3 : 1);
             document.getElementById('swap-target').innerText = teamMissions[targetTeam].nombre;
 
-            // Cambiar pantalla de juego a la alerta de victoria
-            document.getElementById('screen-game').classList.remove('active');
-            document.getElementById('screen-game').style.display = 'none';
-            document.getElementById('screen-alert').style.display = 'flex';
-            setTimeout(() => { document.getElementById('screen-alert').classList.add('active'); }, 50);
+            switchScreen('screen-game', 'screen-alert');
 
-            // Cuenta regresiva exprés de 10 segundos
             let timeLeft = 10;
             clearInterval(countdownInterval);
             countdownInterval = setInterval(() => {
@@ -350,6 +440,13 @@
                     document.getElementById('countdown').innerText = "¡YA!";
                 }
             }, 1000);
+        }
+
+        function resumeGameAfterSwap() {
+            document.body.classList.remove('red-alert-bg');
+            clearInterval(countdownInterval);
+            switchScreen('screen-alert', 'screen-game');
+            loadMission();
         }
     </script>
 </body>
