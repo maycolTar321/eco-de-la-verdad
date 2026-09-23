@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Eco de la Verdad - Reto Bíblico</title>
+    <title>El Eco de la Verdad - Reto Bíblico Católico</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
     <style>
         :root {
             --primary: #0ea5e9; --secondary: #0369a1; --accent: #38bdf8;
-            --error: #ef4444; --success: #10b981; --alert: #dc2626;
+            --error: #ef4444; --success: #10b981;
         }
 
         body {
@@ -24,7 +24,7 @@
         .font-epic { font-family: 'Cinzel', serif; }
 
         .card-glass {
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(56, 189, 248, 0.3);
             border-radius: 1.5rem;
@@ -56,7 +56,7 @@
         .screen { display: none; opacity: 0; transition: opacity 0.5s ease; }
         .screen.active { display: flex; opacity: 1; }
 
-        /* ALERTA ROJA (Intercambio Exprés) */
+        /* ALERTA ROJA (Intercambio Exprés de 10s) */
         .red-alert-bg {
             background: radial-gradient(circle at center, #7f1d1d 0%, #450a0a 100%) !important;
             animation: pulse-alert-bg 1s infinite alternate;
@@ -77,131 +77,176 @@
         <h1 class="text-5xl md:text-7xl font-black mb-4 font-epic text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-400">
             EL ECO DE LA VERDAD
         </h1>
-        <p class="text-blue-200 text-lg mb-10">Conéctense al sistema central. Elijan su subgrupo.</p>
+        <p class="text-blue-200 text-lg mb-10 font-medium">Seleccionen su subgrupo para iniciar el recorrido de 4 misiones bíblicas.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-            <button onclick="selectTeam(1)" class="card-glass p-8 hover:scale-105 transition-all text-center border-orange-500/50">
+            <button onclick="selectTeam(1)" class="card-glass p-8 hover:scale-105 transition-all text-center border-orange-500/50 cursor-pointer">
                 <i class="fas fa-fire text-5xl text-orange-500 mb-4 drop-shadow-[0_0_15px_rgba(249,115,22,0.8)]"></i>
                 <h3 class="text-xl font-black uppercase text-white font-epic">Huellas de Fuego</h3>
             </button>
-            <button onclick="selectTeam(2)" class="card-glass p-8 hover:scale-105 transition-all text-center border-yellow-500/50">
+            <button onclick="selectTeam(2)" class="card-glass p-8 hover:scale-105 transition-all text-center border-yellow-500/50 cursor-pointer">
                 <i class="fas fa-bolt text-5xl text-yellow-400 mb-4 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]"></i>
                 <h3 class="text-xl font-black uppercase text-white font-epic">Voceros de la Luz</h3>
             </button>
-            <button onclick="selectTeam(3)" class="card-glass p-8 hover:scale-105 transition-all text-center border-red-500/50">
+            <button onclick="selectTeam(3)" class="card-glass p-8 hover:scale-105 transition-all text-center border-red-500/50 cursor-pointer">
                 <i class="fas fa-heart text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]"></i>
                 <h3 class="text-xl font-black uppercase text-white font-epic">Latido Eterno</h3>
             </button>
         </div>
     </div>
 
-    <!-- 2. PANTALLA LOBBY: REGISTRO DE NOMBRES Y ESPERA -->
+    <!-- 2. PANTALLA DE REGISTRO DE NOMBRES -->
     <div id="screen-lobby" class="screen flex-col items-center justify-center w-full max-w-2xl text-center">
         <div class="card-glass p-8 w-full">
             <h2 id="lobby-title" class="text-3xl font-epic font-black text-cyan-400 mb-6 uppercase">Subgrupo</h2>
-            <p class="text-slate-300 mb-4">Escriban los nombres de todos los integrantes de este grupo separados por comas:</p>
+            <p class="text-slate-300 mb-4">Escriban los nombres de los integrantes separados por comas (para el sorteo dinámico de viajeros):</p>
             <textarea id="team-names" class="input-game mb-6 h-32" placeholder="Ej: Juan, Maria, Pedro..."></textarea>
-            <button id="btn-ready" onclick="setReady()" class="btn-modern w-full py-4 text-xl"><i class="fas fa-check-double mr-2"></i> Estamos Listos</button>
-            
-            <div id="waiting-status" class="mt-8 hidden">
-                <p class="text-yellow-400 font-bold text-lg animate-pulse"><i class="fas fa-satellite-dish mr-2"></i> Esperando a los demás grupos...</p>
-                <div class="flex justify-around mt-4 text-sm font-bold text-slate-400">
-                    <span id="status-g1">G1: ❌</span>
-                    <span id="status-g2">G2: ❌</span>
-                    <span id="status-g3">G3: ❌</span>
-                </div>
-            </div>
+            <button onclick="startTeamGame()" class="btn-modern w-full py-4 text-xl"><i class="fas fa-play mr-2"></i> Comenzar las 4 Misiones</button>
         </div>
     </div>
 
-    <!-- 3. PANTALLA DE JUEGO: EL ENIGMA BÍBLICO -->
+    <!-- 3. PANTALLA DE JUEGO SECUENCIAL (4 MISIONES) -->
     <div id="screen-game" class="screen flex-col w-full max-w-4xl flex-grow z-10">
         <header class="card-glass p-4 mb-6 flex justify-between items-center bg-slate-900/90 border-b-2 border-cyan-500/50">
-            <span id="game-team-name" class="text-cyan-400 font-black text-xl uppercase font-epic">Equipo</span>
-            <span class="text-blue-200 uppercase tracking-widest font-bold text-sm"><i class="fas fa-lock mr-2"></i> Misión Activa</span>
+            <span id="game-team-name" class="text-cyan-400 font-black text-uppercase font-epic">Equipo</span>
+            <span id="mission-counter" class="text-yellow-300 font-bold uppercase tracking-widest text-sm bg-black/40 px-3 py-1 rounded border border-yellow-500/40">Misión 1 de 4</span>
         </header>
 
         <main class="card-glass p-6 md:p-10 flex-grow mb-6 text-center">
-            <i class="fas fa-book-bible text-6xl text-cyan-400 mb-6 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]"></i>
-            <h2 class="text-3xl font-epic font-black text-white mb-6">Desencriptar el Mensaje</h2>
+            <div id="mission-icon-container" class="mb-4">
+                <i id="mission-icon" class="fas fa-book-bible text-5xl text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]"></i>
+            </div>
+            <h2 id="mission-title-text" class="text-2xl md:text-3xl font-epic font-black text-white mb-4">Título de Misión</h2>
             
-            <div class="bg-slate-900/80 border border-cyan-500/30 p-6 rounded-xl text-left mb-8">
-                <h3 class="text-cyan-300 font-black tracking-widest uppercase mb-4"><i class="fas fa-search mr-2"></i> Biblia Católica:</h3>
-                <div id="enigma-cita" class="text-4xl font-black font-epic text-white bg-slate-950 py-4 rounded text-center border-2 border-cyan-400 mb-4">CITA</div>
-                <p id="enigma-pregunta" class="text-xl text-blue-100 leading-relaxed">Pregunta...</p>
+            <div class="bg-slate-900/90 border border-cyan-500/30 p-6 rounded-xl text-left mb-6 shadow-inner">
+                <div id="mission-badge" class="inline-block bg-cyan-900 text-cyan-300 px-3 py-1 rounded text-xs font-bold mb-3 border border-cyan-500">BIBLIOTECA</div>
+                <p id="mission-desc" class="text-lg md:text-xl text-blue-100 leading-relaxed font-medium">Descripción de la misión...</p>
             </div>
 
-            <input type="text" id="enigma-answer" class="input-game text-2xl uppercase tracking-widest mb-4" placeholder="PALABRA SECRETA">
-            <button id="btn-solve" onclick="checkAnswer()" class="btn-modern w-full py-4 text-xl"><i class="fas fa-unlock mr-2"></i> Validar Código</button>
-            <p id="enigma-error" class="mt-4 font-bold text-error hidden">Palabra incorrecta. Lean atentamente.</p>
-            
-            <div id="waiting-solve-status" class="mt-8 hidden p-6 bg-green-900/40 border border-green-500 rounded-xl">
-                <p class="text-green-400 font-bold text-xl mb-2"><i class="fas fa-check-circle mr-2"></i> ¡Código Aceptado!</p>
-                <p class="text-white animate-pulse">Esperando a que los demás grupos logren desencriptar su mensaje...</p>
+            <div class="max-w-md mx-auto">
+                <input type="text" id="mission-answer" class="input-game text-xl uppercase tracking-widest mb-4" placeholder="RESPUESTA O CÓDIGO">
+                <button onclick="validateMission()" class="btn-modern w-full py-4 text-lg"><i class="fas fa-check mr-2"></i> Enviar Respuesta</button>
+                <p id="mission-error" class="mt-3 font-bold text-error hidden">Respuesta incorrecta. Analicen bien el texto o busquen en su Biblia Católica.</p>
             </div>
         </main>
     </div>
 
-    <!-- 4. PANTALLA ALERTA ROJA: INTERCAMBIO EXPRÉS (10 SEGUNDOS, SELECCIÓN ALEATORIA) -->
+    <!-- 4. PANTALLA ALERTA ROJA: INTERCAMBIO EXPRÉS (10 SEGUNDOS) -->
     <div id="screen-alert" class="screen flex-col items-center justify-center w-full h-full min-h-[80vh] text-center z-50">
-        <i class="fas fa-triangle-exclamation text-7xl text-white mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,1)] animate-bounce"></i>
+        <i class="fas fa-crown text-7xl text-yellow-300 mb-4 drop-shadow-[0_0_25px_rgba(250,204,21,0.9)] animate-bounce"></i>
         <h1 class="text-4xl md:text-6xl font-black font-epic text-white mb-2 tracking-widest drop-shadow-2xl">
-            ¡INTERCAMBIO EXPRÉS!
+            ¡MISIÓN CUMPLIDA!
         </h1>
-        <p class="text-xl text-yellow-300 font-bold mb-6">Tienen <span id="countdown" class="text-3xl text-white font-mono bg-black/40 px-3 py-1 rounded">10</span> segundos para rotar</p>
+        <p class="text-xl text-yellow-300 font-bold mb-6">Intercambio exprés de viajeros en <span id="countdown" class="text-3xl text-white font-mono bg-black/50 px-3 py-1 rounded">10</span> seg</p>
         
-        <div class="card-glass p-6 md:p-8 text-center bg-black/60 border-2 border-white max-w-2xl">
-            <p class="text-lg text-white mb-4">El sistema ha seleccionado al azar a los siguientes integrantes de este grupo para moverse:</p>
-            <div id="selected-travelers" class="bg-cyan-950/80 p-5 rounded-xl border border-cyan-400 text-2xl font-black text-cyan-300 uppercase mb-4 tracking-wide">
-                Cargando viajeros...
+        <div class="card-glass p-6 md:p-8 text-center bg-black/70 border-2 border-white max-w-2xl">
+            <p class="text-lg text-white mb-4">El sistema ha seleccionado al azar a los siguientes integrantes para moverse a otro grupo:</p>
+            <div id="selected-travelers" class="bg-cyan-950/90 p-5 rounded-xl border border-cyan-400 text-2xl font-black text-cyan-300 uppercase mb-4 tracking-wide">
+                Seleccionando...
             </div>
             <p class="text-sm text-yellow-200">Destino inmediato: <strong id="swap-target" class="text-white font-epic text-lg">---</strong></p>
         </div>
     </div>
 
-    <!-- CONFIGURACIÓN DE FIREBASE Y LÓGICA -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCZsdoYHsk-B21sCnc4pNAVqP0h3pfw9oA",
-            authDomain: "eco-de-la-verdad.firebaseapp.com",
-            projectId: "eco-de-la-verdad",
-            storageBucket: "eco-de-la-verdad.firebasestorage.app",
-            messagingSenderId: "1079674721987",
-            appId: "1:1079674721987:web:c0933d3297ff246d473476",
-            measurementId: "G-8ZX67RNZ6F"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "estado_actual");
-
-        const enigmas = {
-            1: { nombre: "Huellas de Fuego", icono: "fa-fire", cita: "Apocalipsis 3, 16", pregunta: "Dios habla fuerte aquí. 'Pero como eres tibio, y no eres ni frío ni caliente, estoy por ________ de mi boca'. (8 letras)", respuesta: "vomitarte" },
-            2: { nombre: "Voceros de la Luz", icono: "fa-bolt", cita: "Isaías 43, 1", pregunta: "Dios nos da identidad: 'No temas, porque yo te he rescatado; te he llamado por tu ________, tú eres mío'. (6 letras)", respuesta: "nombre" },
-            3: { nombre: "Latido Eterno", icono: "fa-heart", cita: "Mateo 16, 18", pregunta: "Jesús funda la Iglesia: 'Y yo te digo que tú eres Pedro, y sobre esta ________ edificaré mi Iglesia'. (6 letras)", respuesta: "piedra" },
+    <!-- LÓGICA AMPLIADA Y SECUENCIAL -->
+    <script>
+        // --- BASE DE DATOS DE 4 MISIONES POR EQUIPO ---
+        const teamMissions = {
+            1: { // Huellas de Fuego (Enfoque en el Pentateuco, Profetas y Apocalipsis)
+                nombre: "Huellas de Fuego", icono: "fa-fire",
+                missions: [
+                    {
+                        badge: "ESTRUCTURA BÍBLICA",
+                        title: "Misión 1: La Base de la Ley",
+                        desc: "Los primeros 5 libros de la Biblia forman la base de la Alianza (Pentateuco). Busquen el índice de su Biblia Católica, sumen cuántos libros tiene el Antiguo Testamento y escriban el número.",
+                        answer: "46"
+                    },
+                    {
+                        badge: "PROFETAS",
+                        title: "Misión 2: El Viento del Espíritu",
+                        desc: "Busquen en el profeta Isaías el capítulo 40, versículo 31. El texto dice que los que esperan en el Señor renovarán sus fuerzas; subirán con alas como las de... ¿Qué animal menciona exactamente?",
+                        answer: "aguilas"
+                    },
+                    {
+                        badge: "NUEVO TESTAMENTO",
+                        title: "Misión 3: El Fuego de Pentecostés",
+                        desc: "Busquen en el libro de los Hechos de los Apóstoles el capítulo 2, versículo 3. Aparecieron lenguas repartidas, como de... ¿En forma de qué elemento se repartió el Espíritu Santo sobre ellos?",
+                        answer: "fuego"
+                    },
+                    {
+                        badge: "RETO FINAL",
+                        title: "Misión 4: La Palabra Secreta del Juicio",
+                        desc: "Busquen la última cita clave: Apocalipsis 3, 16. Dice: 'Pero como eres tibio... estoy por ________ de mi boca'. Escriban la palabra exacta que falta para completar la misión.",
+                        answer: "vomitarte"
+                    }
+                ]
+            },
+            2: { // Voceros de la Luz (Enfoque en Sabiduría, Salmos y Evangelios)
+                nombre: "Voceros de la Luz", icono: "fa-bolt",
+                missions: [
+                    {
+                        badge: "ESTRUCTURA BÍBLICA",
+                        title: "Misión 1: La Biblioteca Cristiana",
+                        desc: "La Biblia Católica contiene un número exacto de libros en total entre el Antiguo y el Nuevo Testamento. Sume ambos para descubrir la cifra clave de la biblioteca.",
+                        answer: "73"
+                    },
+                    {
+                        badge: "SALMOS",
+                        title: "Misión 2: La Brújula del Sendero",
+                        desc: "Busquen el Salmo 119, versículo 105. Dice de memoria: 'Tu palabra es una _______ para mis pasos'. Escriban la palabra que falta.",
+                        answer: "lampara"
+                    },
+                    {
+                        badge: "EVANGELIOS",
+                        title: "Misión 3: El Sermón del Monte",
+                        desc: "Busquen en el Evangelio de Mateo, capítulo 5, versículo 14. Jesús le dice a sus discípulos: 'Ustedes son la ___ del mundo'. ¿Qué elemento brillante menciona?",
+                        answer: "luz"
+                    },
+                    {
+                        badge: "RETO FINAL",
+                        title: "Misión 4: El Sello de la Identidad",
+                        desc: "Busquen el libro del profeta Isaías, capítulo 43, versículo 1. Dice: 'No temas... te he llamado por tu ________, tú eres mío'. Escriban la palabra que falta.",
+                        answer: "nombre"
+                    }
+                ]
+            },
+            3: { // Latido Eterno (Enfoque en Cartas, Vida y Alianza)
+                nombre: "Latido Eterno", icono: "fa-heart",
+                missions: [
+                    {
+                        badge: "ESTRUCTURA BÍBLICA",
+                        title: "Misión 1: Los Pilares del Nuevo Testamento",
+                        desc: "El Nuevo Testamento relata la vida de Jesús y el nacimiento de la Iglesia. Busquen en el índice cuántos libros componen exclusivamente el Nuevo Testamento y escriban el número.",
+                        answer: "27"
+                    },
+                    {
+                        badge: "CARTAS APOSTÓLICAS",
+                        title: "Misión 2: El Mandamiento Principal",
+                        desc: "Busquen en la Primera Carta de Juan, capítulo 4, versículo 8. El texto afirma con contundencia una sola verdad sobre Dios. Escriban esa palabra de 4 letras.",
+                        answer: "amor"
+                    },
+                    {
+                        badge: "LOS EVANGELIOS",
+                        title: "Misión 3: La Roca de la Iglesia",
+                        desc: "Busquen en el Evangelio de Mateo, capítulo 16, versículo 18. Jesús le dice a Pedro: 'Y sobre esta ________ edificaré mi Iglesia'. Escriban la palabra clave.",
+                        answer: "piedra"
+                    },
+                    {
+                        badge: "RETO FINAL",
+                        title: "Misión 4: La Fuente de la Vida",
+                        desc: "Busquen en el Evangelio de Juan, capítulo 14, versículo 6. Jesús declara: 'Yo soy el Camino, la Verdad y la...'. ¿Cuál es la última palabra de esta gran declaración?",
+                        answer: "vida"
+                    }
+                ]
+            }
         };
 
         let myTeamId = 0;
-        let isGameStarted = false;
+        let currentMissionIndex = 0;
+        let teamNamesList = [];
         let countdownInterval;
 
-        async function initGameDoc() {
-            const docSnap = await getDoc(gameRef);
-            if (!docSnap.exists() || docSnap.data().fase === 2) {
-                await setDoc(gameRef, {
-                    fase: 0, 
-                    g1_ready: false, g2_ready: false, g3_ready: false,
-                    g1_names: "", g2_names: "", g3_names: "",
-                    g1_solved: false, g2_solved: false, g3_solved: false
-                });
-            }
-        }
-        initGameDoc();
-
-        window.switchScreen = (hideId, showId) => {
+        function switchScreen(hideId, showId) {
             const hideEl = document.getElementById(hideId);
             const showEl = document.getElementById(showId);
             hideEl.style.opacity = '0';
@@ -210,115 +255,102 @@
                 showEl.style.display = 'flex';
                 setTimeout(() => { showEl.classList.add('active'); showEl.style.opacity = '1'; }, 50);
             }, 500);
-        };
+        }
 
-        window.selectTeam = (teamId) => {
+        function selectTeam(teamId) {
             myTeamId = teamId;
-            document.getElementById('lobby-title').innerHTML = `<i class="fas ${enigmas[teamId].icono} mr-2"></i> ${enigmas[teamId].nombre}`;
+            document.getElementById('lobby-title').innerHTML = `<i class="fas ${teamMissions[teamId].icono} mr-2"></i> ${teamMissions[teamId].nombre}`;
             switchScreen('screen-intro', 'screen-lobby');
-        };
+        }
 
-        window.setReady = async () => {
-            const names = document.getElementById('team-names').value.trim();
-            if (names === "") { alert("Deben escribir los nombres de los integrantes."); return; }
-            document.getElementById('team-names').disabled = true;
-            document.getElementById('btn-ready').style.display = 'none';
-            document.getElementById('waiting-status').classList.remove('hidden');
+        function startTeamGame() {
+            const rawNames = document.getElementById('team-names').value.trim();
+            if (rawNames === "") {
+                alert("Por favor escriban al menos un nombre para el sorteo de viajeros.");
+                return;
+            }
+            teamNamesList = rawNames.split(',').map(n => n.trim()).filter(n => n !== "");
+            currentMissionIndex = 0;
 
-            const updateData = {};
-            updateData[`g${myTeamId}_ready`] = true;
-            updateData[`g${myTeamId}_names`] = names;
-            await updateDoc(gameRef, updateData);
-        };
+            loadMission();
+            switchScreen('screen-lobby', 'screen-game');
+        }
 
-        window.checkAnswer = async () => {
-            const input = document.getElementById('enigma-answer');
-            const error = document.getElementById('enigma-error');
-            const correct = enigmas[myTeamId].respuesta;
-            
+        function loadMission() {
+            const team = teamMissions[myTeamId];
+            const mission = team.missions[currentMissionIndex];
+
+            document.getElementById('game-team-name').innerHTML = `<i class="fas ${team.icono} mr-2"></i> ${team.nombre}`;
+            document.getElementById('mission-counter').innerText = `Misión ${currentMissionIndex + 1} de ${team.missions.length}`;
+            document.getElementById('mission-badge').innerText = mission.badge;
+            document.getElementById('mission-title-text').innerText = mission.title;
+            document.getElementById('mission-desc').innerText = mission.desc;
+
+            const input = document.getElementById('mission-answer');
+            input.value = "";
+            input.disabled = false;
+            document.getElementById('mission-error').classList.add('hidden');
+        }
+
+        function validateMission() {
+            const team = teamMissions[myTeamId];
+            const mission = team.missions[currentMissionIndex];
+            const input = document.getElementById('mission-answer');
+            const error = document.getElementById('mission-error');
+
             let userVal = input.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 
-            if (userVal === correct) {
-                input.disabled = true;
-                document.getElementById('btn-solve').style.display = 'none';
-                error.classList.add('hidden');
-                document.getElementById('waiting-solve-status').classList.remove('hidden');
-                
-                const updateData = {};
-                updateData[`g${myTeamId}_solved`] = true;
-                await updateDoc(gameRef, updateData);
+            if (userVal === mission.answer) {
+                // Correcto, avanzamos a la siguiente misión o ganamos
+                currentMissionIndex++;
+                if (currentMissionIndex < team.missions.length) {
+                    // Cargar siguiente misión con un efecto visual limpio
+                    loadMission();
+                } else {
+                    // ¡Completaron las 4 misiones! Victoria de este equipo
+                    triggerVictoryAlert();
+                }
             } else {
                 input.classList.add('error-shake');
                 error.classList.remove('hidden');
                 setTimeout(() => { input.classList.remove('error-shake'); error.classList.add('hidden'); }, 1500);
             }
-        };
+        }
 
-        // ESCUCHA EN TIEMPO REAL
-        onSnapshot(gameRef, async (docSnap) => {
-            if (!docSnap.exists()) return;
-            const data = docSnap.data();
+        function triggerVictoryAlert() {
+            document.body.classList.add('red-alert-bg');
 
-            document.getElementById('status-g1').innerHTML = `G1: ${data.g1_ready ? '✅' : '❌'}`;
-            document.getElementById('status-g2').innerHTML = `G2: ${data.g2_ready ? '✅' : '❌'}`;
-            document.getElementById('status-g3').innerHTML = `G3: ${data.g3_ready ? '✅' : '❌'}`;
-
-            if (data.fase === 0 && data.g1_ready && data.g2_ready && data.g3_ready) {
-                if (data[`g${myTeamId}_ready`]) { await updateDoc(gameRef, { fase: 1 }); }
+            // Seleccionar aleatoriamente entre 1 y 2 personas de la lista de este equipo
+            let selectedTravelers = "Todo el equipo";
+            if (teamNamesList.length > 0) {
+                let shuffled = [...teamNamesList].sort(() => 0.5 - Math.random());
+                let count = Math.min(2, shuffled.length);
+                selectedTravelers = shuffled.slice(0, count).join(', ');
             }
+            document.getElementById('selected-travelers').innerText = selectedTravelers;
 
-            if (data.fase === 1 && !isGameStarted) {
-                isGameStarted = true;
-                document.getElementById('game-team-name').innerHTML = `<i class="fas ${enigmas[myTeamId].icono} mr-2"></i> ${enigmas[myTeamId].nombre}`;
-                document.getElementById('enigma-cita').innerText = enigmas[myTeamId].cita;
-                document.getElementById('enigma-pregunta').innerText = enigmas[myTeamId].pregunta;
-                switchScreen('screen-lobby', 'screen-game');
-            }
+            // Definir destino de rotación (1 -> 2, 2 -> 3, 3 -> 1)
+            let targetTeam = myTeamId === 1 ? 2 : (myTeamId === 2 ? 3 : 1);
+            document.getElementById('swap-target').innerText = teamMissions[targetTeam].nombre;
 
-            if (data.fase === 1 && data.g1_solved && data.g2_solved && data.g3_solved) {
-                await updateDoc(gameRef, { fase: 2 });
-            }
+            // Cambiar pantalla de juego a la alerta de victoria
+            document.getElementById('screen-game').classList.remove('active');
+            document.getElementById('screen-game').style.display = 'none';
+            document.getElementById('screen-alert').style.display = 'flex';
+            setTimeout(() => { document.getElementById('screen-alert').classList.add('active'); }, 50);
 
-            if (data.fase === 2) {
-                document.body.classList.add('red-alert-bg');
-                
-                // Seleccionar aleatoriamente entre 1 y 2 personas de la lista de nombres de este grupo
-                let myNamesStr = data[`g${myTeamId}_names`] || "";
-                let namesArray = myNamesStr.split(',').map(n => n.trim()).filter(n => n !== "");
-                
-                let selectedTravelers = "Todo el equipo";
-                if (namesArray.length > 0) {
-                    // Mezclar aleatoriamente y tomar hasta 2 personas
-                    let shuffled = namesArray.sort(() => 0.5 - Math.random());
-                    let count = Math.min(2, shuffled.length);
-                    selectedTravelers = shuffled.slice(0, count).join(', ');
-                }
-
-                document.getElementById('selected-travelers').innerText = selectedTravelers;
-
-                let targetTeam = myTeamId === 1 ? 2 : (myTeamId === 2 ? 3 : 1);
-                document.getElementById('swap-target').innerText = enigmas[targetTeam].nombre;
-                
-                if(!document.getElementById('screen-alert').classList.contains('active')) {
-                    document.getElementById('screen-game').classList.remove('active');
-                    document.getElementById('screen-game').style.display = 'none';
-                    document.getElementById('screen-alert').style.display = 'flex';
-                    setTimeout(() => { document.getElementById('screen-alert').classList.add('active'); }, 50);
-
-                    // Cuenta regresiva de 10 segundos
-                    let timeLeft = 10;
+            // Cuenta regresiva exprés de 10 segundos
+            let timeLeft = 10;
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdown').innerText = timeLeft;
+                if (timeLeft <= 0) {
                     clearInterval(countdownInterval);
-                    countdownInterval = setInterval(() => {
-                        timeLeft--;
-                        document.getElementById('countdown').innerText = timeLeft;
-                        if (timeLeft <= 0) {
-                            clearInterval(countdownInterval);
-                            document.getElementById('countdown').innerText = "¡TIEMPO!";
-                        }
-                    }, 1000);
+                    document.getElementById('countdown').innerText = "¡YA!";
                 }
-            }
-        });
+            }, 1000);
+        }
     </script>
 </body>
 </html>
