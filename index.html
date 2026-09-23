@@ -56,7 +56,7 @@
         .screen { display: none; opacity: 0; transition: opacity 0.5s ease; }
         .screen.active { display: flex; opacity: 1; }
 
-        /* ALERTA ROJA (Intercambio) */
+        /* ALERTA ROJA (Intercambio Exprés) */
         .red-alert-bg {
             background: radial-gradient(circle at center, #7f1d1d 0%, #450a0a 100%) !important;
             animation: pulse-alert-bg 1s infinite alternate;
@@ -142,20 +142,20 @@
         </main>
     </div>
 
-    <!-- 4. PANTALLA ALERTA ROJA: INTERCAMBIO -->
+    <!-- 4. PANTALLA ALERTA ROJA: INTERCAMBIO EXPRÉS (10 SEGUNDOS, SELECCIÓN ALEATORIA) -->
     <div id="screen-alert" class="screen flex-col items-center justify-center w-full h-full min-h-[80vh] text-center z-50">
-        <i class="fas fa-triangle-exclamation text-8xl text-white mb-6 drop-shadow-[0_0_30px_rgba(255,255,255,1)] animate-bounce"></i>
-        <h1 class="text-5xl md:text-7xl font-black font-epic text-white mb-4 tracking-widest drop-shadow-2xl">
-            ¡ALERTA ROJA!
+        <i class="fas fa-triangle-exclamation text-7xl text-white mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,1)] animate-bounce"></i>
+        <h1 class="text-4xl md:text-6xl font-black font-epic text-white mb-2 tracking-widest drop-shadow-2xl">
+            ¡INTERCAMBIO EXPRÉS!
         </h1>
-        <h2 class="text-3xl text-yellow-300 font-bold uppercase tracking-widest mb-10">Intercambio de Grupos</h2>
+        <p class="text-xl text-yellow-300 font-bold mb-6">Tienen <span id="countdown" class="text-3xl text-white font-mono bg-black/40 px-3 py-1 rounded">10</span> segundos para rotar</p>
         
-        <div class="card-glass p-8 md:p-12 text-center bg-black/50 border-2 border-white max-w-2xl">
-            <p class="text-xl text-white mb-6">El viento del Espíritu sopla donde quiere. Tienen <strong class="text-yellow-400">60 SEGUNDOS</strong> para moverse.</p>
-            <div class="bg-white/10 p-6 rounded-xl border border-white/30 text-2xl font-black text-white leading-relaxed">
-                Todos los integrantes de este equipo deben dejar su lugar e ir INMEDIATAMENTE al grupo:<br><br>
-                <span id="swap-target" class="text-4xl text-cyan-300 uppercase font-epic drop-shadow-[0_0_15px_rgba(103,232,249,0.8)]">---</span>
+        <div class="card-glass p-6 md:p-8 text-center bg-black/60 border-2 border-white max-w-2xl">
+            <p class="text-lg text-white mb-4">El sistema ha seleccionado al azar a los siguientes integrantes de este grupo para moverse:</p>
+            <div id="selected-travelers" class="bg-cyan-950/80 p-5 rounded-xl border border-cyan-400 text-2xl font-black text-cyan-300 uppercase mb-4 tracking-wide">
+                Cargando viajeros...
             </div>
+            <p class="text-sm text-yellow-200">Destino inmediato: <strong id="swap-target" class="text-white font-epic text-lg">---</strong></p>
         </div>
     </div>
 
@@ -164,7 +164,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // TUS CREDENCIALES EXACTAS
         const firebaseConfig = {
             apiKey: "AIzaSyCZsdoYHsk-B21sCnc4pNAVqP0h3pfw9oA",
             authDomain: "eco-de-la-verdad.firebaseapp.com",
@@ -179,7 +178,6 @@
         const db = getFirestore(app);
         const gameRef = doc(db, "juego", "estado_actual");
 
-        // ENIGMAS CATÓLICOS
         const enigmas = {
             1: { nombre: "Huellas de Fuego", icono: "fa-fire", cita: "Apocalipsis 3, 16", pregunta: "Dios habla fuerte aquí. 'Pero como eres tibio, y no eres ni frío ni caliente, estoy por ________ de mi boca'. (8 letras)", respuesta: "vomitarte" },
             2: { nombre: "Voceros de la Luz", icono: "fa-bolt", cita: "Isaías 43, 1", pregunta: "Dios nos da identidad: 'No temas, porque yo te he rescatado; te he llamado por tu ________, tú eres mío'. (6 letras)", respuesta: "nombre" },
@@ -188,6 +186,7 @@
 
         let myTeamId = 0;
         let isGameStarted = false;
+        let countdownInterval;
 
         async function initGameDoc() {
             const docSnap = await getDoc(gameRef);
@@ -282,6 +281,21 @@
 
             if (data.fase === 2) {
                 document.body.classList.add('red-alert-bg');
+                
+                // Seleccionar aleatoriamente entre 1 y 2 personas de la lista de nombres de este grupo
+                let myNamesStr = data[`g${myTeamId}_names`] || "";
+                let namesArray = myNamesStr.split(',').map(n => n.trim()).filter(n => n !== "");
+                
+                let selectedTravelers = "Todo el equipo";
+                if (namesArray.length > 0) {
+                    // Mezclar aleatoriamente y tomar hasta 2 personas
+                    let shuffled = namesArray.sort(() => 0.5 - Math.random());
+                    let count = Math.min(2, shuffled.length);
+                    selectedTravelers = shuffled.slice(0, count).join(', ');
+                }
+
+                document.getElementById('selected-travelers').innerText = selectedTravelers;
+
                 let targetTeam = myTeamId === 1 ? 2 : (myTeamId === 2 ? 3 : 1);
                 document.getElementById('swap-target').innerText = enigmas[targetTeam].nombre;
                 
@@ -290,6 +304,18 @@
                     document.getElementById('screen-game').style.display = 'none';
                     document.getElementById('screen-alert').style.display = 'flex';
                     setTimeout(() => { document.getElementById('screen-alert').classList.add('active'); }, 50);
+
+                    // Cuenta regresiva de 10 segundos
+                    let timeLeft = 10;
+                    clearInterval(countdownInterval);
+                    countdownInterval = setInterval(() => {
+                        timeLeft--;
+                        document.getElementById('countdown').innerText = timeLeft;
+                        if (timeLeft <= 0) {
+                            clearInterval(countdownInterval);
+                            document.getElementById('countdown').innerText = "¡TIEMPO!";
+                        }
+                    }, 1000);
                 }
             }
         });
