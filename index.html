@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Eco de la Verdad - Arena Bíblica Multijugador</title>
+    <title>El Eco de la Verdad - Feria de la Biblia (Confirmación)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -13,67 +13,82 @@
         :root {
             --primary: #0284c7; --secondary: #0369a1; --accent: #38bdf8;
             --error: #f43f5e; --success: #10b981; --warning: #f59e0b;
-            --bg-deep: #030712; --card-bg: rgba(15, 23, 42, 0.92);
+            --bg-deep: #030712; --card-bg: rgba(15, 23, 42, 0.9);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #030712 80%);
+            background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #030712 90%);
             color: #f8fafc; min-height: 100vh; overflow-x: hidden;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 1rem;
+            position: relative;
         }
+
+        .bg-particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
+            background-image: radial-gradient(circle, rgba(56,189,248,0.15) 1.5px, transparent 1.5px);
+            background-size: 35px 35px;
+            animation: bg-shift 25s linear infinite;
+        }
+        @keyframes bg-shift { 0% { background-position: 0 0; } 100% { background-position: 35px 35px; } }
 
         .font-epic { font-family: 'Cinzel', serif; }
 
         .card-glass {
             background: var(--card-bg);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(56, 189, 248, 0.35);
+            border: 1px solid rgba(56, 189, 248, 0.4);
             border-radius: 2rem;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.1);
-            position: relative; overflow: hidden;
-            width: 100%; max-width: 48rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.15);
+            position: relative; overflow: hidden; z-index: 10;
+            animation: card-appear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes card-appear {
+            0% { opacity: 0; transform: translateY(20px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .btn-modern {
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-            color: white; border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 1.25rem;
+            color: white; border: 1px solid rgba(56, 189, 248, 0.6); border-radius: 1.25rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
-            box-shadow: 0 4px 25px rgba(2, 132, 199, 0.5);
+            box-shadow: 0 4px 25px rgba(2, 132, 199, 0.6);
             text-transform: uppercase; font-weight: 800; letter-spacing: 1.5px;
+            position: relative; overflow: hidden;
         }
         .btn-modern:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 35px rgba(56, 189, 248, 0.7);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 10px 40px rgba(56, 189, 248, 0.8);
             background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
         }
+        .btn-modern:active { transform: translateY(-1px) scale(1); }
 
         .btn-option {
-            background: rgba(15, 23, 42, 0.8); border: 2px solid rgba(56, 189, 248, 0.3);
+            background: rgba(15, 23, 42, 0.85); border: 2px solid rgba(56, 189, 248, 0.35);
             color: white; border-radius: 1.25rem; padding: 1.15rem; font-weight: 700; text-align: left;
-            transition: all 0.25s ease; display: flex; align-items: center; gap: 1rem; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 1rem; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
         .btn-option:hover {
-            background: rgba(14, 165, 233, 0.25); border-color: #38bdf8; transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+            background: rgba(14, 165, 233, 0.3); border-color: #38bdf8; transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
         }
 
         .input-game {
             background: rgba(2, 6, 23, 0.95); border: 2px solid rgba(56, 189, 248, 0.5);
             color: #ffffff !important; text-align: left; border-radius: 1.25rem;
             transition: all 0.3s ease; width: 100%; padding: 1.25rem; font-size: 1.1rem; font-weight: 600;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.9);
         }
         .input-game::placeholder { color: #64748b; }
-        .input-game:focus { outline: none; border-color: #fde047; box-shadow: 0 0 25px rgba(253, 224, 71, 0.5), inset 0 2px 5px rgba(0,0,0,0.8); }
+        .input-game:focus { outline: none; border-color: #fde047; box-shadow: 0 0 30px rgba(253, 224, 71, 0.6); }
 
-        .screen { display: none; opacity: 0; transition: opacity 0.6s ease; width: 100%; max-width: 48rem; }
+        .screen { display: none; opacity: 0; transition: opacity 0.5s ease; width: 100%; max-width: 48rem; z-index: 10; }
         .screen.active { display: flex; opacity: 1; flex-direction: column; align-items: center; }
 
         .red-alert-bg {
             background: radial-gradient(circle at center, #991b1b 0%, #450a0a 70%, #030712 100%) !important;
-            animation: pulse-alert-bg 1.2s infinite alternate;
+            animation: pulse-alert-bg 1s infinite alternate;
         }
         @keyframes pulse-alert-bg {
             0% { background: radial-gradient(circle at center, #991b1b 0%, #450a0a 70%, #030712 100%); }
@@ -83,21 +98,27 @@
         .music-player {
             position: fixed; top: 1rem; right: 1rem; z-index: 100;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
-            border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 9999px;
+            border: 1px solid rgba(56, 189, 248, 0.6); border-radius: 9999px;
             padding: 0.5rem 1.25rem; display: flex; align-items: center; gap: 0.75rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: transform 0.3s;
         }
+        .music-player:hover { transform: scale(1.05); }
 
-        /* ANIMACIÓN DE ENTRADA INICIAL */
-        @keyframes portal-pulse {
-            0% { transform: scale(0.95); opacity: 0.8; shadow: 0 0 20px rgba(56,189,248,0.2); }
-            50% { transform: scale(1); opacity: 1; shadow: 0 0 50px rgba(56,189,248,0.6); }
-            100% { transform: scale(0.95); opacity: 0.8; shadow: 0 0 20px rgba(56,189,248,0.2); }
+        @keyframes neon-pulse {
+            0%, 100% { text-shadow: 0 0 15px rgba(56,189,248,0.6), 0 0 30px rgba(56,189,248,0.3); }
+            50% { text-shadow: 0 0 30px rgba(56,189,248,1), 0 0 50px rgba(14,165,233,0.8); }
         }
-        .portal-animation { animation: portal-pulse 3s infinite ease-in-out; }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        .gaming-title { animation: neon-pulse 2s infinite ease-in-out; }
+        .floating-badge { animation: floating 3.5s infinite ease-in-out; }
     </style>
 </head>
 <body class="justify-center items-center">
+
+    <div class="bg-particles"></div>
 
     <!-- REPRODUCTOR DE MÚSICA -->
     <div class="music-player">
@@ -107,22 +128,27 @@
         <audio id="bg-audio" loop>
             <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
         </audio>
-        <button onclick="toggleMusic()" id="music-btn" class="w-9 h-9 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white flex items-center justify-center transition cursor-pointer shadow-lg">
+        <button onclick="toggleMusic()" id="music-btn" class="w-9 h-9 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white flex items-center justify-center transition cursor-pointer shadow-lg active:scale-95">
             <i class="fas fa-play text-xs" id="music-icon"></i>
         </button>
     </div>
 
-    <div class="w-full flex flex-col items-center justify-center flex-grow">
+    <div class="w-full flex flex-col items-center justify-center flex-grow z-10">
 
-        <!-- 0. PANTALLA DE ANIMACIÓN DE BIENVENIDA -->
-        <div id="screen-welcome" class="screen active text-center py-10">
-            <div class="card-glass p-10 flex flex-col items-center portal-animation border-cyan-400">
-                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-400 flex items-center justify-center text-white text-4xl mb-6 shadow-[0_0_35px_rgba(56,189,248,0.8)]">
-                    <i class="fas fa-cross"></i>
+        <!-- 0. PANTALLA DE ENTRADA CINEMÁTICA -->
+        <div id="screen-welcome" class="screen active text-center py-6">
+            <div class="card-glass p-8 md:p-12 flex flex-col items-center border-cyan-400 shadow-[0_0_60px_rgba(56,189,248,0.4)]">
+                <div class="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-gradient-to-tr from-cyan-600 to-blue-400 flex items-center justify-center text-white text-3xl md:text-4xl mb-6 shadow-[0_0_50px_rgba(56,189,248,1)] floating-badge">
+                    <i class="fas fa-bible"></i>
                 </div>
-                <h1 class="text-3xl md:text-5xl font-black font-epic text-white mb-3 tracking-wide">EL ECO DE LA VERDAD</h1>
-                <p class="text-cyan-300 text-sm font-bold tracking-[0.3em] uppercase mb-8">Mes de la Biblia • Edición Suprema</p>
-                <button onclick="enterPortal()" class="btn-modern px-10 py-4 text-base"><i class="fas fa-bolt mr-2"></i> Ingresar a la Arena</button>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/90 border border-cyan-500/50 text-cyan-300 text-xs font-bold tracking-[0.25em] uppercase mb-4 shadow-md">
+                    <i class="fas fa-satellite-dish text-cyan-400 animate-ping"></i> Sistema En Línea
+                </div>
+                <h1 class="text-3xl md:text-5xl font-black font-epic text-white mb-3 tracking-wide gaming-title">EL ECO DE LA VERDAD</h1>
+                <p class="text-slate-300 text-xs md:text-sm font-semibold tracking-[0.2em] uppercase mb-8">Feria de la Biblia • Confirmación</p>
+                <button onclick="enterPortal()" class="btn-modern px-10 py-4 text-sm md:text-base w-full max-w-xs shadow-[0_0_35px_rgba(2,132,199,0.9)]">
+                    <i class="fas fa-play mr-2"></i> Iniciar Sistema
+                </button>
             </div>
         </div>
 
@@ -131,28 +157,28 @@
             <div class="mb-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/90 border border-cyan-500/50 text-cyan-300 text-xs font-bold tracking-widest uppercase">
                 <i class="fas fa-shield-halved text-cyan-400"></i> Selecciona tu Subgrupo
             </div>
-            <h1 class="text-3xl md:text-5xl font-black mb-3 font-epic text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400">
+            <h1 class="text-2xl md:text-4xl font-black mb-3 font-epic text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400">
                 ELIGE TU EQUIPO
             </h1>
-            <p class="text-slate-300 text-sm md:text-base mb-6 max-w-lg">
-                La batalla por la Palabra está por comenzar. Selecciona con sabiduría.
+            <p class="text-slate-300 text-xs md:text-sm mb-6 max-w-lg">
+                La batalla por la Palabra está por comenzar. Abran su Biblia Católica y preparen sus corazones.
             </p>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                 <button onclick="selectTeam(1)" class="card-glass p-5 hover:scale-105 transition-all text-center border-orange-500/40 cursor-pointer group">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_20px_rgba(249,115,22,0.6)] group-hover:scale-110 transition-transform">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_25px_rgba(249,115,22,0.8)] group-hover:scale-125 transition-transform duration-300">
                         <i class="fas fa-fire"></i>
                     </div>
                     <h3 class="text-base font-extrabold uppercase text-white font-epic tracking-wider">Huellas de Fuego</h3>
                 </button>
                 <button onclick="selectTeam(2)" class="card-glass p-5 hover:scale-105 transition-all text-center border-yellow-500/40 cursor-pointer group">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_20px_rgba(250,204,21,0.6)] group-hover:scale-110 transition-transform">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_25px_rgba(250,204,21,0.8)] group-hover:scale-125 transition-transform duration-300">
                         <i class="fas fa-bolt"></i>
                     </div>
                     <h3 class="text-base font-extrabold uppercase text-white font-epic tracking-wider">Voceros de la Luz</h3>
                 </button>
                 <button onclick="selectTeam(3)" class="card-glass p-5 hover:scale-105 transition-all text-center border-red-500/40 cursor-pointer group">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-rose-500 to-red-700 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_20px_rgba(244,63,94,0.6)] group-hover:scale-110 transition-transform">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-rose-500 to-red-700 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_25px_rgba(244,63,94,0.8)] group-hover:scale-125 transition-transform duration-300">
                         <i class="fas fa-heart"></i>
                     </div>
                     <h3 class="text-base font-extrabold uppercase text-white font-epic tracking-wider">Latido Eterno</h3>
@@ -178,7 +204,7 @@
                 
                 <button id="btn-ready" onclick="setReady()" class="btn-modern w-full py-4 text-base"><i class="fas fa-check-double mr-2"></i> ¡Estamos Listos y Conectados!</button>
                 
-                <div id="waiting-status" class="mt-6 hidden bg-slate-950/90 p-4 rounded-2xl border border-cyan-500/30 text-center">
+                <div id="waiting-status" class="mt-6 hidden bg-slate-950/90 p-4 rounded-2xl border border-cyan-500/30 text-center shadow-lg">
                     <p class="text-yellow-400 font-bold text-xs uppercase tracking-widest animate-pulse mb-3"><i class="fas fa-satellite-dish mr-2"></i> Sincronizando los 3 subgrupos en la nube...</p>
                     <div class="flex justify-around text-xs font-extrabold text-slate-300">
                         <span id="status-g1" class="bg-black/40 px-3 py-1 rounded-lg border border-slate-800">Fuego: ❌</span>
@@ -187,9 +213,9 @@
                     </div>
                 </div>
 
-                <div id="start-countdown-box" class="mt-6 hidden bg-cyan-950/80 border border-cyan-400 p-5 rounded-2xl text-center shadow-[0_0_20px_rgba(56,189,248,0.4)]">
+                <div id="start-countdown-box" class="mt-6 hidden bg-cyan-950/90 border border-cyan-400 p-5 rounded-2xl text-center shadow-[0_0_25px_rgba(56,189,248,0.5)]">
                     <p class="text-cyan-300 font-extrabold text-xs uppercase tracking-widest">¡Los 3 equipos están listos! Iniciando batalla en:</p>
-                    <div id="start-timer" class="text-6xl font-black font-mono text-white mt-1 drop-shadow-md">10</div>
+                    <div id="start-timer" class="text-6xl font-black font-mono text-white mt-1 drop-shadow-md animate-pulse">10</div>
                 </div>
             </div>
         </div>
@@ -198,12 +224,12 @@
         <div id="screen-game" class="screen flex-grow z-10 my-2">
             <header class="card-glass p-4 mb-4 flex justify-between items-center bg-slate-900/95 border-b-2 border-cyan-500/40 max-w-none">
                 <div class="flex items-center gap-3">
-                    <div id="header-team-icon" class="w-9 h-9 rounded-xl bg-cyan-950 border border-cyan-500 flex items-center justify-center text-cyan-400 text-sm">
+                    <div id="header-team-icon" class="w-9 h-9 rounded-xl bg-cyan-950 border border-cyan-500 flex items-center justify-center text-cyan-400 text-sm shadow">
                         <i class="fas fa-fire"></i>
                     </div>
                     <span id="game-team-name" class="text-cyan-300 font-extrabold uppercase font-epic text-xs md:text-sm">Equipo</span>
                 </div>
-                <div class="flex items-center gap-2 text-xs font-black bg-black/70 px-3.5 py-1.5 rounded-xl border border-slate-700">
+                <div class="flex items-center gap-2 text-xs font-black bg-black/70 px-3.5 py-1.5 rounded-xl border border-slate-700 shadow-inner">
                     <span class="text-orange-400">G1:<b id="score-g1">100</b></span> <span class="text-slate-600">|</span> 
                     <span class="text-yellow-400">G2:<b id="score-g2">100</b></span> <span class="text-slate-600">|</span> 
                     <span class="text-rose-400">G3:<b id="score-g3">100</b></span>
@@ -214,13 +240,13 @@
                 <div>
                     <div class="flex justify-between items-center mb-3">
                         <span id="mission-counter" class="text-cyan-300 font-bold text-xs bg-cyan-950 px-3 py-1 rounded-lg border border-cyan-500/40">Pregunta 1 / 10</span>
-                        <span class="text-yellow-400 font-black text-xs bg-black/60 px-3 py-1 rounded-lg border border-yellow-500/40">
+                        <span class="text-yellow-400 font-black text-xs bg-black/60 px-3 py-1 rounded-lg border border-yellow-500/40 shadow">
                             <i class="fas fa-star mr-1"></i> Mis Puntos: <span id="my-score">100</span>
                         </span>
                     </div>
 
                     <div class="bg-slate-950/90 border border-cyan-500/30 p-5 rounded-2xl text-left mb-5 shadow-inner">
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-1.5"><i class="fas fa-book-open mr-1"></i> Fuente Bíblica:</p>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-1.5"><i class="fas fa-book-open mr-1"></i> Búscalo en tu Biblia Católica:</p>
                         <p id="trivia-source" class="text-xs font-semibold text-cyan-200 mb-3 bg-cyan-950/60 p-2.5 rounded-xl border border-cyan-800/40">Cita...</p>
                         
                         <p id="trivia-question" class="text-base md:text-lg text-white font-bold leading-relaxed">Pregunta...</p>
@@ -229,38 +255,38 @@
                     <div id="trivia-options" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-left"></div>
                 </div>
 
-                <div id="feedback-msg" class="mt-4 font-bold text-sm hidden p-3 rounded-xl shadow-lg"></div>
+                <div id="feedback-msg" class="mt-4 font-bold text-sm hidden p-3.5 rounded-xl shadow-lg transition-all transform scale-100"></div>
             </main>
         </div>
 
         <!-- 4. ALERTA ROJA: INTERCAMBIO EXPRÉS -->
         <div id="screen-alert" class="screen text-center z-50 py-6">
             <div class="card-glass p-8 text-center bg-black/90 border-2 border-red-500 shadow-2xl max-w-xl w-full">
-                <div class="w-16 h-16 mx-auto rounded-3xl bg-red-600/30 border border-red-500 flex items-center justify-center text-3xl text-red-400 mb-4 animate-bounce">
+                <div class="w-16 h-16 mx-auto rounded-3xl bg-red-600/30 border border-red-500 flex items-center justify-center text-3xl text-red-400 mb-4 animate-bounce shadow-[0_0_30px_rgba(239,68,68,0.8)]">
                     <i class="fas fa-people-arrows"></i>
                 </div>
                 <h1 class="text-3xl font-black font-epic text-white mb-2">¡INTERCAMBIO EXPRÉS!</h1>
                 <p class="text-base text-yellow-300 font-bold mb-4">Rotación de viajeros en <span id="countdown" class="text-xl text-white font-mono bg-red-950 px-2.5 py-0.5 rounded border border-red-500">10</span> seg</p>
-                <div id="selected-travelers" class="bg-slate-950 p-4 rounded-xl border border-cyan-400/60 text-lg font-black text-cyan-300 uppercase mb-4 tracking-wide">Viajeros...</div>
+                <div id="selected-travelers" class="bg-slate-950 p-4 rounded-xl border border-cyan-400/60 text-lg font-black text-cyan-300 uppercase mb-4 tracking-wide shadow-inner">Viajeros...</div>
                 <p class="text-xs text-slate-300 mb-5">Destino al grupo: <strong id="swap-target" class="text-white font-epic text-sm">---</strong></p>
-                <button onclick="resumeGameAfterSwap()" class="btn-modern w-full py-3.5 text-sm bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]">Continuar Arena</button>
+                <button onclick="resumeGameAfterSwap()" class="btn-modern w-full py-3.5 text-sm bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.6)]">Continuar Arena</button>
             </div>
         </div>
 
         <!-- 5. PANTALLA FINAL -->
         <div id="screen-final" class="screen text-center py-6">
-            <div class="card-glass p-8 text-center border-t-4 border-yellow-400 w-full">
-                <i class="fas fa-crown text-6xl text-yellow-400 mb-3 animate-bounce"></i>
+            <div class="card-glass p-8 text-center border-t-4 border-yellow-400 w-full shadow-2xl">
+                <i class="fas fa-crown text-6xl text-yellow-400 mb-3 animate-bounce shadow-lg"></i>
                 <h1 class="text-3xl md:text-4xl font-black font-epic text-yellow-300 mb-3 uppercase">¡Arena Concluida!</h1>
                 <p class="text-slate-200 text-base mb-6">Tu puntaje final: <strong id="final-score" class="text-2xl text-cyan-300 font-mono">100</strong> puntos</p>
-                <button onclick="location.reload()" class="btn-modern px-6 py-3 text-xs bg-slate-800">Reiniciar Sistema</button>
+                <button onclick="location.reload()" class="btn-modern px-6 py-3 text-xs bg-slate-800 shadow-md">Reiniciar Sistema</button>
             </div>
         </div>
 
     </div>
 
     <!-- FIRMA OFICIAL AL PIE DE PÁGINA -->
-    <footer class="w-full text-center py-3 text-xs font-bold text-slate-400 tracking-widest uppercase border-t border-slate-800/80 mt-4 bg-slate-950/60 backdrop-blur-md">
+    <footer class="w-full text-center py-3 text-xs font-bold text-slate-400 tracking-widest uppercase border-t border-slate-800/80 mt-4 bg-slate-950/70 backdrop-blur-md z-10">
         Construido con pasión por el Catequista Maycol
     </footer>
 
@@ -281,7 +307,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "arena_estado_v2");
+        const gameRef = doc(db, "juego", "arena_estado_v3");
 
         const audio = document.getElementById('bg-audio');
         const musicIcon = document.getElementById('music-icon');
@@ -292,22 +318,49 @@
         };
 
         window.enterPortal = () => {
-            toggleMusic(); // Arrancar música automáticamente al entrar
+            toggleMusic();
             switchScreen('screen-welcome', 'screen-intro');
         };
 
-        const triviaQuestions = [
-            { source: "Índice de la Biblia Católica", q: "¿Cuántos libros integran oficialmente el Antiguo Testamento?", options: ["39 libros", "46 libros", "27 libros", "73 libros"], correct: 1 },
-            { source: "Profeta Isaías (Capítulo 40, v. 31)", q: "Los que esperan en el Señor renovarán sus fuerzas; subirán con alas como...", options: ["Palomas", "Águilas", "Leones", "Cóndores"], correct: 1 },
-            { source: "Libro de los Hechos (Capítulo 2, v. 3)", q: "¿En forma de qué elemento bajó el Espíritu Santo en Pentecostés?", options: ["Viento fuerte", "Fuego (lenguas)", "Paloma blanca", "Agua viva"], correct: 1 },
-            { source: "Libro de los Salmos (Salmo 119, v. 105)", q: "Dice: 'Tu palabra es una _______ para mis pasos'. ¿Qué palabra falta?", options: ["Antorcha", "Guía", "Lámpara", "Luz eterna"], correct: 2 },
-            { source: "Evangelio de San Mateo (Capítulo 5, v. 14)", q: "Jesús le dice a sus discípulos: 'Ustedes son la ___ del mundo'.", options: ["Sal", "Luz", "Verdad", "Vida"], correct: 1 },
-            { source: "Profeta Isaías (Capítulo 43, v. 1)", q: "Dice: 'No temas, porque yo te he rescatado; te he llamado por tu...'", options: ["Fe", "Nombre", "Espíritu", "Amor"], correct: 1 },
-            { source: "Primera Carta de San Juan (Cap. 4, v. 8)", q: "El texto afirma con contundencia una sola palabra como la definición de Dios:", options: ["Justicia", "Poder", "Amor", "Fuego"], correct: 2 },
-            { source: "Evangelio de San Mateo (Cap. 16, v. 18)", q: "Jesús le dice a Pedro: 'Y sobre esta ________ edificaré mi Iglesia'.", options: ["Columna", "Roca", "Piedra", "Fe"], correct: 2 },
-            { source: "Evangelio de San Juan (Cap. 14, v. 6)", q: "Jesús declara: 'Yo soy el Camino, la Verdad y la...'", options: ["Luz", "Paz", "Vida", "Puerta"], correct: 2 },
-            { source: "Libro del Apocalipsis (Capítulo 3, v. 16)", q: "Al ángel de la iglesia de Laodicea le dice: 'Como eres tibio... estoy por...'", options: ["Descartarte", "Vomitarte", "Olvidarte", "Castigarte"], correct: 1 }
-        ];
+        // BANCO DE PREGUNTAS 100% EXCLUSIVO Y DIFERENTE PARA CADA SUBGRUPO
+        const teamTrivia = {
+            1: [ // HUELLAS DE FUEGO (Pentateuco, Profetas y Apocalipsis)
+                { source: "Índice de la Biblia Católica", q: "¿Cuántos libros integran oficialmente el Antiguo Testamento?", options: ["39 libros", "46 libros", "27 libros", "73 libros"], correct: 1 },
+                { source: "Profeta Isaías (Capítulo 40, v. 31)", q: "Los que esperan en el Señor renovarán sus fuerzas; subirán con alas como...", options: ["Palomas", "Águilas", "Leones", "Cóndores"], correct: 1 },
+                { source: "Libro del Génesis (Capítulo 1, v. 3)", q: "Dios dijo: 'Hágase la...'. ¿Cuál fue la primera creación lumínica?", options: ["Estrella", "Luz", "Aurora", "Fuego"], correct: 1 },
+                { source: "Libro del Éxodo (Capítulo 3, v. 2)", q: "Dios se le apareció a Moisés en el desierto en medio de una zarza que ardía sin...", options: ["Hacer ruido", "Consumirse", "Dar calor", "Apagarse"], correct: 1 },
+                { source: "Libro de los Números (Capítulo 21, v. 9)", q: "Moisés levantó en el desierto una serpiente de qué material:", options: ["Oro puro", "Bronce", "Hierro", "Arcilla"], correct: 1 },
+                { source: "Profeta Daniel (Capítulo 6, v. 22)", q: "¿Quién cerró las fauces de los leones cuando Daniel fue arrojado al foso?", options: ["Un ángel", "El profeta Elías", "Una fuerza divina", "El mismo Dios"], correct: 0 },
+                { source: "Libro de los Hechos (Capítulo 2, v. 3)", q: "¿En forma de qué elemento bajó el Espíritu Santo sobre los apóstoles?", options: ["Viento huracanado", "Fuego (lenguas)", "Paloma blanca", "Luz cegadora"], correct: 1 },
+                { source: "Libro de los Salmos (Salmo 23, v. 1)", q: "El famoso salmo comienza diciendo: 'El Señor es mi...'", options: ["Guía y protector", "Pastor, nada me falta", "Refugio y fortaleza", "Luz y salvación"], correct: 1 },
+                { source: "Libro del Apocalipsis (Capítulo 3, v. 16)", q: "Al ángel de Laodicea le advierte: 'Como eres tibio... estoy por...'", options: ["Descartarte", "Vomitarte", "Olvidarte", "Castigarte"], correct: 1 },
+                { source: "Libro del Apocalipsis (Capítulo 21, v. 6)", q: "El Señor declara: 'Al que tenga sed, yo le daré gratuitamente de la fuente del agua de...'", options: ["La vida", "La gracia", "La salvación", "La eternidad"], correct: 0 }
+            ],
+            2: [ // VOCEROS DE LA LUZ (Estructura general, Salmos y Evangelios)
+                { source: "Índice General de la Biblia Católica", q: "Suma los libros del Antiguo y Nuevo Testamento para descubrir el total:", options: ["66 libros", "72 libros", "73 libros", "80 libros"], correct: 2 },
+                { source: "Libro de los Salmos (Salmo 119, v. 105)", q: "Dice: 'Tu palabra es una _______ para mis pasos'. ¿Qué palabra falta?", options: ["Antorcha", "Guía", "Lámpara", "Luz eterna"], correct: 2 },
+                { source: "Evangelio de San Mateo (Capítulo 5, v. 14)", q: "Jesús dice en el Sermón del Monte: 'Ustedes son la ___ del mundo'.", options: ["Sal", "Luz", "Verdad", "Vida"], correct: 1 },
+                { source: "Evangelio de San Lucas (Capítulo 1, v. 38)", q: "María respondió al ángel: 'Hágase en mí según...'", options: ["Tu voluntad", "Tu palabra", "El plan divino", "Tu diseño"], correct: 1 },
+                { source: "Evangelio de San Juan (Capítulo 1, v. 1)", q: "El evangelio comienza diciendo: 'En el principio ya existía la...'", options: ["Creación", "Verdad", "Palabra (Verbo)", "Luz"], correct: 2 },
+                { source: "Evangelio de San Marcos (Capítulo 1, v. 11)", q: "Se oyó una voz del cielo en el bautismo de Jesús que decía: 'Tú eres mi Hijo...'", options: ["Muy amado", "Predilecto", "Amado, en ti me complazco", "Santo y ungido"], correct: 2 },
+                { source: "Profeta Isaías (Capítulo 43, v. 1)", q: "Dios nos da identidad: 'No temas, porque yo te he rescatado; te he llamado por tu...'", options: ["Fe", "Nombre", "Espíritu", "Amor"], correct: 1 },
+                { source: "Libro de los Proverbios (Capítulo 3, v. 5)", q: "Recomienda: 'Confía en el Señor de todo corazón y no te fíes de tu propia...'", options: ["Fuerza", "Inteligencia", "Prudencia", "Razonamiento"], correct: 1 },
+                { source: "Carta a los Efesios (Capítulo 6, v. 14)", q: "¿Qué elemento de la armadura espiritual se ajusta primero a la cintura?", options: ["La justicia", "La verdad", "La fe", "La paz"], correct: 1 },
+                { source: "Evangelio de San Juan (Capítulo 14, v. 6)", q: "Jesús declara solemnemente: 'Yo soy el Camino, la Verdad y la...'", options: ["Luz", "Paz", "Vida", "Puerta"], correct: 2 }
+            ],
+            3: [ // LATIDO ETERNO (Nuevo Testamento, Cartas y Vida)
+                { source: "Índice del Nuevo Testamento", q: "¿Cuántos libros componen exclusivamente el Nuevo Testamento?", options: ["24 libros", "27 libros", "30 libros", "21 libros"], correct: 1 },
+                { source: "Primera Carta de San Juan (Cap. 4, v. 8)", q: "El texto afirma con contundencia una sola palabra como la definición suprema de Dios:", options: ["Justicia", "Poder", "Amor", "Fuego"], correct: 2 },
+                { source: "Evangelio de San Mateo (Capítulo 16, v. 18)", q: "Jesús le dice a Simón: 'Y sobre esta ________ edificaré mi Iglesia'.", options: ["Columna", "Roca", "Piedra", "Fe"], correct: 2 },
+                { source: "Evangelio de San Juan (Capítulo 2, v. 9)", q: "¿En qué se convirtió el agua durante el primer milagro de Jesús en las Bodas de Caná?", options: ["Aceite", "Vino", "Leche sagrada", "Néctar"], correct: 1 },
+                { source: "Libro de los Hechos (Capítulo 1, v. 8)", q: "Jesús promete: 'Recibiréis la fuerza del ________ Santo que vendrá sobre vosotros'.", options: ["Poder", "Espíritu", "Fuego", "Amor"], correct: 1 },
+                { source: "Carta a los Gálatas (Capítulo 5, v. 22)", q: "El primer fruto del Espíritu Santo mencionado por San Pablo es el:", options: ["Amor", "Gozo", "Paz", "Bondad"], correct: 0 },
+                { source: "Carta a los Romanos (Capítulo 8, v. 28)", q: "San Pablo afirma que en todas las cosas interviene Dios para bien de los que le... ", options: ["Buscan", "aman", "obedecen", "alaban"], correct: 1 },
+                { source: "Evangelio de San Lucas (Capítulo 15, v. 7)", q: "Jesús dice que hay más alegría en el cielo por un solo pecador que se... ", options: ["Bautiza", "Arrepiente", "Convierte", "Salva"], correct: 1 },
+                { source: "Evangelio de San Mateo (Capítulo 28, v. 19)", q: "El mandato misionero final es: 'Vayan y hagan discípulos a todas las naciones, bautizándolos en el nombre del...'", options: ["Padre y del Hijo y del Espíritu Santo", "Señor Jesucristo", "Dios Todopoderoso", "Mesías"], correct: 0 },
+                { source: "Libro de Josué (Capítulo 1, v. 9)", q: "La promesa que alienta es: 'Sé fuerte y valiente; no temas... porque el Señor tu Dios está contigo dondequiera que...'", options: ["Vayas", "Camines", "Luches", "Pises"], correct: 0 }
+            ]
+        };
 
         let myTeamId = 0;
         let currentQIndex = 0;
@@ -357,20 +410,21 @@
         };
 
         window.checkAnswer = async (selectedIndex) => {
-            const q = triviaQuestions[currentQIndex];
+            const questions = teamTrivia[myTeamId];
+            const q = questions[currentQIndex];
             const feedback = document.getElementById('feedback-msg');
             feedback.classList.remove('hidden');
 
             const upd = {};
             if (selectedIndex === q.correct) {
                 myScore += 10;
-                feedback.className = "mt-4 font-bold text-sm bg-emerald-950/90 p-3.5 rounded-xl border border-emerald-500 text-emerald-300";
-                feedback.innerHTML = `<i class="fas fa-check-circle mr-1"></i> ¡Correcto! +10 puntos.`;
+                feedback.className = "mt-4 font-bold text-sm bg-emerald-950/95 p-3.5 rounded-xl border border-emerald-500 text-emerald-300 shadow-xl";
+                feedback.innerHTML = `<i class="fas fa-check-circle mr-1"></i> ¡Aleluya! ¡Correcto! +10 puntos.`;
             } else {
                 myScore -= 10;
                 if(myScore < 0) myScore = 0;
-                feedback.className = "mt-4 font-bold text-sm bg-rose-950/90 p-3.5 rounded-xl border border-rose-500 text-rose-300";
-                feedback.innerHTML = `<i class="fas fa-times-circle mr-1"></i> Incorrecto. Era: <b>${q.options[q.correct]}</b> (-10 pts)`;
+                feedback.className = "mt-4 font-bold text-sm bg-rose-950/95 p-3.5 rounded-xl border border-rose-500 text-rose-300 shadow-xl";
+                feedback.innerHTML = `<i class="fas fa-times-circle mr-1"></i> Incorrecto. La respuesta correcta era: <b>${q.options[q.correct]}</b> (-10 pts)`;
             }
             document.getElementById('my-score').innerText = myScore;
 
@@ -382,20 +436,21 @@
                 feedback.classList.add('hidden');
                 if (currentQIndex === 3 || currentQIndex === 6) {
                     triggerSwapAlert();
-                } else if (currentQIndex < triviaQuestions.length) {
+                } else if (currentQIndex < questions.length) {
                     loadTriviaQuestion();
                 } else {
                     switchScreen('screen-game', 'screen-final');
                     document.getElementById('final-score').innerText = myScore;
                 }
-            }, 1800);
+            }, 2000);
         };
 
         function loadTriviaQuestion() {
-            const q = triviaQuestions[currentQIndex];
+            const questions = teamTrivia[myTeamId];
+            const q = questions[currentQIndex];
             document.getElementById('game-team-name').innerText = teamData[myTeamId].nombre;
             document.getElementById('header-team-icon').innerHTML = `<i class="fas ${teamData[myTeamId].icono}"></i>`;
-            document.getElementById('mission-counter').innerText = `Pregunta ${currentQIndex + 1} / ${triviaQuestions.length}`;
+            document.getElementById('mission-counter').innerText = `Pregunta ${currentQIndex + 1} / ${questions.length}`;
             document.getElementById('my-score').innerText = myScore;
             document.getElementById('trivia-source').innerText = q.source;
             document.getElementById('trivia-question').innerText = q.q;
@@ -405,7 +460,7 @@
             q.options.forEach((opt, idx) => {
                 optContainer.innerHTML += `
                     <button onclick="checkAnswer(${idx})" class="btn-option">
-                        <span class="w-8 h-8 rounded-xl bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-300 font-extrabold text-sm">${String.fromCharCode(65 + idx)}</span>
+                        <span class="w-8 h-8 rounded-xl bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-300 font-extrabold text-sm shadow">${String.fromCharCode(65 + idx)}</span>
                         <span class="text-sm md:text-base">${opt}</span>
                     </button>
                 `;
