@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>El Eco de la Verdad - Arena Suprema Admin</title>
+    <title>El Eco de la Verdad - Arena Suprema v6</title>
     
+    <!-- Librerías de CSS y Fuentes -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- LIBRERÍA PROFESIONAL PARA ARRASTRAR Y SOLTAR (SortableJS) -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
     <style>
         :root {
             --neon-cyan: #06b6d4; --neon-cyan-glow: rgba(6, 182, 212, 0.6);
             --neon-gold: #fbbf24; --neon-gold-glow: rgba(251, 191, 36, 0.6);
             --neon-red: #ef4444;  --neon-red-glow: rgba(239, 68, 68, 0.6);
-            --bg-deep: #020617;    --bg-glass: rgba(15, 23, 42, 0.8);
+            --bg-deep: #020617;    --bg-glass: rgba(15, 23, 42, 0.75);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -76,6 +80,16 @@
         }
         .animate-divine { animation: divine-float 4s ease-in-out infinite; }
 
+        @keyframes glitch-anim {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+        .glitch-error { animation: glitch-anim 0.3s infinite; border-color: var(--neon-red) !important; color: var(--neon-red); }
+
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100dvh;
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
@@ -104,10 +118,15 @@
         .progress-fill { height: 100%; background: var(--neon-cyan); transition: width 0.1s linear, background 0.3s; }
         .progress-fill.danger { background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
 
-        .dnd-container { display: flex; flex-direction: column; gap: 0.5rem; min-height: 200px; padding: 1rem; background: rgba(0,0,0,0.4); border-radius: 1rem; }
-        .dnd-item { padding: 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; color: white; font-weight: bold; cursor: grab; text-align: center; transition: transform 0.2s; }
-        .dnd-item:active { cursor: grabbing; transform: scale(1.05); border-color: var(--neon-cyan); z-index: 50; }
-        .dnd-item.dragging { opacity: 0.5; }
+        /* ESTILOS MEJORADOS PARA DRAG AND DROP */
+        .dnd-container { display: flex; flex-direction: column; gap: 0.75rem; min-height: 200px; padding: 1rem; background: rgba(0,0,0,0.4); border-radius: 1rem; touch-action: none; }
+        .dnd-item { 
+            padding: 1.25rem 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; 
+            color: white; font-weight: bold; cursor: grab; text-align: left; transition: border-color 0.2s;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+        }
+        .dnd-item:active { cursor: grabbing; }
+        .dnd-item.dragging { opacity: 0.4; background: #0f172a; border: 2px dashed var(--neon-cyan); transform: scale(1.02); }
 
         .overlay-fx { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(10px); }
         .overlay-fx.show { opacity: 1; pointer-events: all; }
@@ -117,7 +136,7 @@
 
         .ice-texture { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>'); background-color: rgba(2, 132, 199, 0.9); }
 
-        /* PANEL ADMIN MEJORADO */
+        /* PANEL ADMIN */
         #admin-panel {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98);
             z-index: 99999; display: none; flex-direction: column; padding: 1.5rem; overflow-y: auto; backdrop-filter: blur(10px);
@@ -159,13 +178,13 @@
 
     <!-- VISTAS DE LA APP -->
     
-    <!-- 0. BIENVENIDA CON BOTON ADMIN -->
+    <!-- 0. BIENVENIDA -->
     <div id="view-welcome" class="screen active">
         <div class="screen-content flex flex-col items-center text-center">
             <div class="relative mb-8">
                 <i class="fas fa-shield-cross text-8xl text-cyan-400 drop-shadow-[0_0_30px_#06b6d4] animate-divine"></i>
             </div>
-            <h1 class="text-5xl md:text-6xl font-black font-epic text-white mb-4 leading-tight tracking-wide">
+            <h1 id="god-mode-trigger" class="text-5xl md:text-6xl font-black font-epic text-white mb-4 leading-tight tracking-wide cursor-pointer">
                 EL ECO DE<br><span class="text-cyan-400">LA VERDAD</span>
             </h1>
             <p class="text-slate-400 text-sm tracking-[0.4em] uppercase mb-12 font-bold">Protocolo de Confirmación</p>
@@ -174,7 +193,7 @@
                 <i class="fas fa-power-off"></i> INICIAR SISTEMA
             </button>
             
-            <!-- Botón Secreto Admin -->
+            <!-- Botón Admin -->
             <button onclick="System.loginAdmin()" class="mt-12 text-slate-500 text-xs uppercase font-bold tracking-widest hover:text-cyan-400 transition flex items-center gap-2 cursor-pointer p-2">
                 <i class="fas fa-lock"></i> Acceso Coordinador
             </button>
@@ -227,7 +246,7 @@
         </div>
     </div>
 
-    <!-- 2. LOBBY (PERSONALIZAR NOMBRE Y CONECTAR) -->
+    <!-- 2. LOBBY -->
     <div id="view-lobby" class="screen">
         <div class="screen-content text-center">
             <div class="cyber-panel p-8 w-full max-w-md mx-auto text-left">
@@ -235,7 +254,6 @@
                     <div id="lobby-icon" class="text-3xl"></div>
                     <div class="flex-grow">
                         <label class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Edita el Nombre de tu Equipo:</label>
-                        <!-- AQUÍ PUEDEN EDITAR SU NOMBRE DE EQUIPO -->
                         <input type="text" id="custom-team-name" class="w-full bg-transparent border-b-2 border-cyan-500/50 text-xl font-black font-epic text-cyan-300 uppercase py-1 focus:outline-none focus:border-cyan-400 transition" value="Equipo">
                     </div>
                 </div>
@@ -285,8 +303,8 @@
                 <div class="bg-cyan-950 text-cyan-400 font-black text-xs px-3 py-2 rounded-xl border border-cyan-800 uppercase tracking-widest">
                     FASE <span id="arena-counter" class="text-white text-sm">1/10</span>
                 </div>
-                <!-- Puntuaciones dinámicas con nombres personalizados -->
-                <div id="hud-scores" class="flex gap-2 text-xs font-black bg-black rounded-xl px-3 py-1.5 border border-slate-800 overflow-x-auto whitespace-nowrap scrollbar-hide max-w-[60%]">
+                <!-- Puntuaciones dinámicas -->
+                <div id="hud-scores" class="flex gap-2 text-xs font-black bg-black rounded-xl px-3 py-1.5 border border-slate-800 overflow-x-auto whitespace-nowrap max-w-[60%]">
                     <!-- JS -->
                 </div>
             </div>
@@ -313,6 +331,7 @@
 
                 <h2 id="arena-q" class="text-xl md:text-2xl font-black text-white leading-snug mb-8 border-l-4 border-cyan-500 pl-4 py-1 flex-shrink-0">...</h2>
 
+                <!-- ZONA DE ACCIÓN: Se inyectan los botones o bloques aquí -->
                 <div id="arena-action" class="w-full flex-grow flex flex-col justify-end gap-3 pb-2"></div>
             </div>
         </div>
@@ -338,7 +357,6 @@
             <button onclick="document.getElementById('admin-panel').style.display='none'" class="text-slate-400 hover:text-white text-3xl"><i class="fas fa-times"></i></button>
         </div>
         
-        <!-- CONTROL MAESTRO DE INICIO -->
         <div class="bg-cyan-950/60 p-5 rounded-2xl border border-cyan-500 mb-6 shadow-[0_0_20px_rgba(6,182,212,0.2)] text-center">
             <p class="text-cyan-200 font-bold mb-4 text-sm">Control de Partida. Inicia cuando los equipos que deseas participen estén listos (✅).</p>
             <button id="btn-admin-start" onclick="System.adminStartGame()" class="btn-core btn-cyan w-full py-4 text-lg rounded-xl shadow-lg cursor-pointer">
@@ -362,6 +380,7 @@
         </div>
     </div>
 
+    <!-- SCRIPT PRINCIPAL DINÁMICO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -376,7 +395,7 @@
         };
         const app = initializeApp(fbConfig);
         const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "arena_engine_admin_v1"); // ID Limpio
+        const gameRef = doc(db, "juego", "arena_engine_admin_v2"); // Refreshed ID
 
         const AudioSys = {
             ctx: null,
@@ -481,7 +500,6 @@
             
             selectTeam(tid) {
                 this.id = tid; AudioSys.tick(); this.vibrate(50);
-                // Pre-llenar el input con el nombre default
                 document.getElementById('custom-team-name').value = TeamMeta[tid].name;
                 document.getElementById('lobby-icon').innerHTML = `<i class="fas ${TeamMeta[tid].icon} ${TeamMeta[tid].color}"></i>`;
                 this.nav('view-lobby');
@@ -590,7 +608,7 @@
                         if(id !== this.id && this.dbCache && this.dbCache[`g${id}_r`]) {
                             let tName = this.dbCache[`g${id}_cname`] || TeamMeta[id].name;
                             let b = document.createElement('button');
-                            b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-4 rounded-xl mb-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer text-sm";
+                            b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-4 rounded-xl mb-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer text-sm uppercase";
                             b.innerHTML = `<i class="fas fa-snowflake mr-2 text-xl"></i> ATACAR A: ${tName}`;
                             b.onclick = async () => {
                                 const upd = {}; upd[`sab_${id}`] = Date.now();
@@ -610,22 +628,26 @@
                 else if (m.type === "dnd") {
                     area.innerHTML = `<div id="dnd-box" class="dnd-container"></div><button id="btn-dnd" class="btn-core btn-cyan w-full py-4 mt-4 rounded-xl hidden cursor-pointer">CONFIRMAR ORDEN</button>`;
                     let box = document.getElementById('dnd-box'), btn = document.getElementById('btn-dnd');
-                    let dragged = null;
                     
                     let shuffled = m.items.map((it, i) => ({it, i})).sort(()=>Math.random()-0.5);
                     
                     shuffled.forEach(obj => {
-                        let el = document.createElement('div'); el.className = 'dnd-item'; el.innerText = obj.it; el.dataset.id = obj.i;
-                        el.addEventListener('touchstart', e => { dragged = el; el.classList.add('dragging'); this.vibrate(20); }, {passive:true});
-                        el.addEventListener('touchmove', e => {
-                            if(!dragged) return; e.preventDefault();
-                            const touchY = e.touches[0].clientY;
-                            const siblings = [...box.querySelectorAll('.dnd-item:not(.dragging)')];
-                            let nextNode = siblings.find(sib => touchY <= sib.getBoundingClientRect().top + sib.offsetHeight / 2);
-                            box.insertBefore(dragged, nextNode); btn.classList.remove('hidden');
-                        }, {passive:false});
-                        el.addEventListener('touchend', () => { if(dragged){ dragged.classList.remove('dragging'); dragged = null; AudioSys.tick(); }});
+                        let el = document.createElement('div'); 
+                        el.className = 'dnd-item shadow-md'; 
+                        el.innerHTML = `<i class="fas fa-grip-lines text-slate-500 mr-3"></i> <span>${obj.it}</span>`;
+                        el.dataset.id = obj.i;
                         box.appendChild(el);
+                    });
+                    
+                    // Inicializar SortableJS para Drag & Drop Profesional
+                    new Sortable(box, {
+                        animation: 150,
+                        ghostClass: 'dragging',
+                        onEnd: () => {
+                            btn.classList.remove('hidden');
+                            AudioSys.tick();
+                            System.vibrate(20);
+                        }
                     });
                     
                     btn.onclick = () => {
@@ -712,13 +734,10 @@
             },
             async adminStartGame() {
                 if(!this.dbCache) return;
-                // Contar cuantos listos hay
                 let listos = 0;
                 for(let i=1; i<=5; i++) { if(this.dbCache[`g${i}_r`]) listos++; }
                 
-                if(listos === 0) {
-                    alert("No hay ningún equipo conectado en la sala de espera aún."); return;
-                }
+                if(listos === 0) { alert("No hay equipos conectados aún."); return; }
                 if(confirm(`Hay ${listos} equipos listos. ¿Deseas iniciar la maratón AHORA?`)) {
                     await updateDoc(gameRef, { fase: 1 });
                     document.getElementById('admin-panel').style.display = 'none';
@@ -731,7 +750,7 @@
                         let tName = this.dbCache[`g${i}_cname`] || TeamMeta[i].name;
                         html += `
                             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                                <h3 class="font-black mb-2 text-white"><i class="fas ${TeamMeta[i].icon} ${TeamMeta[i].color} mr-1"></i> ${tName}</h3>
+                                <h3 class="font-black mb-2 text-white uppercase"><i class="fas ${TeamMeta[i].icon} ${TeamMeta[i].color} mr-1"></i> ${tName}</h3>
                                 <div class="flex gap-2">
                                     <button onclick="System.adminModScore(${i}, 50)" class="btn-core bg-green-700 px-3 py-1 rounded text-xs">+50</button>
                                     <button onclick="System.adminModScore(${i}, -50)" class="btn-core bg-red-700 px-3 py-1 rounded text-xs">-50</button>
@@ -748,7 +767,7 @@
                 await updateDoc(gameRef, upd);
             },
             async adminForceEnd() {
-                if(confirm("¿Forzar el final de la maratón para todos los equipos en pantalla?")) {
+                if(confirm("¿Forzar el final de la maratón para todos los equipos?")) {
                     await updateDoc(gameRef, { end: true });
                     document.getElementById('admin-panel').style.display = 'none';
                 }
@@ -770,7 +789,7 @@
             if(!snap.exists()) return;
             const d = snap.data(); System.dbCache = d;
 
-            // HUD Superior Dinámico (Nombres Personalizados)
+            // HUD Superior Dinámico
             let hudHTML = "";
             let sortedAdmin = [];
             
@@ -781,7 +800,6 @@
                 
                 if(isReady) {
                     sortedAdmin.push({ id: i, n: tName, s: score });
-                    // Acortar nombre en el HUD superior para que entre (primeras 8 letras)
                     let shortName = tName.length > 8 ? tName.substring(0,8)+"." : tName;
                     hudHTML += `<span class="${TeamMeta[i].color} uppercase">${shortName}:<b>${score}</b></span><span class="text-slate-700">|</span>`;
                 }
@@ -789,7 +807,6 @@
             if(hudHTML) hudHTML = hudHTML.slice(0, -42);
             document.getElementById('hud-scores').innerHTML = hudHTML || '<span class="text-slate-500">Esperando...</span>';
 
-            // Actualizar Panel de Admin en Vivo si está abierto
             if(document.getElementById('admin-panel').style.display === 'flex') {
                 System.buildAdminControls();
             }
@@ -803,7 +820,7 @@
             });
             document.getElementById('admin-live-podium').innerHTML = livePodHTML || '<span class="text-slate-500 text-xs">Sin datos...</span>';
 
-            // Lobby (Actualización del grid)
+            // Lobby update
             if (document.getElementById('view-lobby').classList.contains('active')) {
                 let gridHTML = "";
                 for(let i=1; i<=5; i++) {
@@ -813,14 +830,14 @@
                 document.getElementById('sync-grid').innerHTML = gridHTML;
             }
 
-            // INICIO DIRIGIDO POR EL ADMIN (Transición Fase 0 -> 1)
+            // INICIO ADMIN (Fase 1)
             if(d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
                 System.prevScores = {};
                 for(let i=1; i<=5; i++) System.prevScores[i] = d[`g${i}_s`] || 100;
                 System.runRoulette();
             }
 
-            // TOASTS DE COMPETENCIA
+            // TOASTS
             if(d.fase >= 1 && System.prevScores) {
                 for(let i=1; i<=5; i++) {
                     if(i !== System.id && d[`g${i}_r`] && (d[`g${i}_s`] || 100) > System.prevScores[i]) {
