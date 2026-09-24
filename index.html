@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>El Eco de la Verdad - Motor Dios v2</title>
+    <title>El Eco de la Verdad - Arena Suprema v5 (5 Equipos Únicos)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
@@ -14,7 +14,6 @@
             --neon-cyan: #06b6d4; --neon-cyan-glow: rgba(6, 182, 212, 0.6);
             --neon-gold: #fbbf24; --neon-gold-glow: rgba(251, 191, 36, 0.6);
             --neon-red: #ef4444;  --neon-red-glow: rgba(239, 68, 68, 0.6);
-            --neon-purple: #a855f7;
             --bg-deep: #020617;    --bg-glass: rgba(15, 23, 42, 0.75);
         }
 
@@ -47,26 +46,21 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(6, 182, 212, 0.05);
             position: relative; overflow: hidden;
         }
-        .cyber-panel::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
-            transform: skewX(-20deg); animation: shine 6s infinite;
-        }
 
         .btn-core {
             position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em;
-            display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem; cursor: pointer;
         }
         .btn-core:active { transform: scale(0.96); }
         
-        .btn-cyan { background: linear-gradient(135deg, #0284c7, #06b6d4); border: 1px solid #22d3ee; box-shadow: 0 0 20px var(--neon-cyan-glow); color: white; cursor: pointer; }
+        .btn-cyan { background: linear-gradient(135deg, #0284c7, #06b6d4); border: 1px solid #22d3ee; box-shadow: 0 0 20px var(--neon-cyan-glow); color: white; }
         .btn-cyan:hover { box-shadow: 0 0 40px var(--neon-cyan); text-shadow: 0 0 10px white; }
         
-        .btn-gold { background: linear-gradient(135deg, #b45309, #f59e0b); border: 1px solid #fbbf24; box-shadow: 0 0 20px var(--neon-gold-glow); color: #000; cursor: pointer; }
+        .btn-gold { background: linear-gradient(135deg, #b45309, #f59e0b); border: 1px solid #fbbf24; box-shadow: 0 0 20px var(--neon-gold-glow); color: #000; }
         .btn-gold:hover { box-shadow: 0 0 40px var(--neon-gold); }
 
-        .btn-danger { background: linear-gradient(135deg, #991b1b, #ef4444); border: 1px solid #f87171; box-shadow: 0 0 20px var(--neon-red-glow); color: white; cursor: pointer; }
+        .btn-danger { background: linear-gradient(135deg, #991b1b, #ef4444); border: 1px solid #f87171; box-shadow: 0 0 20px var(--neon-red-glow); color: white; }
         
         .cyber-input {
             width: 100%; background: rgba(0,0,0,0.6); border: 2px solid #0369a1;
@@ -76,8 +70,6 @@
         .cyber-input:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 20px rgba(14, 165, 233, 0.4); }
         .cyber-input::placeholder { color: #475569; }
 
-        @keyframes shine { 0% { left: -100%; } 20%, 100% { left: 200%; } }
-        
         @keyframes divine-float {
             0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 20px var(--neon-gold)); }
             50% { transform: translateY(-15px) scale(1.05); filter: drop-shadow(0 0 50px #fff); }
@@ -154,7 +146,7 @@
         }
 
         #admin-panel {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96);
             z-index: 99999; display: none; flex-direction: column; padding: 2rem; overflow-y: auto;
         }
     </style>
@@ -187,7 +179,7 @@
     <div id="ov-frozen" class="overlay-fx ice-texture border-8 border-cyan-300">
         <i class="fas fa-snowflake text-9xl text-white mb-6 animate-spin" style="animation-duration: 10s; filter: drop-shadow(0 0 20px #fff);"></i>
         <h2 class="font-epic text-5xl font-black text-white text-center drop-shadow-lg">SABOTAJE</h2>
-        <p class="text-xl font-bold text-cyan-100 text-center mt-4 uppercase tracking-widest">Judas te ha congelado</p>
+        <p class="text-xl font-bold text-cyan-100 text-center mt-4 uppercase tracking-widest">Un rival te ha congelado</p>
         <p class="text-7xl font-black text-white mt-8 drop-shadow-[0_0_20px_#fff]" id="frozen-timer">10</p>
     </div>
 
@@ -197,11 +189,12 @@
             <div class="relative mb-8">
                 <i class="fas fa-shield-cross text-8xl text-cyan-400 drop-shadow-[0_0_30px_#06b6d4] animate-divine"></i>
             </div>
+            <!-- El título es el trigger secreto para abrir el panel de control con PIN -->
             <h1 id="god-mode-trigger" class="text-5xl md:text-6xl font-black font-epic text-white mb-4 leading-tight tracking-wide cursor-pointer">
                 EL ECO DE<br><span class="text-cyan-400">LA VERDAD</span>
             </h1>
             <p class="text-slate-400 text-sm tracking-[0.4em] uppercase mb-12 font-bold">Protocolo de Confirmación</p>
-            <button onclick="System.initAudioAndStart()" class="btn-core btn-cyan w-full max-w-sm py-5 text-xl rounded-2xl">
+            <button onclick="System.initAudioAndStart()" class="btn-core btn-cyan w-full max-w-sm py-5 text-xl rounded-2xl cursor-pointer">
                 <i class="fas fa-power-off"></i> INICIAR SISTEMA
             </button>
         </div>
@@ -210,27 +203,41 @@
     <div id="view-teams" class="screen">
         <div class="screen-content text-center">
             <h2 class="text-3xl font-black font-epic text-cyan-300 mb-2 uppercase">Identifica tu Legión</h2>
-            <p class="text-slate-400 text-sm mb-8">Un solo dispositivo será la espada del equipo.</p>
+            <p class="text-slate-400 text-sm mb-8">Selecciona tu subgrupo (pueden participar de 3 hasta 5 equipos).</p>
             
-            <div class="flex flex-col gap-5 w-full max-w-md mx-auto">
-                <button onclick="System.selectTeam(1)" class="cyber-panel p-6 flex items-center justify-between hover:border-orange-500 transition group cursor-pointer">
-                    <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 rounded-full bg-orange-950 border border-orange-500 flex items-center justify-center text-orange-500 text-2xl group-hover:bg-orange-500 group-hover:text-white transition"><i class="fas fa-fire"></i></div>
-                        <span class="text-xl font-black text-white uppercase tracking-wider">Huellas de Fuego</span>
+            <div class="flex flex-col gap-4 w-full max-w-md mx-auto max-h-[60vh] overflow-y-auto pr-1">
+                <button onclick="System.selectTeam(1)" class="cyber-panel p-5 flex items-center justify-between hover:border-orange-500 transition group cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-950 border border-orange-500 flex items-center justify-center text-orange-500 text-xl group-hover:bg-orange-500 group-hover:text-white transition"><i class="fas fa-fire"></i></div>
+                        <span class="text-lg font-black text-white uppercase tracking-wider">Huellas de Fuego</span>
                     </div>
                     <i class="fas fa-chevron-right text-slate-500"></i>
                 </button>
-                <button onclick="System.selectTeam(2)" class="cyber-panel p-6 flex items-center justify-between hover:border-yellow-400 transition group cursor-pointer">
-                    <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 rounded-full bg-yellow-950 border border-yellow-400 flex items-center justify-center text-yellow-400 text-2xl group-hover:bg-yellow-400 group-hover:text-black transition"><i class="fas fa-bolt"></i></div>
-                        <span class="text-xl font-black text-white uppercase tracking-wider">Voceros de la Luz</span>
+                <button onclick="System.selectTeam(2)" class="cyber-panel p-5 flex items-center justify-between hover:border-yellow-400 transition group cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-yellow-950 border border-yellow-400 flex items-center justify-center text-yellow-400 text-xl group-hover:bg-yellow-400 group-hover:text-black transition"><i class="fas fa-bolt"></i></div>
+                        <span class="text-lg font-black text-white uppercase tracking-wider">Voceros de la Luz</span>
                     </div>
                     <i class="fas fa-chevron-right text-slate-500"></i>
                 </button>
-                <button onclick="System.selectTeam(3)" class="cyber-panel p-6 flex items-center justify-between hover:border-rose-500 transition group cursor-pointer">
-                    <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 rounded-full bg-rose-950 border border-rose-500 flex items-center justify-center text-rose-500 text-2xl group-hover:bg-rose-500 group-hover:text-white transition"><i class="fas fa-heart"></i></div>
-                        <span class="text-xl font-black text-white uppercase tracking-wider">Latido Eterno</span>
+                <button onclick="System.selectTeam(3)" class="cyber-panel p-5 flex items-center justify-between hover:border-rose-500 transition group cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-rose-950 border border-rose-500 flex items-center justify-center text-rose-500 text-xl group-hover:bg-rose-500 group-hover:text-white transition"><i class="fas fa-heart"></i></div>
+                        <span class="text-lg font-black text-white uppercase tracking-wider">Latido Eterno</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-500"></i>
+                </button>
+                <button onclick="System.selectTeam(4)" class="cyber-panel p-5 flex items-center justify-between hover:border-emerald-500 transition group cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-950 border border-emerald-500 flex items-center justify-center text-emerald-500 text-xl group-hover:bg-emerald-500 group-hover:text-white transition"><i class="fas fa-shield"></i></div>
+                        <span class="text-lg font-black text-white uppercase tracking-wider">Escudo de la Fe</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-500"></i>
+                </button>
+                <button onclick="System.selectTeam(5)" class="cyber-panel p-5 flex items-center justify-between hover:border-purple-500 transition group cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-purple-950 border border-purple-500 flex items-center justify-center text-purple-500 text-xl group-hover:bg-purple-500 group-hover:text-white transition"><i class="fas fa-crown"></i></div>
+                        <span class="text-lg font-black text-white uppercase tracking-wider">Testigos del Reino</span>
                     </div>
                     <i class="fas fa-chevron-right text-slate-500"></i>
                 </button>
@@ -250,21 +257,19 @@
                 </div>
 
                 <div class="bg-slate-800 border-l-4 border-cyan-500 p-4 mb-6 text-sm text-slate-300 font-medium">
-                    <i class="fas fa-info-circle text-cyan-400 mr-2"></i> Anota a tus <b class="text-white">guerreros</b> separados por coma. La IA elegirá quién ejecuta cada misión.
+                    <i class="fas fa-info-circle text-cyan-400 mr-2"></i> Anota a tus <b class="text-white">guerreros</b> separados por coma.
                 </div>
                 
-                <textarea id="input-names" class="cyber-input h-32 mb-6" placeholder="Ej: Juan, Pedro, Maria, Carlos, Ana, Luis, Sofia"></textarea>
+                <textarea id="input-names" class="cyber-input h-32 mb-6" placeholder="Ej: Juan, Pedro, Maria, Carlos, Ana..."></textarea>
                 
-                <button id="btn-ready" onclick="System.commitLobby()" class="btn-core btn-cyan w-full py-5 rounded-xl text-lg">
+                <button id="btn-ready" onclick="System.commitLobby()" class="btn-core btn-cyan w-full py-5 rounded-xl text-lg cursor-pointer">
                     <i class="fas fa-satellite-dish"></i> ENLAZAR AL SERVIDOR
                 </button>
                 
                 <div id="lobby-waiting" class="hidden mt-4">
-                    <p class="text-yellow-400 font-bold uppercase text-center text-sm mb-4 animate-pulse"><i class="fas fa-spinner fa-spin mr-2"></i> Esperando conexión de rivales...</p>
-                    <div class="grid grid-cols-3 gap-2 text-center text-xs font-black uppercase">
-                        <div class="bg-slate-900 border border-slate-700 rounded p-2 text-slate-500" id="sync-1">Fuego<br><span class="text-lg">❌</span></div>
-                        <div class="bg-slate-900 border border-slate-700 rounded p-2 text-slate-500" id="sync-2">Luz<br><span class="text-lg">❌</span></div>
-                        <div class="bg-slate-900 border border-slate-700 rounded p-2 text-slate-500" id="sync-3">Latido<br><span class="text-lg">❌</span></div>
+                    <p class="text-yellow-400 font-bold uppercase text-center text-sm mb-4 animate-pulse"><i class="fas fa-spinner fa-spin mr-2"></i> Esperando conexión de los demás equipos...</p>
+                    <div id="sync-grid" class="grid grid-cols-5 gap-1.5 text-center text-[10px] font-black uppercase">
+                        <!-- Generado dinámicamente -->
                     </div>
                 </div>
             </div>
@@ -281,7 +286,7 @@
                 <div id="roulette-wheel" class="roulette-wheel"></div>
             </div>
 
-            <button id="btn-accept-mission" onclick="System.renderArena()" class="btn-core btn-gold px-10 py-5 rounded-2xl text-xl w-full max-w-sm opacity-0 transition-opacity duration-500 pointer-events-none">
+            <button id="btn-accept-mission" onclick="System.renderArena()" class="btn-core btn-gold px-10 py-5 rounded-2xl text-xl w-full max-w-sm opacity-0 transition-opacity duration-500 pointer-events-none cursor-pointer">
                 <i class="fas fa-hand-paper"></i> SOY YO. ACEPTO.
             </button>
         </div>
@@ -293,10 +298,9 @@
                 <div class="bg-cyan-950 text-cyan-400 font-black text-xs px-3 py-2 rounded-xl border border-cyan-800 uppercase tracking-widest">
                     FASE <span id="arena-counter" class="text-white text-sm">1/10</span>
                 </div>
-                <div class="flex gap-2 text-xs md:text-sm font-black bg-black rounded-xl px-3 py-1.5 border border-slate-800">
-                    <span class="text-orange-500">🔥<span id="sc-1">0</span></span><span class="text-slate-700">|</span>
-                    <span class="text-yellow-400">⚡<span id="sc-2">0</span></span><span class="text-slate-700">|</span>
-                    <span class="text-rose-500">❤️<span id="sc-3">0</span></span>
+                <!-- HUD de marcadores dinámicos -->
+                <div id="hud-scores" class="flex gap-2 text-xs md:text-sm font-black bg-black rounded-xl px-3 py-1.5 border border-slate-800 overflow-x-auto">
+                    <!-- Generado por JS -->
                 </div>
             </div>
 
@@ -333,44 +337,31 @@
             <h1 class="text-4xl md:text-5xl font-black font-epic text-white mb-2">CONSUMATUM EST</h1>
             <p class="text-slate-400 text-sm tracking-[0.3em] uppercase mb-10">La Maratón ha concluido</p>
             
-            <div class="cyber-panel p-6 w-full max-w-sm mx-auto flex flex-col gap-4">
-                <div id="pod-1" class="flex justify-between items-center p-5 bg-gradient-to-r from-yellow-600/40 to-yellow-900/40 rounded-xl border-2 border-yellow-400 text-yellow-400 transform scale-110 shadow-[0_0_20px_rgba(251,191,36,0.2)]">
-                    <div class="flex items-center gap-3"><span class="text-3xl">🥇</span><span class="font-black uppercase text-lg pod-name">N/A</span></div>
-                    <b class="text-2xl pod-sc">0</b>
-                </div>
-                <div id="pod-2" class="flex justify-between items-center p-4 bg-slate-700/40 rounded-xl border-2 border-slate-400 text-slate-300">
-                    <div class="flex items-center gap-3"><span class="text-2xl">🥈</span><span class="font-bold uppercase pod-name">N/A</span></div>
-                    <b class="text-xl pod-sc">0</b>
-                </div>
-                <div id="pod-3" class="flex justify-between items-center p-4 bg-amber-900/40 rounded-xl border-2 border-amber-700 text-amber-500">
-                    <div class="flex items-center gap-3"><span class="text-xl">🥉</span><span class="font-bold uppercase pod-name">N/A</span></div>
-                    <b class="text-lg pod-sc">0</b>
-                </div>
+            <div id="podium-container" class="cyber-panel p-6 w-full max-w-sm mx-auto flex flex-col gap-3">
+                <!-- Generado dinámicamente -->
             </div>
         </div>
     </div>
 
+    <!-- PANEL CATEQUISTA CON PIN 777 -->
     <div id="admin-panel">
-        <h2 class="text-3xl font-black text-red-500 mb-6 border-b border-red-900 pb-2"><i class="fas fa-terminal"></i> PANEL CATEQUISTA (GOD MODE)</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                <h3 class="text-orange-500 font-black mb-2">Huellas de Fuego</h3>
-                <div class="flex gap-2"><button onclick="System.adminModScore(1, 50)" class="bg-green-700 px-3 py-1 rounded font-bold cursor-pointer">+50</button><button onclick="System.adminModScore(1, -50)" class="bg-red-700 px-3 py-1 rounded font-bold cursor-pointer">-50</button></div>
-            </div>
-            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                <h3 class="text-yellow-500 font-black mb-2">Voceros de Luz</h3>
-                <div class="flex gap-2"><button onclick="System.adminModScore(2, 50)" class="bg-green-700 px-3 py-1 rounded font-bold cursor-pointer">+50</button><button onclick="System.adminModScore(2, -50)" class="bg-red-700 px-3 py-1 rounded font-bold cursor-pointer">-50</button></div>
-            </div>
-            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                <h3 class="text-rose-500 font-black mb-2">Latido Eterno</h3>
-                <div class="flex gap-2"><button onclick="System.adminModScore(3, 50)" class="bg-green-700 px-3 py-1 rounded font-bold cursor-pointer">+50</button><button onclick="System.adminModScore(3, -50)" class="bg-red-700 px-3 py-1 rounded font-bold cursor-pointer">-50</button></div>
-            </div>
+        <h2 class="text-3xl font-black text-cyan-400 mb-2 border-b border-cyan-900 pb-2"><i class="fas fa-crown"></i> PODIUM & CONTROL CATEQUISTA</h2>
+        <p class="text-xs text-slate-400 uppercase tracking-widest mb-6">Panel exclusivo protegido por contraseña (PIN: 777)</p>
+        
+        <div class="bg-slate-900 p-5 rounded-2xl border border-cyan-500/40 mb-6">
+            <h3 class="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-3"><i class="fas fa-ranking-star mr-2"></i> Posiciones en Tiempo Real</h3>
+            <div id="admin-live-podium" class="space-y-2"></div>
         </div>
-        <button onclick="System.adminForceEnd()" class="bg-red-600 text-white font-black py-4 rounded-xl w-full mb-4 uppercase hover:bg-red-500 transition shadow-[0_0_20px_#ef4444] cursor-pointer">Terminar Juego Ahora</button>
-        <button onclick="document.getElementById('admin-panel').style.display='none'" class="bg-slate-800 text-white font-bold py-3 rounded-xl w-full cursor-pointer">Cerrar Panel</button>
+
+        <div id="admin-teams-control" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <!-- Controles de puntaje generados por JS -->
+        </div>
+
+        <button onclick="System.adminForceEnd()" class="btn-core btn-danger py-4 rounded-xl w-full mb-4 uppercase cursor-pointer">Terminar Juego Ahora</button>
+        <button onclick="document.getElementById('admin-panel').style.display='none'" class="btn-core bg-slate-800 text-white py-3 rounded-xl w-full cursor-pointer">Cerrar Panel</button>
     </div>
 
-    <!-- SCRIPT PRINCIPAL -->
+    <!-- SCRIPT PRINCIPAL DINÁMICO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -385,7 +376,7 @@
         };
         const app = initializeApp(fbConfig);
         const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "arena_engine_v1");
+        const gameRef = doc(db, "juego", "arena_engine_dynamic_v2");
 
         const AudioSys = {
             ctx: null,
@@ -436,23 +427,82 @@
         };
         ParticleSys.init();
 
-        const MisionsDB = [
-            { type: "trivia", badge: "TEOLOGÍA RÁPIDA", q: "¿Qué apóstol caminó sobre el agua hacia Jesús antes de hundirse por dudar?", opts: ["Juan", "Pedro", "Santiago", "Andrés"], ans: 1, time: 15, pts: 20 },
-            { type: "camera", badge: "RETO FÍSICO", q: "¡TORRE DE BABEL! Quítense 1 zapato todos y armen una torre en el piso. Tomen una foto con la cámara para validar.", pts: 35, ac: "image/*" },
-            { type: "dnd", badge: "LÓGICA GÉNESIS", q: "Ordena los días de la Creación arrastrando los bloques.", items: ["La Luz", "El Cielo y Mar", "Animales Terrestres"], ans: [0, 1, 2], pts: 30 },
-            { type: "text", badge: "ACERTIJO PROFÉTICO", q: "Fui arrojado a un foso de leones por orar a mi Dios, pero un ángel cerró sus bocas. ¿Quién soy?", ans: ["daniel"], pts: 25 },
-            { type: "hold", badge: "SOPORTA LA CRUZ", q: "¡RETO FÍSICO! Carga en la espalda a un compañero y mantén presionado el botón 7 segundos.", dur: 7000, pts: 35 },
-            { type: "sabotage", badge: "EL BESO DE JUDAS", q: "Elige estratégicamente a un equipo rival para congelar sus pantallas por 10 segundos.", pts: 10 },
-            { type: "motion", badge: "TERREMOTO EN PRISIÓN", q: "¡Como Pablo y Silas! Agita tu celular o toca el botón 40 veces rápido.", taps: 40, time: 10, pts: 40 },
-            { type: "trivia", badge: "MANDAMIENTOS", q: "¿Cuál de estos NO es uno de los 10 Mandamientos originales?", opts: ["No robarás", "No codiciarás", "Amarás a tus enemigos", "No matarás"], ans: 2, time: 15, pts: 20 },
-            { type: "sequence", badge: "EL CÓDIGO BÍBLICO", q: "Toca los botones en el orden correcto: Bautismo, Comunión, Confirmación.", items: ["Comunión", "Confirmación", "Bautismo"], ans: [2, 0, 1], pts: 30 },
-            { type: "camera", badge: "LA GRAN COMISIÓN", q: "¡JEFE FINAL! Graben un video selfie gritando: '¡CRISTO VIVE!'. Al aceptar ganan.", pts: 100, ac: "video/*,image/*" }
-        ];
+        // CATÁLOGO DINÁMICO DE EQUIPOS (HASTA 5)
+        const TeamMeta = {
+            1: { name: "Huellas de Fuego", icon: "fa-fire", color: "text-orange-500" },
+            2: { name: "Voceros de la Luz", icon: "fa-bolt", color: "text-yellow-400" },
+            3: { name: "Latido Eterno", icon: "fa-heart", color: "text-rose-500" },
+            4: { name: "Escudo de la Fe", icon: "fa-shield", color: "text-emerald-400" },
+            5: { name: "Testigos del Reino", icon: "fa-crown", color: "text-purple-400" }
+        };
+
+        // BANCOS DE MISIONES EXCLUSIVOS PARA CADA UNO DE LOS 5 EQUIPOS
+        const TeamMisionsDB = {
+            1: [ // EQUIPO 1
+                { type: "trivia", badge: "AT • PENTATEUCO", q: "¿Cuántos libros integran oficialmente el Antiguo Testamento en la Biblia Católica?", opts: ["39 libros", "46 libros", "27 libros", "73 libros"], ans: 1, time: 15, pts: 20 },
+                { type: "camera", badge: "RETO FÍSICO", q: "¡TORRE DE BABEL! Quítense 1 zapato todos y armen una torre en el piso. Tomen una foto.", pts: 35, ac: "image/*" },
+                { type: "dnd", badge: "LÓGICA GÉNESIS", q: "Ordena los días de la Creación arrastrando los bloques.", items: ["La Luz", "El Cielo y Mar", "Animales Terrestres"], ans: [0, 1, 2], pts: 30 },
+                { type: "text", badge: "ACERTIJO PROFÉTICO", q: "Fui arrojado a un foso de leones por orar a mi Dios, pero un ángel cerró sus bocas. ¿Quién soy?", ans: ["daniel"], pts: 25 },
+                { type: "hold", badge: "SOPORTA LA CRUZ", q: "Carga en la espalda a un compañero y mantén presionado el botón 7 segundos.", dur: 7000, pts: 35 },
+                { type: "sabotage", badge: "EL BESO DE JUDAS", q: "Elige estratégicamente a un equipo rival para congelar sus pantallas por 10 segundos.", pts: 10 },
+                { type: "motion", badge: "TERREMOTO EN PRISIÓN", q: "¡Como Pablo y Silas! Agita tu celular o toca el botón 40 veces rápido.", taps: 40, time: 10, pts: 40 },
+                { type: "trivia", badge: "PROFETAS", q: "En Isaías 40, 31, se menciona que los que esperan en el Señor subirán con alas como...", opts: ["Palomas", "Águilas", "Leones", "Cóndores"], ans: 1, time: 15, pts: 20 },
+                { type: "sequence", badge: "EL CÓDIGO BÍBLICO", q: "Orden de sacramentos: Bautismo, Comunión, Confirmación.", items: ["Comunión", "Confirmación", "Bautismo"], ans: [2, 0, 1], pts: 30 },
+                { type: "camera", badge: "LA GRAN COMISIÓN", q: "¡JEFE FINAL! Graben un video selfie gritando: '¡CRISTO VIVE!'. Al aceptar ganan.", pts: 100, ac: "video/*,image/*" }
+            ],
+            2: [ // EQUIPO 2
+                { type: "trivia", badge: "ESTRUCTURA", q: "Suma los libros del Antiguo y Nuevo Testamento para descubrir el total de la Biblia Católica:", opts: ["66 libros", "72 libros", "73 libros", "80 libros"], ans: 2, time: 15, pts: 20 },
+                { type: "camera", badge: "RETO FÍSICO", q: "¡LÁMPARA DE MIS PASOS! Junten linternas de celulares y armen un haz de luz. Tomen foto.", pts: 35, ac: "image/*" },
+                { type: "dnd", badge: "LÓGICA", q: "Ordena cronológicamente estos eventos de la vida de Jesús:", items: ["Bautismo", "Crucifixión", "Nacimiento"], ans: [2, 0, 1], pts: 30 },
+                { type: "text", badge: "ACERTIJO", q: "Dije 'Hágase en mí según tu palabra' cuando el ángel me visitó. ¿Quién soy?", ans: ["maria", "virgen maria"], pts: 25 },
+                { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos mientras tu equipo canta una alabanza.", dur: 7000, pts: 35 },
+                { type: "sabotage", badge: "SABOTAJE", q: "Elige a un equipo rival para congelar sus pantallas 10 segundos.", pts: 10 },
+                { type: "motion", badge: "LUZ DEL MUNDO", q: "¡Tapéa rápido 40 veces para encender la luz espiritual en la pantalla!", taps: 40, time: 10, pts: 40 },
+                { type: "trivia", badge: "SALMOS", q: "En el Salmo 119, 105, se declara que la palabra de Dios es una _______ para los pasos.", opts: ["Antorcha", "Guía", "Lámpara", "Luz"], ans: 2, time: 15, pts: 20 },
+                { type: "sequence", badge: "CÓDIGO", q: "Ordena los elementos del Credo: Encarnación, Pasión, Resurrección.", items: ["Pasión", "Resurrección", "Encarnación"], ans: [2, 0, 1], pts: 30 },
+                { type: "camera", badge: "JEFE FINAL", q: "Graben un video selfie proclamando: '¡SOMOS LUZ DEL MUNDO!'. Ganan.", pts: 100, ac: "video/*,image/*" }
+            ],
+            3: [ // EQUIPO 3
+                { type: "trivia", badge: "NT • CARTAS", q: "¿Cuántos libros componen exclusivamente el Nuevo Testamento?", opts: ["24 libros", "27 libros", "30 libros", "21 libros"], ans: 1, time: 15, pts: 20 },
+                { type: "camera", badge: "RETO FÍSICO", q: "¡ALIANZA ETERNA! Formen un círculo perfecto tomados de las manos. Tomen foto.", pts: 35, ac: "image/*" },
+                { type: "dnd", badge: "LÓGICA", q: "Ordena los siguientes pilares de la Iglesia primitiva:", items: ["Pentecostés", "La Última Cena", "Ascensión"], ans: [1, 2, 0], pts: 30 },
+                { type: "text", badge: "ACERTIJO", q: "Fui llamado el discípulo amado y escribí el Apocalipsis. ¿Quién soy?", ans: ["juan", "san juan"], pts: 25 },
+                { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos repitiendo 'Jesús es el Señor'.", dur: 7000, pts: 35 },
+                { type: "sabotage", badge: "SABOTAJE", q: "Congela las pantallas de un equipo rival por 10 segundos.", pts: 10 },
+                { type: "motion", badge: "PENTECOSTÉS", q: "¡Tapéa 40 veces rápido simulando el descenso del Espíritu Santo!", taps: 40, time: 10, pts: 40 },
+                { type: "trivia", badge: "CARTAS", q: "En 1 Juan 4, 8, se afirma con contundencia una sola palabra como la definición suprema de Dios:", opts: ["Justicia", "Poder", "Amor", "Fuego"], ans: 2, time: 15, pts: 20 },
+                { type: "sequence", badge: "CÓDIGO", q: "Ordena los misterios del Rosario: Dolorosos, Gozosos, Gloriosos.", items: ["Gozosos", "Gloriosos", "Dolorosos"], ans: [0, 2, 1], pts: 30 },
+                { type: "camera", badge: "JEFE FINAL", q: "Graben un video selfie gritando: '¡VIVA CRISTO REY!'. Ganan.", pts: 100, ac: "video/*,image/*" }
+            ],
+            4: [ // EQUIPO 4: ESCUDO DE LA FE
+                { type: "trivia", badge: "HISTORIA", q: "¿Quién fue el sucesor directo de Moisés para guiar al pueblo a la Tierra Prometida?", opts: ["Caleb", "Josué", "Gedeón", "Samuel"], ans: 1, time: 15, pts: 20 },
+                { type: "camera", badge: "RETO FÍSICO", q: "¡ESCUDO PROTECTOR! Hagan una muralla humana abrazándose todos. Tomen foto.", pts: 35, ac: "image/*" },
+                { type: "dnd", badge: "LÓGICA", q: "Ordena los siguientes jueces de Israel:", items: ["Sansón", "Gedeón", "Otoniel"], ans: [2, 1, 0], pts: 30 },
+                { type: "text", badge: "ACERTIJO", q: "Derribé las murallas de Jericó tocando trompetas y dando gritos de fe. ¿Quién soy?", ans: ["josue", "josué"], pts: 25 },
+                { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos mientras declaran 'Dios es nuestro escudo'.", dur: 7000, pts: 35 },
+                { type: "sabotage", badge: "SABOTAJE", q: "Congela a un equipo rival durante 10 segundos con tu escudo.", pts: 10 },
+                { type: "motion", badge: "BATALLA", q: "¡Tapéa 40 veces rápido simulando la victoria de la fe!", taps: 40, time: 10, pts: 40 },
+                { type: "trivia", badge: "CARTAS", q: "En Hebreos 11, 1 se define la fe como la garantía de lo que se...", opts: ["espera", "siente", "busca", "piensa"], ans: 0, time: 15, pts: 20 },
+                { type: "sequence", badge: "CÓDIGO", q: "Ordena las virtudes teologales: Caridad, Fe, Esperanza.", items: ["Fe", "Esperanza", "Caridad"], ans: [0, 1, 2], pts: 30 },
+                { type: "camera", badge: "JEFE FINAL", q: "Graben un video selfie firmando la victoria con la consigna '¡FIRMES EN LA FE!'. Ganan.", pts: 100, ac: "video/*,image/*" }
+            ],
+            5: [ // EQUIPO 5: TESTIGOS DEL REINO
+                { type: "trivia", badge: "REINO", q: "¿En qué ciudad comenzó la predicación pública de la Iglesia tras Pentecostés?", opts: ["Nazaret", "Jerusalén", "Antioquía", "Roma"], ans: 1, time: 15, pts: 20 },
+                { type: "camera", badge: "RETO FÍSICO", q: "¡TESTIGOS VIVOS! Levanten las manos al cielo formando una corona. Tomen foto.", pts: 35, ac: "image/*" },
+                { type: "dnd", badge: "LÓGICA", q: "Ordena las etapas de la expansión de la Iglesia en Hechos:", items: ["Hasta los confines del mundo", "Jerusalén", "Judea y Samaria"], ans: [1, 2, 0], pts: 30 },
+                { type: "text", badge: "ACERTIJO", q: "Fui el primer mártir de la Iglesia apedreado por confesar a Jesús. ¿Quién soy?", ans: ["esteban", "san esteban"], pts: 25 },
+                { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos proclamando el Reino de Dios.", dur: 7000, pts: 35 },
+                { type: "sabotage", badge: "SABOTAJE", q: "Congela las pantallas de un equipo rival por 10 segundos.", pts: 10 },
+                { type: "motion", badge: "TESTIGO", q: "¡Tapéa 40 veces rápido cumpliendo la Gran Comisión!", taps: 40, time: 10, pts: 40 },
+                { type: "trivia", badge: "PROCLAMA", q: "Jesús dijo: 'Vayan por todo el mundo y...'", opts: ["Prediquen el Evangelio", "Hagan templos", "Enseñen historia", "Sanen enfermos"], ans: 0, time: 15, pts: 20 },
+                { type: "sequence", badge: "CÓDIGO", q: "Ordena las etapas del juicio de Jesús: Getsemaní, Calvario, Ante Pilato.", items: ["Getsemaní", "Ante Pilato", "Calvario"], ans: [0, 1, 2], pts: 30 },
+                { type: "camera", badge: "JEFE FINAL", q: "Graben un video selfie gritando: '¡SOMOS TESTIGOS DEL REINO!'. Ganan.", pts: 100, ac: "video/*,image/*" }
+            ]
+        };
 
         const System = {
             id: 0, score: 100, missIdx: 0, names: [],
             dbCache: null, isFrozen: false, timerInt: null,
-            teamRef: { 1: "Huellas de Fuego", 2: "Voceros de la Luz", 3: "Latido Eterno" },
             
             nav(toId) {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -464,9 +514,8 @@
             
             selectTeam(tid) {
                 this.id = tid; AudioSys.tick(); this.vibrate(50);
-                document.getElementById('lobby-name').innerText = this.teamRef[tid];
-                const icons = {1:'<i class="fas fa-fire text-orange-500"></i>', 2:'<i class="fas fa-bolt text-yellow-400"></i>', 3:'<i class="fas fa-heart text-rose-500"></i>'};
-                document.getElementById('lobby-icon').innerHTML = icons[tid];
+                document.getElementById('lobby-name').innerText = TeamMeta[tid].name;
+                document.getElementById('lobby-icon').innerHTML = `<i class="fas ${TeamMeta[tid].icon} ${TeamMeta[tid].color}"></i>`;
                 this.nav('view-lobby');
             },
 
@@ -479,13 +528,11 @@
                 document.getElementById('btn-ready').style.display = 'none';
                 document.getElementById('lobby-waiting').classList.remove('hidden');
                 
-                // Asegurar existencia del documento en Firestore antes de actualizar
                 const snap = await getDoc(gameRef);
                 if (!snap.exists()) {
-                    await setDoc(gameRef, {
-                        fase: 0, g1_r: false, g2_r: false, g3_r: false,
-                        g1_s: 100, g2_s: 100, g3_s: 100, end: false
-                    });
+                    let baseData = { fase: 0, end: false };
+                    for(let i=1; i<=5; i++) { baseData[`g${i}_r`] = false; baseData[`g${i}_s`] = 100; }
+                    await setDoc(gameRef, baseData);
                 }
 
                 const upd = {}; upd[`g${this.id}_r`] = true;
@@ -522,6 +569,7 @@
             },
 
             renderArena() {
+                const MisionsDB = TeamMisionsDB[this.id] || TeamMisionsDB[1];
                 if(this.missIdx >= MisionsDB.length) return;
                 this.nav('view-arena');
                 const m = MisionsDB[this.missIdx];
@@ -564,11 +612,12 @@
                     btn.addEventListener('mousedown', startH); btn.addEventListener('mouseup', stopH); btn.addEventListener('mouseleave', stopH);
                 }
                 else if (m.type === "sabotage") {
-                    [1,2,3].forEach(id => {
-                        if(id !== this.id) {
+                    [1,2,3,4,5].forEach(id => {
+                        // Solo muestra para atacar si el equipo existe en la DB y está activo
+                        if(id !== this.id && this.dbCache && this.dbCache[`g${id}_r`]) {
                             let b = document.createElement('button');
-                            b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-5 rounded-xl mb-3 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer";
-                            b.innerHTML = `<i class="fas fa-snowflake mr-2 text-2xl"></i> ATACAR A: ${this.teamRef[id]}`;
+                            b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-4 rounded-xl mb-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer text-sm";
+                            b.innerHTML = `<i class="fas fa-snowflake mr-2 text-xl"></i> ATACAR A: ${TeamMeta[id].name}`;
                             b.onclick = async () => {
                                 const upd = {}; upd[`sab_${id}`] = Date.now();
                                 await updateDoc(gameRef, upd); this.win(m.pts);
@@ -662,10 +711,11 @@
 
             async advance() {
                 this.missIdx++;
+                const MisionsDB = TeamMisionsDB[this.id] || TeamMisionsDB[1];
                 if(this.missIdx >= MisionsDB.length) {
                     await updateDoc(gameRef, { end: true });
                 } else {
-                    this.runRoulette();
+                    this.renderArena(); // Direct to next mission (no roulette for flow)
                 }
             },
 
@@ -676,17 +726,45 @@
                 setTimeout(()=>t.classList.remove('show'), 3500);
             },
 
+            // --- PANEL CATEQUISTA PIN 777 ---
             godClicks: 0,
             initGodMode() {
                 document.getElementById('god-mode-trigger').onclick = () => {
                     this.godClicks++;
-                    if(this.godClicks >= 7) { document.getElementById('admin-panel').style.display = 'flex'; this.godClicks = 0; }
+                    if(this.godClicks >= 7) {
+                        let pin = prompt("Introduce el PIN de Coordinador:");
+                        if(pin === "777") {
+                            document.getElementById('admin-panel').style.display = 'flex';
+                            this.buildAdminControls();
+                        } else {
+                            alert("PIN incorrecto.");
+                        }
+                        this.godClicks = 0;
+                    }
                     setTimeout(()=>this.godClicks=0, 3000);
                 };
             },
+            buildAdminControls() {
+                let html = "";
+                // Construir botones de control solo para equipos que están activos en la DB
+                for(let i=1; i<=5; i++) {
+                    if(this.dbCache && this.dbCache[`g${i}_r`]) {
+                        html += `
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                                <h3 class="font-black mb-2 text-white"><i class="fas ${TeamMeta[i].icon} ${TeamMeta[i].color} mr-1"></i> ${TeamMeta[i].name}</h3>
+                                <div class="flex gap-2">
+                                    <button onclick="System.adminModScore(${i}, 50)" class="btn-core bg-green-700 px-3 py-1 rounded text-xs">+50</button>
+                                    <button onclick="System.adminModScore(${i}, -50)" class="btn-core bg-red-700 px-3 py-1 rounded text-xs">-50</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                document.getElementById('admin-teams-control').innerHTML = html || "<p class='text-white'>No hay equipos conectados aún.</p>";
+            },
             async adminModScore(team, val) {
                 if(!this.dbCache) return;
-                const upd = {}; upd[`g${team}_s`] = Math.max(0, this.dbCache[`g${team}_s`] + val);
+                const upd = {}; upd[`g${team}_s`] = Math.max(0, (this.dbCache[`g${team}_s`] || 0) + val);
                 await updateDoc(gameRef, upd);
             },
             async adminForceEnd() {
@@ -701,35 +779,62 @@
             if(!snap.exists()) return;
             const d = snap.data(); System.dbCache = d;
 
-            document.getElementById('sc-1').innerText = d.g1_s;
-            document.getElementById('sc-2').innerText = d.g2_s;
-            document.getElementById('sc-3').innerText = d.g3_s;
+            // Renderizar HUD dinámico superior (Solo equipos activos)
+            let hudHTML = "";
+            let sortedAdmin = [];
+            let activeCount = 0;
             
-            if (document.getElementById('view-lobby').classList.contains('active')) {
-                document.getElementById('sync-1').innerHTML = `Fuego<br><span class="text-lg">${d.g1_r ? '✅' : '❌'}</span>`;
-                document.getElementById('sync-1').className = d.g1_r ? "bg-green-900 border border-green-500 rounded p-2 text-white" : "bg-slate-900 border border-slate-700 rounded p-2 text-slate-500";
-                document.getElementById('sync-2').innerHTML = `Luz<br><span class="text-lg">${d.g2_r ? '✅' : '❌'}</span>`;
-                document.getElementById('sync-2').className = d.g2_r ? "bg-green-900 border border-green-500 rounded p-2 text-white" : "bg-slate-900 border border-slate-700 rounded p-2 text-slate-500";
-                document.getElementById('sync-3').innerHTML = `Latido<br><span class="text-lg">${d.g3_r ? '✅' : '❌'}</span>`;
-                document.getElementById('sync-3').className = d.g3_r ? "bg-green-900 border border-green-500 rounded p-2 text-white" : "bg-slate-900 border border-slate-700 rounded p-2 text-slate-500";
+            for(let i=1; i<=5; i++) {
+                let score = d[`g${i}_s`] || 0;
+                let isReady = d[`g${i}_r`] || false;
                 
-                if(d.fase === 0 && d.g1_r && d.g2_r && d.g3_r && d[`g${System.id}_r`]) {
+                if(isReady) {
+                    activeCount++;
+                    sortedAdmin.push({ id: i, n: TeamMeta[i].name, s: score, r: isReady });
+                    hudHTML += `<span class="${TeamMeta[i].color}">T${i}:<b>${score}</b></span><span class="text-slate-700">|</span>`;
+                }
+            }
+            // Limpiar último palito separador
+            if(hudHTML) hudHTML = hudHTML.slice(0, -42);
+            document.getElementById('hud-scores').innerHTML = hudHTML || '<span class="text-slate-500">Esperando equipos...</span>';
+
+            // Ordenar para el podium del admin y final
+            sortedAdmin.sort((a,b) => b.s - a.s);
+            let livePodHTML = "";
+            sortedAdmin.forEach((item, index) => {
+                let medal = index === 0 ? "🥇" : (index === 1 ? "🥈" : (index === 2 ? "🥉" : "🏅"));
+                livePodHTML += `<div class="flex justify-between items-center bg-black/60 p-2.5 rounded-lg border border-slate-800 text-xs font-bold text-white"><span class="text-cyan-400">${medal} ${item.n}</span><span class="text-yellow-400 font-mono">${item.s} pts</span></div>`;
+            });
+            document.getElementById('admin-live-podium').innerHTML = livePodHTML;
+
+            // Sincronización en Lobby (rejilla dinámica)
+            if (document.getElementById('view-lobby').classList.contains('active')) {
+                let gridHTML = "";
+                for(let i=1; i<=5; i++) {
+                    let r = d[`g${i}_r`] || false;
+                    gridHTML += `<div class="bg-slate-900 border ${r?'border-green-500 text-white':'border-slate-700 text-slate-500'} rounded p-1.5">${i}<br><span class="text-sm">${r ? '✅' : '❌'}</span></div>`;
+                }
+                document.getElementById('sync-grid').innerHTML = gridHTML;
+
+                // Si al menos hay 3 equipos listos y este dispositivo está listo, arrancar
+                if(d.fase === 0 && activeCount >= 3 && d[`g${System.id}_r`]) {
                     await updateDoc(gameRef, { fase: 1 });
                 }
             }
 
             if(d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
-                System.prevScores = { 1: d.g1_s, 2: d.g2_s, 3: d.g3_s };
+                System.prevScores = {};
+                for(let i=1; i<=5; i++) System.prevScores[i] = d[`g${i}_s`] || 100;
                 System.runRoulette();
             }
 
             if(d.fase >= 1 && System.prevScores) {
-                [1,2,3].forEach(id => {
-                    if(id !== System.id && d[`g${id}_s`] > System.prevScores[id]) {
-                        System.showToast(`🔥 ¡${System.teamRef[id]} avanzó! ¡Aceleren!`);
+                for(let i=1; i<=5; i++) {
+                    if(i !== System.id && d[`g${i}_r`] && (d[`g${i}_s`] || 100) > System.prevScores[i]) {
+                        System.showToast(`🔥 ¡${TeamMeta[i].name} avanzó! ¡Aceleren!`);
                     }
-                    System.prevScores[id] = d[`g${id}_s`];
-                });
+                    System.prevScores[i] = d[`g${i}_s`] || 100;
+                }
             }
 
             if(d.fase >= 1 && d[`sab_${System.id}`]) {
@@ -750,13 +855,17 @@
                 clearInterval(System.timerInt); AudioSys.success(); System.vibrate([1000]);
                 System.nav('view-podium');
                 
-                let sorted = [
-                    {n: System.teamRef[1], s: d.g1_s}, {n: System.teamRef[2], s: d.g2_s}, {n: System.teamRef[3], s: d.g3_s}
-                ].sort((a,b) => b.s - a.s);
-                
-                document.querySelector('#pod-1 .pod-name').innerText = sorted[0].n; document.querySelector('#pod-1 .pod-sc').innerText = sorted[0].s;
-                document.querySelector('#pod-2 .pod-name').innerText = sorted[1].n; document.querySelector('#pod-2 .pod-sc').innerText = sorted[1].s;
-                document.querySelector('#pod-3 .pod-name').innerText = sorted[2].n; document.querySelector('#pod-3 .pod-sc').innerText = sorted[2].s;
+                let podHTML = "";
+                sortedAdmin.forEach((item, index) => {
+                    let medal = index === 0 ? "🥇" : (index === 1 ? "🥈" : (index === 2 ? "🥉" : "🏅"));
+                    podHTML += `
+                        <div class="flex justify-between items-center p-3.5 bg-slate-900 rounded-xl border border-slate-700 text-white font-bold">
+                            <div class="flex items-center gap-3"><span class="text-2xl">${medal}</span><span class="uppercase text-sm">${item.n}</span></div>
+                            <b class="text-lg font-mono text-yellow-400">${item.s} pts</b>
+                        </div>
+                    `;
+                });
+                document.getElementById('podium-container').innerHTML = podHTML;
             }
         });
     </script>
