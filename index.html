@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Eco de la Verdad - Maratón Bíblica con Comodines (Confirmación)</title>
+    <title>El Eco de la Verdad - Maratón Bíblica de Maycol</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #0284c7; --secondary: #0369a1; --accent: #38bdf8;
-            --error: #f43f5e; --success: #10b981; --warning: #f59e0b;
-            --bg-deep: #030712; --card-bg: rgba(15, 23, 42, 0.94);
+            --card-bg: rgba(15, 23, 42, 0.94);
         }
 
         body {
@@ -61,45 +59,33 @@
             background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
         }
 
-        .btn-notebook {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            box-shadow: 0 4px 20px rgba(217, 119, 6, 0.5);
-            border-color: rgba(251, 191, 36, 0.5);
+        .btn-physical {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.5);
+            border-color: rgba(248, 113, 113, 0.8);
+            animation: pulse-physical 1.5s infinite;
         }
-        .btn-notebook:hover {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.8);
+        @keyframes pulse-physical {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+            50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(239, 68, 68, 0.9); }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
         }
-
-        .btn-comodin {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-            border-color: rgba(167, 139, 250, 0.6);
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.5);
-        }
-        .btn-comodin:hover {
-            background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-            box-shadow: 0 8px 25px rgba(167, 139, 250, 0.8);
+        
+        .btn-physical:hover {
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            animation: none;
+            transform: scale(1.05);
         }
 
         .btn-option {
             background: rgba(15, 23, 42, 0.85); border: 2px solid rgba(56, 189, 248, 0.35);
             color: white; border-radius: 1.25rem; padding: 1.15rem; font-weight: 700; text-align: left;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 1rem; cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
         .btn-option:hover {
             background: rgba(14, 165, 233, 0.3); border-color: #38bdf8; transform: translateY(-3px) scale(1.02);
             box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
         }
-
-        .input-game {
-            background: rgba(2, 6, 23, 0.95); border: 2px solid rgba(56, 189, 248, 0.5);
-            color: #ffffff !important; text-align: left; border-radius: 1.25rem;
-            transition: all 0.3s ease; width: 100%; padding: 1.25rem; font-size: 1.1rem; font-weight: 600;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.9);
-        }
-        .input-game::placeholder { color: #64748b; }
-        .input-game:focus { outline: none; border-color: #fde047; box-shadow: 0 0 30px rgba(253, 224, 71, 0.6); }
 
         .screen { display: none; opacity: 0; transition: opacity 0.5s ease; width: 100%; max-width: 48rem; z-index: 10; }
         .screen.active { display: flex; opacity: 1; flex-direction: column; align-items: center; }
@@ -113,42 +99,24 @@
             100% { background: radial-gradient(circle at center, #dc2626 0%, #7f1d1d 70%, #030712 100%); }
         }
 
-        .music-player {
-            position: fixed; top: 1rem; right: 1rem; z-index: 100;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
-            border: 1px solid rgba(56, 189, 248, 0.6); border-radius: 9999px;
-            padding: 0.5rem 1.25rem; display: flex; align-items: center; gap: 0.75rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: transform 0.3s;
+        /* NOTIFICACIÓN DE PRESIÓN TOAST */
+        #pressure-toast {
+            position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-150%);
+            z-index: 999; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .music-player:hover { transform: scale(1.05); }
+        #pressure-toast.show { transform: translateX(-50%) translateY(0); }
 
-        @keyframes neon-pulse {
-            0%, 100% { text-shadow: 0 0 15px rgba(56,189,248,0.6), 0 0 30px rgba(56,189,248,0.3); }
-            50% { text-shadow: 0 0 30px rgba(56,189,248,1), 0 0 50px rgba(14,165,233,0.8); }
-        }
-        @keyframes floating {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
-        }
-        .gaming-title { animation: neon-pulse 2s infinite ease-in-out; }
-        .floating-badge { animation: floating 3.5s infinite ease-in-out; }
+        .giant-timer { font-size: 10rem; line-height: 1; font-weight: 900; text-shadow: 0 0 50px rgba(56,189,248,1); }
     </style>
 </head>
 <body class="justify-center items-center">
 
     <div class="bg-particles"></div>
 
-    <!-- REPRODUCTOR DE MÚSICA -->
-    <div class="music-player">
-        <div class="text-cyan-300 text-xs font-extrabold hidden md:block tracking-wider">
-            <i class="fas fa-music animate-spin mr-1"></i> Promesas de Dios
-        </div>
-        <audio id="bg-audio" loop>
-            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        </audio>
-        <button onclick="toggleMusic()" id="music-btn" class="w-9 h-9 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white flex items-center justify-center transition cursor-pointer shadow-lg active:scale-95">
-            <i class="fas fa-play text-xs" id="music-icon"></i>
-        </button>
+    <!-- TOAST DE PRESIÓN EN VIVO -->
+    <div id="pressure-toast" class="bg-red-600 border-2 border-yellow-400 text-white font-black px-6 py-3 rounded-2xl shadow-[0_0_30px_rgba(220,38,38,0.9)] flex items-center gap-3">
+        <i class="fas fa-siren-on text-2xl animate-pulse text-yellow-300"></i>
+        <span id="pressure-msg" class="uppercase tracking-widest text-sm md:text-base">¡Alguien avanzó!</span>
     </div>
 
     <div class="w-full flex flex-col items-center justify-center flex-grow z-10">
@@ -156,196 +124,146 @@
         <!-- 0. PANTALLA DE ENTRADA CINEMÁTICA -->
         <div id="screen-welcome" class="screen active text-center py-6">
             <div class="card-glass p-8 md:p-12 flex flex-col items-center border-cyan-400 shadow-[0_0_60px_rgba(56,189,248,0.4)]">
-                <div class="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-gradient-to-tr from-cyan-600 to-blue-400 flex items-center justify-center text-white text-3xl md:text-4xl mb-6 shadow-[0_0_50px_rgba(56,189,248,1)] floating-badge">
-                    <i class="fas fa-bible"></i>
+                <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-cyan-600 to-blue-400 flex items-center justify-center text-white text-4xl mb-6 shadow-[0_0_50px_rgba(56,189,248,1)] animate-bounce">
+                    <i class="fas fa-cross"></i>
                 </div>
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/90 border border-cyan-500/50 text-cyan-300 text-xs font-bold tracking-[0.25em] uppercase mb-4 shadow-md">
-                    <i class="fas fa-satellite-dish text-cyan-400 animate-ping"></i> Sistema En Línea
-                </div>
-                <h1 class="text-3xl md:text-5xl font-black font-epic text-white mb-3 tracking-wide gaming-title">EL ECO DE LA VERDAD</h1>
-                <p class="text-slate-300 text-xs md:text-sm font-semibold tracking-[0.2em] uppercase mb-8">Feria de la Biblia • Confirmación</p>
-                <button onclick="enterPortal()" class="btn-modern px-10 py-4 text-sm md:text-base w-full max-w-xs shadow-[0_0_35px_rgba(2,132,199,0.9)]">
-                    <i class="fas fa-play mr-2"></i> Iniciar Sistema
+                <h1 class="text-4xl md:text-6xl font-black font-epic text-white mb-3 tracking-wide">EL ECO DE LA VERDAD</h1>
+                <p class="text-slate-300 text-sm font-semibold tracking-[0.2em] uppercase mb-8">Batalla Bíblica • Confirmación</p>
+                <button onclick="enterPortal()" class="btn-modern px-10 py-5 text-lg w-full max-w-sm shadow-[0_0_35px_rgba(2,132,199,0.9)]">
+                    <i class="fas fa-play mr-2"></i> Iniciar Batalla
                 </button>
             </div>
         </div>
 
         <!-- 1. PANTALLA INICIAL: SELECCIÓN DE EQUIPO -->
         <div id="screen-intro" class="screen text-center py-4">
-            <div class="mb-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/90 border border-cyan-500/50 text-cyan-300 text-xs font-bold tracking-widest uppercase">
-                <i class="fas fa-shield-halved text-cyan-400"></i> Selecciona tu Subgrupo
-            </div>
-            <h1 class="text-2xl md:text-4xl font-black mb-3 font-epic text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400">
+            <h1 class="text-3xl md:text-5xl font-black mb-6 font-epic text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400">
                 ELIGE TU EQUIPO
             </h1>
-            <p class="text-slate-300 text-xs md:text-sm mb-6 max-w-lg">
-                La maratón ha comenzado. Prepárense con su Biblia Católica, su cuaderno y sus comodines tácticos.
-            </p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-                <button onclick="selectTeam(1)" class="card-glass p-5 hover:scale-105 transition-all text-center border-orange-500/40 cursor-pointer group">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_25px_rgba(249,115,22,0.8)] group-hover:scale-125 transition-transform duration-300">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+                <button onclick="selectTeam(1)" class="card-glass p-6 hover:scale-105 transition-all text-center border-orange-500/40 cursor-pointer">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-3xl text-white mb-4 shadow-[0_0_25px_rgba(249,115,22,0.8)]">
                         <i class="fas fa-fire"></i>
                     </div>
-                    <h3 class="text-base font-extrabold uppercase text-white font-epic tracking-wider">Huellas de Fuego</h3>
+                    <h3 class="text-lg font-black uppercase text-white font-epic">Huellas de Fuego</h3>
                 </button>
-                <button onclick="selectTeam(2)" class="card-glass p-5 hover:scale-105 transition-all text-center border-yellow-500/40 cursor-pointer group">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_25px_rgba(250,204,21,0.8)] group-hover:scale-125 transition-transform duration-300">
+                <button onclick="selectTeam(2)" class="card-glass p-6 hover:scale-105 transition-all text-center border-yellow-500/40 cursor-pointer">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-3xl text-white mb-4 shadow-[0_0_25px_rgba(250,204,21,0.8)]">
                         <i class="fas fa-bolt"></i>
                     </div>
-                    <h3 class="text-base font-extrabold uppercase text-white font-epic tracking-wider">Voceros de la Luz</h3>
+                    <h3 class="text-lg font-black uppercase text-white font-epic">Voceros de la Luz</h3>
                 </button>
-                <button onclick="selectTeam(3)" class="card-glass p-5 hover:scale-105 transition-all text-center border-red-500/40 cursor-pointer group">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-rose-500 to-red-700 flex items-center justify-center text-xl text-white mb-3 shadow-[0_0_25px_rgba(244,63,94,0.8)] group-hover:scale-125 transition-transform duration-300">
+                <button onclick="selectTeam(3)" class="card-glass p-6 hover:scale-105 transition-all text-center border-red-500/40 cursor-pointer">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-rose-500 to-red-700 flex items-center justify-center text-3xl text-white mb-4 shadow-[0_0_25px_rgba(244,63,94,0.8)]">
                         <i class="fas fa-heart"></i>
                     </div>
-                    <h3 class="text-base font-extrabold uppercase text-white font-epic tracking-wider">Latido Eterno</h3>
+                    <h3 class="text-lg font-black uppercase text-white font-epic">Latido Eterno</h3>
                 </button>
             </div>
         </div>
 
-        <!-- 2. LOBBY Y SALA DE ESPERA SINCRONIZADA -->
+        <!-- 2. LOBBY -->
         <div id="screen-lobby" class="screen text-center">
-            <div class="card-glass p-8 w-full text-left">
+            <div class="card-glass p-8 w-full max-w-xl text-left">
                 <div class="flex items-center gap-4 mb-5 border-b border-slate-800 pb-4">
-                    <div id="lobby-icon-container" class="w-12 h-12 rounded-xl bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-xl text-cyan-400 shadow-md">
-                        <i class="fas fa-users"></i>
-                    </div>
+                    <div id="lobby-icon-container" class="w-14 h-14 rounded-xl bg-cyan-950 flex items-center justify-center text-2xl text-cyan-400"></div>
                     <div>
-                        <h2 id="lobby-title" class="text-xl md:text-2xl font-epic font-black text-cyan-300 uppercase">Subgrupo</h2>
-                        <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Sala de Conexión en Vivo</p>
+                        <h2 id="lobby-title" class="text-2xl font-epic font-black text-cyan-300 uppercase">Subgrupo</h2>
+                        <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Registro de guerreros</p>
                     </div>
                 </div>
 
-                <label class="block text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Integrantes del Equipo (Separados por comas):</label>
-                <textarea id="team-names" class="input-game mb-6 h-32 resize-none" placeholder="Ej: Juan, Maria, Pedro, Sofia, Carlos..."></textarea>
+                <textarea id="team-names" class="w-full bg-slate-900 border-2 border-cyan-500/50 text-white rounded-xl p-4 font-bold h-32 mb-6" placeholder="Escriban sus nombres aquí..."></textarea>
                 
-                <button id="btn-ready" onclick="setReady()" class="btn-modern w-full py-4 text-base"><i class="fas fa-check-double mr-2"></i> ¡Estamos Listos y Conectados!</button>
+                <button id="btn-ready" onclick="setReady()" class="btn-modern w-full py-4 text-lg"><i class="fas fa-check-double mr-2"></i> ¡Listos para la Batalla!</button>
                 
-                <div id="waiting-status" class="mt-6 hidden bg-slate-950/90 p-4 rounded-2xl border border-cyan-500/30 text-center shadow-lg">
-                    <p class="text-yellow-400 font-bold text-xs uppercase tracking-widest animate-pulse mb-3"><i class="fas fa-satellite-dish mr-2"></i> Sincronizando los 3 subgrupos en la nube...</p>
-                    <div class="flex justify-around text-xs font-extrabold text-slate-300">
-                        <span id="status-g1" class="bg-black/40 px-3 py-1 rounded-lg border border-slate-800">Fuego: ❌</span>
-                        <span id="status-g2" class="bg-black/40 px-3 py-1 rounded-lg border border-slate-800">Voceros: ❌</span>
-                        <span id="status-g3" class="bg-black/40 px-3 py-1 rounded-lg border border-slate-800">Latido: ❌</span>
+                <div id="waiting-status" class="mt-6 hidden text-center">
+                    <p class="text-yellow-400 font-bold uppercase animate-pulse mb-3">Esperando a que los rivales tengan valor...</p>
+                    <div class="flex justify-around text-sm font-black text-slate-300 bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <span id="status-g1">Fuego: ❌</span>
+                        <span id="status-g2">Luz: ❌</span>
+                        <span id="status-g3">Latido: ❌</span>
                     </div>
                 </div>
 
-                <div id="start-countdown-box" class="mt-6 hidden bg-cyan-950/90 border border-cyan-400 p-5 rounded-2xl text-center shadow-[0_0_25px_rgba(56,189,248,0.5)]">
-                    <p class="text-cyan-300 font-extrabold text-xs uppercase tracking-widest">¡Los 3 equipos están listos! Iniciando batalla en:</p>
-                    <div id="start-timer" class="text-6xl font-black font-mono text-white mt-1 drop-shadow-md animate-pulse">10</div>
+                <!-- CUENTA REGRESIVA GIGANTE -->
+                <div id="start-countdown-box" class="mt-6 hidden text-center absolute inset-0 bg-black/95 z-50 flex flex-col items-center justify-center backdrop-blur-md">
+                    <h2 class="text-red-500 font-black text-4xl uppercase tracking-widest animate-pulse mb-6">PREPÁRENSE</h2>
+                    <div id="start-timer" class="giant-timer text-white font-mono drop-shadow-[0_0_20px_#fff]">10</div>
                 </div>
             </div>
         </div>
 
-        <!-- 3. ARENA DE JUEGO HÍBRIDA CON COMODINES TÁCTICOS -->
+        <!-- 3. ARENA DE JUEGO -->
         <div id="screen-game" class="screen flex-grow z-10 my-2">
             <header class="card-glass p-4 mb-4 flex justify-between items-center bg-slate-900/95 border-b-2 border-cyan-500/40 max-w-none">
                 <div class="flex items-center gap-3">
-                    <div id="header-team-icon" class="w-9 h-9 rounded-xl bg-cyan-950 border border-cyan-500 flex items-center justify-center text-cyan-400 text-sm shadow">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                    <span id="game-team-name" class="text-cyan-300 font-extrabold uppercase font-epic text-xs md:text-sm">Equipo</span>
+                    <span id="game-team-name" class="text-cyan-300 font-extrabold uppercase font-epic text-sm md:text-lg">Equipo</span>
                 </div>
-                <div class="flex items-center gap-2 text-xs font-black bg-black/70 px-3.5 py-1.5 rounded-xl border border-slate-700 shadow-inner">
-                    <span class="text-orange-400">G1:<b id="score-g1">100</b></span> <span class="text-slate-600">|</span> 
-                    <span class="text-yellow-400">G2:<b id="score-g2">100</b></span> <span class="text-slate-600">|</span> 
-                    <span class="text-rose-400">G3:<b id="score-g3">100</b></span>
+                <div class="flex items-center gap-3 text-sm md:text-base font-black bg-black/80 px-4 py-2 rounded-xl border border-slate-700">
+                    <span class="text-orange-400">🔥 <b id="score-g1">100</b></span> <span class="text-slate-600">|</span> 
+                    <span class="text-yellow-400">⚡ <b id="score-g2">100</b></span> <span class="text-slate-600">|</span> 
+                    <span class="text-rose-400">❤️ <b id="score-g3">100</b></span>
                 </div>
             </header>
 
-            <main class="card-glass p-6 md:p-8 flex-grow text-center flex flex-col justify-between max-w-none">
+            <main class="card-glass p-6 md:p-8 flex-grow text-center flex flex-col justify-between max-w-none w-full">
                 <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span id="mission-counter" class="text-cyan-300 font-bold text-xs bg-cyan-950 px-3 py-1 rounded-lg border border-cyan-500/40">Misión 1 / 10</span>
-                        <div class="flex items-center gap-2">
-                            <button id="comodin-btn" onclick="useComodin()" class="hidden btn-modern btn-comodin px-3 py-1 text-xs animate-bounce shadow-lg"><i class="fas fa-wand-magic-sparkles mr-1"></i> ¡Usar Comodín (<span id="comodin-count">0</span>)!</button>
-                            <span class="text-yellow-400 font-black text-xs bg-black/60 px-3 py-1 rounded-lg border border-yellow-500/40 shadow">
-                                <i class="fas fa-star mr-1"></i> Puntos: <span id="my-score">100</span>
-                            </span>
-                        </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span id="mission-counter" class="text-cyan-300 font-black text-sm bg-cyan-950 px-4 py-2 rounded-lg border border-cyan-500">Misión 1 / 8</span>
+                        <span class="text-yellow-400 font-black text-sm bg-black/60 px-4 py-2 rounded-lg border border-yellow-500 shadow">
+                            <i class="fas fa-star mr-1"></i> <span id="my-score">100</span>
+                        </span>
                     </div>
 
-                    <!-- ALERTA SI OTROS EQUIPOS TE BLOQUEARON -->
-                    <div id="attack-alert" class="hidden bg-rose-950/90 border border-rose-500 p-3 rounded-xl mb-4 text-rose-300 font-bold text-xs animate-pulse">
-                        <i class="fas fa-triangle-exclamation mr-1"></i> ¡ALERTA! Has recibido un ataque de bloqueo. Responde con cuidado.
-                    </div>
-
-                    <div class="bg-slate-950/90 border border-cyan-500/30 p-5 rounded-2xl text-left mb-5 shadow-inner">
-                        <div id="mission-badge" class="inline-block bg-cyan-900 text-cyan-300 px-2.5 py-1 rounded text-xs font-bold mb-2 border border-cyan-500">TRIVIA DIGITAL</div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-1"><i class="fas fa-book-open mr-1"></i> Búscalo en tu Biblia Católica:</p>
-                        <p id="trivia-source" class="text-xs font-semibold text-cyan-200 mb-3 bg-cyan-950/60 p-2.5 rounded-xl border border-cyan-800/40">Cita...</p>
+                    <div class="bg-slate-950/90 border border-cyan-500/50 p-6 rounded-2xl text-left mb-6 shadow-2xl">
+                        <div id="mission-badge" class="inline-block bg-cyan-900 text-cyan-300 px-3 py-1 rounded text-xs font-black mb-3 border border-cyan-500">TIPO DE RETO</div>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-1"><i class="fas fa-crosshairs mr-1"></i> Objetivo:</p>
+                        <p id="trivia-source" class="text-sm font-bold text-cyan-200 mb-4 bg-cyan-950/60 p-3 rounded-xl border border-cyan-800/60">Cita...</p>
                         
-                        <p id="trivia-question" class="text-base md:text-lg text-white font-bold leading-relaxed">Pregunta...</p>
+                        <p id="trivia-question" class="text-lg md:text-2xl text-white font-black leading-tight">Pregunta o Instrucción...</p>
                     </div>
 
                     <div id="mission-action-container"></div>
                 </div>
 
-                <div id="feedback-msg" class="mt-4 font-bold text-sm hidden p-3.5 rounded-xl shadow-lg transition-all"></div>
+                <div id="feedback-msg" class="mt-6 font-black text-lg hidden p-4 rounded-xl shadow-2xl transition-all"></div>
             </main>
         </div>
 
-        <!-- MODAL PARA ELEGIR A QUIÉN ATACAR CON EL COMODÍN -->
-        <div id="comodin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-            <div class="card-glass p-6 max-w-md text-center border-purple-500/60 shadow-2xl">
-                <i class="fas fa-bolt text-4xl text-purple-400 mb-3 animate-pulse"></i>
-                <h3 class="text-xl font-bold font-epic text-white mb-2">Comodín de Ataque Divino</h3>
-                <p class="text-slate-300 text-xs mb-5">Elige a qué equipo rival deseas bloquear en su siguiente turno restándole 15 puntos:</p>
-                <div class="space-y-3">
-                    <button onclick="launchAttack(1)" class="w-full py-3 bg-orange-950/80 border border-orange-500 text-orange-200 font-bold rounded-xl hover:bg-orange-900 transition">Atacar a Huellas de Fuego</button>
-                    <button onclick="launchAttack(2)" class="w-full py-3 bg-yellow-950/80 border border-yellow-500 text-yellow-200 font-bold rounded-xl hover:bg-yellow-900 transition">Atacar a Voceros de la Luz</button>
-                    <button onclick="launchAttack(3)" class="w-full py-3 bg-rose-950/80 border border-rose-500 text-rose-200 font-bold rounded-xl hover:bg-rose-900 transition">Atacar a Latido Eterno</button>
-                </div>
-                <button onclick="closeComodinModal()" class="mt-4 text-xs text-slate-400 hover:text-white underline">Cancelar</button>
-            </div>
-        </div>
-
-        <!-- 4. ALERTA ROJA: INTERCAMBIO EXPRÉS -->
-        <div id="screen-alert" class="screen text-center z-50 py-6">
-            <div class="card-glass p-8 text-center bg-black/90 border-2 border-red-500 shadow-2xl max-w-xl w-full">
-                <div class="w-16 h-16 mx-auto rounded-3xl bg-red-600/30 border border-red-500 flex items-center justify-center text-3xl text-red-400 mb-4 animate-bounce shadow-[0_0_30px_rgba(239,68,68,0.8)]">
-                    <i class="fas fa-people-arrows"></i>
-                </div>
-                <h1 class="text-3xl font-black font-epic text-white mb-2">¡INTERCAMBIO EXPRÉS!</h1>
-                <p class="text-base text-yellow-300 font-bold mb-4">Rotación de viajeros en <span id="countdown" class="text-xl text-white font-mono bg-red-950 px-2.5 py-0.5 rounded border border-red-500">10</span> seg</p>
-                <div id="selected-travelers" class="bg-slate-950 p-4 rounded-xl border border-cyan-400/60 text-lg font-black text-cyan-300 uppercase mb-4 tracking-wide shadow-inner">Viajeros...</div>
-                <p class="text-xs text-slate-300 mb-5">Destino al grupo: <strong id="swap-target" class="text-white font-epic text-sm">---</strong></p>
-                <button onclick="resumeGameAfterSwap()" class="btn-modern w-full py-3.5 text-sm bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.6)]">Continuar Maratón</button>
-            </div>
-        </div>
-
-        <!-- 5. PANTALLA FINAL CON PODIUM DE GANADORES -->
-        <div id="screen-final" class="screen text-center py-6">
-            <div class="card-glass p-8 text-center border-t-4 border-yellow-400 w-full shadow-2xl">
-                <i class="fas fa-crown text-6xl text-yellow-400 mb-3 animate-bounce shadow-lg"></i>
-                <h1 class="text-3xl md:text-4xl font-black font-epic text-yellow-300 mb-2 uppercase">¡Maratón Concluida!</h1>
-                <p id="winner-announcement" class="text-cyan-300 font-extrabold text-lg mb-6 uppercase tracking-wider">Calculando ganadores...</p>
+        <!-- 4. PANTALLA FINAL PODIUM -->
+        <div id="screen-final" class="screen text-center py-6 z-50">
+            <div class="card-glass p-8 md:p-12 text-center border-t-8 border-yellow-400 w-full shadow-[0_0_100px_rgba(250,204,21,0.5)]">
+                <h1 class="text-5xl font-black font-epic text-white mb-2 uppercase animate-pulse">¡JUEGO TERMINADO!</h1>
+                <p id="winner-announcement" class="text-yellow-300 font-extrabold text-2xl mb-8 uppercase tracking-widest bg-yellow-900/50 py-3 rounded-xl">Alguien ha llegado a la meta...</p>
                 
-                <div class="bg-slate-950/90 p-4 rounded-2xl border border-slate-800 mb-6 text-left">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 text-center"><i class="fas fa-trophy mr-1"></i> Posiciones Finales en Vivo:</p>
-                    <div class="space-y-2 font-bold text-sm">
-                        <div id="podium-1" class="flex justify-between p-2.5 bg-yellow-500/20 rounded-xl border border-yellow-500/40 text-yellow-300"><span>🥇 1er Lugar</span><b id="p-1-score">0 pts</b></div>
-                        <div id="podium-2" class="flex justify-between p-2.5 bg-slate-800/60 rounded-xl border border-slate-700 text-slate-200"><span>🥈 2do Lugar</span><b id="p-2-score">0 pts</b></div>
-                        <div id="podium-3" class="flex justify-between p-2.5 bg-amber-950/30 rounded-xl border border-amber-800/40 text-amber-300"><span>🥉 3er Lugar</span><b id="p-3-score">0 pts</b></div>
+                <div class="space-y-4 font-black text-xl text-left max-w-md mx-auto">
+                    <div id="podium-1" class="flex justify-between p-5 bg-yellow-500/30 rounded-2xl border-2 border-yellow-400 text-yellow-300 transform scale-110 shadow-[0_0_30px_rgba(250,204,21,0.4)]">
+                        <span>🥇 1er Lugar</span><b id="p-1-score"></b>
+                    </div>
+                    <div id="podium-2" class="flex justify-between p-4 bg-slate-400/20 rounded-xl border-2 border-slate-400 text-slate-200">
+                        <span>🥈 2do Lugar</span><b id="p-2-score"></b>
+                    </div>
+                    <div id="podium-3" class="flex justify-between p-4 bg-amber-900/30 rounded-xl border-2 border-amber-700 text-amber-500">
+                        <span>🥉 3er Lugar</span><b id="p-3-score"></b>
                     </div>
                 </div>
 
-                <button onclick="location.reload()" class="btn-modern px-6 py-3 text-xs bg-slate-800 shadow-md">Reiniciar Sistema</button>
+                <button onclick="location.reload()" class="mt-10 btn-modern px-8 py-4 text-sm bg-slate-800 shadow-md">Volver al inicio</button>
             </div>
         </div>
 
     </div>
 
-    <!-- FIRMA OFICIAL AL PIE DE PÁGINA -->
-    <footer class="w-full text-center py-3 text-xs font-bold text-slate-400 tracking-widest uppercase border-t border-slate-800/80 mt-4 bg-slate-950/70 backdrop-blur-md z-10">
-        Construido con pasión por el Catequista Maycol
+    <!-- FIRMA CATEQUISTA -->
+    <footer class="w-full text-center py-4 text-xs font-black text-cyan-500 tracking-widest uppercase border-t border-slate-800/80 mt-4 bg-slate-950/90 backdrop-blur-md z-10">
+        Diseñado para la Gloria de Dios por el Catequista Maycol
     </footer>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA CON COMODINES -->
+    <!-- LÓGICA DEL JUEGO CON FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCZsdoYHsk-B21sCnc4pNAVqP0h3pfw9oA",
@@ -353,78 +271,53 @@
             projectId: "eco-de-la-verdad",
             storageBucket: "eco-de-la-verdad.firebasestorage.app",
             messagingSenderId: "1079674721987",
-            appId: "1:1079674721987:web:c0933d3297ff246d473476",
-            measurementId: "G-8ZX67RNZ6F"
+            appId: "1:1079674721987:web:c0933d3297ff246d473476"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "arena_estado_v5");
+        const gameRef = doc(db, "juego", "arena_v6"); // Cambié el nombre del doc para iniciar limpio
 
-        const audio = document.getElementById('bg-audio');
-        const musicIcon = document.getElementById('music-icon');
-        let isPlaying = false;
-        window.toggleMusic = () => {
-            if (isPlaying) { audio.pause(); musicIcon.className = "fas fa-play text-xs"; isPlaying = false; }
-            else { audio.play().catch(e => {}); musicIcon.className = "fas fa-pause text-xs"; isPlaying = true; }
-        };
+        window.enterPortal = () => { switchScreen('screen-welcome', 'screen-intro'); };
 
-        window.enterPortal = () => {
-            toggleMusic();
-            switchScreen('screen-welcome', 'screen-intro');
-        };
-
+        // RETOS FÍSICOS Y BÍBLICOS DINÁMICOS
         const teamMissions = {
             1: [
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Índice de la Biblia Católica", q: "¿Cuántos libros integran oficialmente el Antiguo Testamento?", options: ["39 libros", "46 libros", "27 libros", "73 libros"], correct: 1 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Profeta Isaías (Cap. 40)", title: "Línea del Tiempo Profética", desc: "Lean en su Biblia Isaías 40 y dibujen en su cuaderno un esquema de 3 minutos sobre la grandeza de Dios creador." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Profeta Isaías (Cap. 40, v. 31)", q: "Los que esperan en el Señor renovarán sus fuerzas; subirán con alas como...", options: ["Palomas", "Águilas", "Leones", "Cóndores"], correct: 1 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Libro del Éxodo (Cap. 3)", title: "La Zarza Ardiendo", desc: "Escriban en el cuaderno 3 lecciones sobre cómo Dios llama a Moisés a pesar de sus dudas." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Libro de los Hechos (Cap. 2, v. 3)", q: "¿En forma de qué elemento bajó el Espíritu Santo sobre los apóstoles?", options: ["Viento huracanado", "Fuego (lenguas)", "Paloma blanca", "Luz cegadora"], correct: 1 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Libro de los Salmos (Salmo 23)", title: "El Buen Pastor", desc: "Anoten en el cuaderno una oración comunitaria inspirada en el Salmo 23." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Libro de los Salmos (Salmo 23, v. 1)", q: "El famoso salmo comienza diciendo: 'El Señor es mi...'", options: ["Guía y protector", "Pastor, nada me falta", "Refugio y fortaleza", "Luz y salvación"], correct: 1 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Libro del Apocalipsis (Cap. 3)", title: "Carta a Laodicea", desc: "Discutan en grupo y escriban en el cuaderno qué significa la advertencia contra la tibieza espiritual." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Libro del Apocalipsis (Cap. 3, v. 16)", q: "Al ángel de Laodicea le advierte: 'Como eres tibio... estoy por...'", options: ["Descartarte", "Vomitarte", "Olvidarte", "Castigarte"], correct: 1 },
-                { type: "action", badge: "CLÍMAX GRUPAL", source: "Evangelios (Tempestad Calmada)", title: "Misión 10: Dramatización Muda", desc: "¡Reto Final de Grupo! Preparen una dramatización muda de 45 segundos representando la Tempestad Calmada usando expresiones corporales." }
+                { type: "digital", badge: "TRIVIA VELOZ", source: "Antiguo Testamento", q: "¿Quién derribó a Goliat con una honda?", options: ["Salomón", "David", "Moisés", "Josué"], correct: 1 },
+                { type: "physical", badge: "RETO FÍSICO: EL BUEN SAMARITANO", source: "Lucas 10, 25", title: "¡Carga a tu Prójimo!", desc: "Elige a un compañero de tu equipo. ¡Cárgalo en tu espalda (o caballito) y den una vuelta completa a la sala gritando '¡Tengo a mi prójimo!' Una vez terminen, presiona el botón." },
+                { type: "digital", badge: "TRIVIA VELOZ", source: "El Diluvio", q: "¿Cuántos días y noches llovió en el Arca de Noé?", options: ["7", "12", "40", "100"], correct: 2 },
+                { type: "physical", badge: "RETO FÍSICO: LOS MUROS DE JERICÓ", source: "Josué 6", title: "¡A Derrumbar!", desc: "Todo el equipo debe correr dando 7 vueltas alrededor de un grupo de sillas. En la vuelta 7, ¡griten a todo pulmón para 'derrumbar' los muros! Presionen el botón al terminar." },
+                { type: "digital", badge: "TRIVIA VELOZ", source: "El Éxodo", q: "¿Qué mar abrió Moisés con el poder de Dios?", options: ["Mar Muerto", "Mar Rojo", "Mar Mediterráneo", "Río Jordán"], correct: 1 },
+                { type: "physical", badge: "RETO FÍSICO: CAMINANDO SOBRE EL AGUA", source: "Mateo 14, 29", title: "¡Fe en un solo pie!", desc: "Todos los del equipo deben cruzar el aula saltando EN UN SOLO PIE (simulando caminar sobre el agua). Si alguien toca el piso con el otro pie, todo el equipo repite. ¡Rápido!" }
             ],
             2: [
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Índice General de la Biblia Católica", q: "Suma los libros del Antiguo y Nuevo Testamento para descubrir el total:", options: ["66 libros", "72 libros", "73 libros", "80 libros"], correct: 2 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Libro de los Salmos (Salmo 119)", title: "Lámpara de Mis Pasos", desc: "Lean el Salmo 119, 105 y escriban en su cuaderno un compromiso grupal guiado por la Palabra." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Libro de los Salmos (Salmo 119, v. 105)", q: "Dice: 'Tu palabra es una _______ para mis pasos'. ¿Qué palabra falta?", options: ["Antorcha", "Guía", "Lámpara", "Luz eterna"], correct: 2 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Evangelio de San Mateo (Cap. 5)", title: "Sermón del Monte", desc: "Anoten en el cuaderno un resumen de 3 Bienaventuranzas explicadas con sus propias palabras." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Evangelio de San Mateo (Cap. 5, v. 14)", q: "Jesús dice en el Sermón del Monte: 'Ustedes son la ___ del mundo'.", options: ["Sal", "Luz", "Verdad", "Vida"], correct: 1 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Evangelio de San Juan (Cap. 1)", title: "El Verbo Divino", desc: "Escriban en el cuaderno una reflexión sobre qué significa que la Palabra de Dios se haya hecho carne." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Profeta Isaías (Cap. 43, v. 1)", q: "Dios nos da identidad: 'No temas, porque yo te he rescatado; te he llamado por tu...'", options: ["Fe", "Nombre", "Espíritu", "Amor"], correct: 1 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Carta a los Efesios (Cap. 6)", title: "La Armadura de Dios", desc: "Diseñen un esquema rápido en el cuaderno con las piezas de la armadura espiritual." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Carta a los Efesios (Cap. 6, v. 14)", q: "¿Qué elemento de la armadura espiritual se ajusta primero a la cintura?", options: ["La justicia", "La verdad", "La fe", "La paz"], correct: 1 },
-                { type: "action", badge: "CLÍMAX GRUPAL", source: "Canto y Alabanza", title: "Misión 10: Himno del Mes de la Biblia", desc: "¡Reto Final de Grupo! Inventen un coro musical de 30 segundos proclamando el lema de la feria con palmas y alegría." }
+                { type: "digital", badge: "TRIVIA VELOZ", source: "Nuevo Testamento", q: "¿Quién traicionó a Jesús por 30 monedas de plata?", options: ["Pedro", "Judas", "Juan", "Tomás"], correct: 1 },
+                { type: "physical", badge: "RETO FÍSICO: LA PESCA MILAGROSA", source: "Lucas 5, 1", title: "¡La Red Humana!", desc: "Todo el equipo debe tomarse de los brazos formando un círculo (la red). Corran juntos, atrapen (suavemente) a un jugador de otro equipo dentro del círculo y tráiganlo a su base." },
+                { type: "digital", badge: "TRIVIA VELOZ", source: "Los Milagros", q: "¿Qué multiplicó Jesús para alimentar a 5000 personas?", options: ["Agua y Vino", "Panes y Peces", "Ovejas", "Monedas"], correct: 1 },
+                { type: "physical", badge: "RETO FÍSICO: LA TORRE DE BABEL", source: "Génesis 11", title: "¡Confusión de Lenguas!", desc: "Quítense un zapato cada uno y armen una torre. MIENTRAS LA ARMAN, todos deben hablar al mismo tiempo en un idioma inventado (balbucear) sin usar español. ¡Demuestren la confusión!" },
+                { type: "digital", badge: "TRIVIA VELOZ", source: "Pentecostés", q: "¿En forma de qué bajó el Espíritu Santo?", options: ["Lluvia", "Lenguas de fuego", "Luz", "Viento"], correct: 1 },
+                { type: "physical", badge: "RETO FÍSICO: DAVID Y GOLIAT", source: "1 Samuel 17", title: "¡Apunta a la cabeza!", desc: "Hagan una bola de papel. Un jugador debe pararse en una silla (Goliat). Otro debe lanzarle la bola de papel (piedra) y darle en la cabeza para 'derribarlo'. ¡Solo tienen 5 intentos, corran!" }
             ],
             3: [
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Índice del Nuevo Testamento", q: "¿Cuántos libros componen exclusivamente el Nuevo Testamento?", options: ["24 libros", "27 libros", "30 libros", "21 libros"], correct: 1 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Primera Carta de San Juan (Cap. 4)", title: "La Esencia del Amor", desc: "Lean 1 Juan 4 y escriban en su cuaderno cómo el amor perfecto echa fuera el temor." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Primera Carta de San Juan (Cap. 4, v. 8)", q: "El texto afirma con contundencia una sola palabra como la definición suprema de Dios:", options: ["Justicia", "Poder", "Amor", "Fuego"], correct: 2 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Evangelio de San Mateo (Cap. 16)", title: "La Confesión de Pedro", desc: "Anoten en el cuaderno qué significa que Jesús sea el Mesías y la piedra angular de la Iglesia." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Evangelio de San Mateo (Cap. 16, v. 18)", q: "Jesús le dice a Simón: 'Y sobre esta ________ edificaré mi Iglesia'.", options: ["Columna", "Roca", "Piedra", "Fe"], correct: 2 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Evangelio de San Juan (Cap. 2)", title: "Las Bodas de Caná", desc: "Escriban en el cuaderno una reflexión sobre la intercesión de la Virgen María en el primer milagro." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Evangelio de San Juan (Cap. 14, v. 6)", q: "Jesús hace su gran declaración: 'Yo soy el Camino, la Verdad y la...'", options: ["Luz", "Paz", "Vida", "Puerta"], correct: 2 },
-                { type: "notebook", badge: "RETO EN CUADERNO", source: "Libro de los Hechos (Cap. 1)", title: "La Promesa del Espíritu", desc: "Anoten en el cuaderno cómo los discípulos se prepararon en oración antes de Pentecostés." },
-                { type: "digital", badge: "TRIVIA DIGITAL", source: "Libro de los Hechos (Cap. 1, v. 8)", q: "Jesús promete: 'Recibiréis la fuerza del ________ Santo que vendrá sobre vosotros'.", options: ["Poder", "Espíritu", "Fuego", "Amor"], correct: 1 },
-                { type: "action", badge: "CLÍMAX GRUPAL", source: "Parábolas de Jesús", title: "Misión 10: Parábola Viviente", desc: "¡Reto Final de Grupo! Realicen una dramatización viviente de 45 segundos de la Parábola del Sembrador usando objetos del entorno." }
+                { type: "digital", badge: "TRIVIA VELOZ", source: "Los Apóstoles", q: "¿Sobre qué apóstol edificó Jesús su Iglesia?", options: ["Juan", "Pablo", "Pedro", "Mateo"], correct: 2 },
+                { type: "physical", badge: "RETO FÍSICO: EL ARCA DE NOÉ", source: "Génesis 7", title: "¡Parejas de Animales!", desc: "El equipo debe dividirse en parejas. Cada pareja debe cruzar el cuarto ida y vuelta imitando el sonido y caminar de un animal DIFERENTE (ej. monos, perros, ranas). ¡Que se note!" },
+                { type: "digital", badge: "TRIVIA VELOZ", source: "Primer Milagro", q: "¿En qué bodas Jesús convirtió el agua en vino?", options: ["Bodas de Caná", "Bodas de Jerusalén", "Bodas de Nazaret", "Bodas de Belén"], correct: 0 },
+                { type: "physical", badge: "RETO FÍSICO: EL PARALÍTICO BAJADO DEL TECHO", source: "Marcos 2", title: "¡Abran paso!", desc: "Deben acostar a un compañero en el piso. Cuatro miembros del equipo deben levantarlo (uno por cada brazo y pierna) y cargarlo 3 metros hacia adelante como al paralítico de la historia." },
+                { type: "digital", badge: "TRIVIA VELOZ", source: "Zaqueo", q: "¿A qué árbol se subió Zaqueo para ver a Jesús?", options: ["Higuera", "Sicomoro", "Olivo", "Palmera"], correct: 1 },
+                { type: "physical", badge: "RETO FÍSICO: LAVATORIO DE PIES", source: "Juan 13", title: "¡El mayor es el servidor!", desc: "Un miembro del equipo debe quitarle los zapatos y medias a otro compañero y hacer la mímica de lavarle los pies con extrema humildad durante 15 segundos. ¡Rápido!" }
             ]
         };
 
         let myTeamId = 0;
         let currentMissionIndex = 0;
         let myScore = 100;
-        let consecutiveHits = 0;
-        let availableComodins = 0;
-        let teamNamesList = [];
-        let countdownInterval;
+        let gameDataCache = null;
+        let prevScores = { 1: 0, 2: 0, 3: 0 };
 
         const teamData = {
-            1: { nombre: "Huellas de Fuego", icono: "fa-fire" },
-            2: { nombre: "Voceros de la Luz", icono: "fa-bolt" },
-            3: { nombre: "Latido Eterno", icono: "fa-heart" }
+            1: { nombre: "Huellas de Fuego" },
+            2: { nombre: "Voceros de la Luz" },
+            3: { nombre: "Latido Eterno" }
         };
 
         async function initDoc() {
@@ -433,9 +326,8 @@
                 await setDoc(gameRef, {
                     fase: 0,
                     g1_ready: false, g2_ready: false, g3_ready: false,
-                    g1_names: "", g2_names: "", g3_names: "",
                     g1_score: 100, g2_score: 100, g3_score: 100,
-                    g1_attacked: 0, g2_attacked: 0, g3_attacked: 0
+                    ganadores: [] // Array para saber quién acaba primero
                 });
             }
         }
@@ -444,164 +336,107 @@
         window.selectTeam = (id) => {
             myTeamId = id;
             document.getElementById('lobby-title').innerText = teamData[id].nombre;
-            document.getElementById('lobby-icon-container').innerHTML = `<i class="fas ${teamData[id].icono}"></i>`;
             switchScreen('screen-intro', 'screen-lobby');
         };
 
         window.setReady = async () => {
-            const names = document.getElementById('team-names').value.trim();
-            if (names === "") { alert("Escribe los nombres de los integrantes."); return; }
-            teamNamesList = names.split(',').map(n => n.trim()).filter(n => n !== "");
-
-            document.getElementById('team-names').disabled = true;
             document.getElementById('btn-ready').style.display = 'none';
             document.getElementById('waiting-status').classList.remove('hidden');
-
-            const upd = {};
-            upd[`g${myTeamId}_ready`] = true;
-            upd[`g${myTeamId}_names`] = names;
+            const upd = {}; upd[`g${myTeamId}_ready`] = true;
             await updateDoc(gameRef, upd);
         };
 
+        // NOTIFICACIÓN EN PANTALLA
+        function showToastAlert(msg) {
+            const toast = document.getElementById('pressure-toast');
+            document.getElementById('pressure-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 4000);
+        }
+
         window.checkAnswer = async (selectedIndex) => {
-            const missions = teamMissions[myTeamId];
-            const m = missions[currentMissionIndex];
+            const m = teamMissions[myTeamId][currentMissionIndex];
             const feedback = document.getElementById('feedback-msg');
             feedback.classList.remove('hidden');
 
-            const upd = {};
             if (selectedIndex === m.correct) {
-                myScore += 10;
-                consecutiveHits++;
-                feedback.className = "mt-4 font-bold text-sm bg-emerald-950/95 p-3.5 rounded-xl border border-emerald-500 text-emerald-300 shadow-xl";
-                feedback.innerHTML = `<i class="fas fa-check-circle mr-1"></i> ¡Aleluya! ¡Correcto! +10 puntos.`;
-
-                // ¡Cada 3 aciertos se gana un comodín!
-                if (consecutiveHits >= 3) {
-                    consecutiveHits = 0;
-                    availableComodins++;
-                    updateComodinUI();
-                }
+                myScore += 20;
+                feedback.className = "mt-6 font-black text-lg bg-emerald-600 text-white p-4 rounded-xl shadow-2xl";
+                feedback.innerHTML = `¡CORRECTO! +20 puntos. ¡Sigan avanzando!`;
             } else {
                 myScore -= 10;
-                consecutiveHits = 0;
-                if(myScore < 0) myScore = 0;
-                feedback.className = "mt-4 font-bold text-sm bg-rose-950/95 p-3.5 rounded-xl border border-rose-500 text-rose-300 shadow-xl";
-                feedback.innerHTML = `<i class="fas fa-times-circle mr-1"></i> Incorrecto. La respuesta era: <b>${m.options[m.correct]}</b> (-10 pts)`;
+                feedback.className = "mt-6 font-black text-lg bg-red-600 text-white p-4 rounded-xl shadow-2xl";
+                feedback.innerHTML = `MAL. La respuesta era: ${m.options[m.correct]}. Pierden 10 pts.`;
             }
+            
             document.getElementById('my-score').innerText = myScore;
-
-            upd[`g${myTeamId}_score`] = myScore;
+            
             currentMissionIndex++;
-            await updateDoc(gameRef, upd);
-
+            await progressGame();
+            
             setTimeout(() => {
                 feedback.classList.add('hidden');
                 checkNextStep();
-            }, 2000);
+            }, 1500);
         };
 
         window.completeManualMission = async () => {
-            myScore += 15;
+            myScore += 30; // Los retos físicos dan más puntos
             document.getElementById('my-score').innerText = myScore;
-            const upd = {};
-            upd[`g${myTeamId}_score`] = myScore;
             currentMissionIndex++;
-            await updateDoc(gameRef, upd);
+            await progressGame();
             checkNextStep();
         };
 
-        function updateComodinUI() {
-            const btn = document.getElementById('comodin-btn');
-            const count = document.getElementById('comodin-count');
-            count.innerText = availableComodins;
-            if (availableComodins > 0) {
-                btn.classList.remove('hidden');
-            } else {
-                btn.classList.add('hidden');
+        async function progressGame() {
+            const upd = {};
+            upd[`g${myTeamId}_score`] = myScore;
+            
+            // Si llegamos al final de nuestras misiones, nos registramos como ganadores
+            if (currentMissionIndex >= teamMissions[myTeamId].length) {
+                upd.ganadores = arrayUnion(myTeamId);
             }
+            await updateDoc(gameRef, upd);
         }
 
-        window.useComodin = () => {
-            if (availableComodins > 0) {
-                document.getElementById('comodin-modal').classList.remove('hidden');
-            }
-        };
-
-        window.closeComodinModal = () => {
-            document.getElementById('comodin-modal').classList.add('hidden');
-        };
-
-        window.launchAttack = async (targetTeamId) => {
-            if (targetTeamId === myTeamId) {
-                alert("¡No puedes atacarte a ti mismo!");
-                return;
-            }
-            availableComodins--;
-            updateComodinUI();
-            closeComodinModal();
-
-            const upd = {};
-            upd[`g${targetTeamId}_attacked`] = Date.now(); // Marca de ataque en vivo
-            await updateDoc(gameRef, upd);
-            alert(`¡Comodín lanzado con éxito contra ${teamData[targetId].nombre}!`);
-        };
-
         function checkNextStep() {
-            const missions = teamMissions[myTeamId];
-            if (currentMissionIndex === 3 || currentMissionIndex === 6) {
-                triggerSwapAlert();
-            } else if (currentMissionIndex < missions.length) {
+            if (currentMissionIndex < teamMissions[myTeamId].length) {
                 loadCurrentMission();
             } else {
-                showFinalPodium();
+                // Pantalla de espera personal mientras otros acaban
+                document.getElementById('mission-action-container').innerHTML = `<h2 class="text-3xl font-black text-emerald-400 mt-10 animate-bounce">¡MISIONES COMPLETADAS! ESPERANDO A QUE TERMINE OTRO EQUIPO...</h2>`;
+                document.getElementById('mission-badge').style.display = 'none';
             }
         }
 
         function loadCurrentMission() {
-            const missions = teamMissions[myTeamId];
-            const m = missions[currentMissionIndex];
-
+            const m = teamMissions[myTeamId][currentMissionIndex];
             document.getElementById('game-team-name').innerText = teamData[myTeamId].nombre;
-            document.getElementById('header-team-icon').innerHTML = `<i class="fas ${teamData[myTeamId].icono}"></i>`;
-            document.getElementById('mission-counter').innerText = `Misión ${currentMissionIndex + 1} / ${missions.length}`;
-            document.getElementById('my-score').innerText = myScore;
+            document.getElementById('mission-counter').innerText = `Ronda ${currentMissionIndex + 1} / ${teamMissions[myTeamId].length}`;
             document.getElementById('mission-badge').innerText = m.badge;
             document.getElementById('trivia-source').innerText = m.source;
             document.getElementById('trivia-question').innerText = m.q || m.title + ": " + m.desc;
 
             const container = document.getElementById('mission-action-container');
-            container.innerHTML = "";
-
             if (m.type === "digital") {
-                let optHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-left">';
+                let optHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">';
                 m.options.forEach((opt, idx) => {
-                    optHtml += `
-                        <button onclick="checkAnswer(${idx})" class="btn-option">
-                            <span class="w-8 h-8 rounded-xl bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-300 font-extrabold text-sm shadow">${String.fromCharCode(65 + idx)}</span>
-                            <span class="text-sm md:text-base">${opt}</span>
-                        </button>
-                    `;
+                    optHtml += `<button onclick="checkAnswer(${idx})" class="btn-option text-lg">${opt}</button>`;
                 });
-                optHtml += '</div>';
-                container.innerHTML = optHtml;
-            } else if (m.type === "notebook" || m.type === "action") {
+                container.innerHTML = optHtml + '</div>';
+            } else if (m.type === "physical") {
                 container.innerHTML = `
-                    <div class="bg-amber-950/40 border border-amber-500/40 p-4 rounded-2xl mb-4 text-center">
-                        <p class="text-amber-300 font-bold mb-1 text-sm"><i class="fas fa-book-pen mr-2"></i> ${m.title}</p>
-                        <p class="text-slate-200 text-sm mb-3">${m.desc}</p>
+                    <div class="mt-8">
+                        <button onclick="completeManualMission()" class="btn-physical w-full py-6 text-xl font-black text-white rounded-2xl uppercase tracking-widest"><i class="fas fa-bolt mr-2"></i> ¡Reto Físico Completado (+30 pts)!</button>
                     </div>
-                    <button onclick="completeManualMission()" class="btn-modern btn-notebook w-full py-4 text-base"><i class="fas fa-star mr-2"></i> ¡Reto Cumplido (+15 pts)!</button>
                 `;
             }
         }
 
-        async function showFinalPodium() {
+        async function endGlobalGame(data) {
+            if(document.getElementById('screen-final').style.display === 'flex') return;
             switchScreen('screen-game', 'screen-final');
-            const snap = await getDoc(gameRef);
-            if (!snap.exists()) return;
-            const data = snap.data();
-
+            
             let scores = [
                 { name: "Huellas de Fuego", score: data.g1_score },
                 { name: "Voceros de la Luz", score: data.g2_score },
@@ -609,40 +444,11 @@
             ];
             scores.sort((a, b) => b.score - a.score);
 
-            document.getElementById('winner-announcement').innerText = `¡El equipo ganador es ${scores[0].name}!`;
-            document.getElementById('p-1-score').innerText = `${scores[0].name} - ${scores[0].score} pts`;
-            document.getElementById('p-2-score').innerText = `${scores[1].name} - ${scores[1].score} pts`;
-            document.getElementById('p-3-score').innerText = `${scores[2].name} - ${scores[2].score} pts`;
+            document.getElementById('winner-announcement').innerText = `¡${scores[0].name} es el Campeón de la Fe!`;
+            document.getElementById('p-1-score').innerText = `${scores[0].score} pts`;
+            document.getElementById('p-2-score').innerText = `${scores[1].score} pts`;
+            document.getElementById('p-3-score').innerText = `${scores[2].score} pts`;
         }
-
-        function triggerSwapAlert() {
-            document.body.classList.add('red-alert-bg');
-            let selectedTravelers = "Todo el equipo";
-            if (teamNamesList.length > 0) {
-                let shuffled = [...teamNamesList].sort(() => 0.5 - Math.random());
-                selectedTravelers = shuffled.slice(0, Math.min(2, shuffled.length)).join(', ');
-            }
-            document.getElementById('selected-travelers').innerText = selectedTravelers;
-            let targetId = myTeamId === 1 ? 2 : (myTeamId === 2 ? 3 : 1);
-            document.getElementById('swap-target').innerText = teamData[targetId].nombre;
-
-            switchScreen('screen-game', 'screen-alert');
-
-            let timeLeft = 10;
-            clearInterval(countdownInterval);
-            countdownInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('countdown').innerText = timeLeft;
-                if (timeLeft <= 0) { clearInterval(countdownInterval); document.getElementById('countdown').innerText = "¡YA!"; }
-            }, 1000);
-        }
-
-        window.resumeGameAfterSwap = () => {
-            document.body.classList.remove('red-alert-bg');
-            clearInterval(countdownInterval);
-            switchScreen('screen-alert', 'screen-game');
-            loadCurrentMission();
-        };
 
         function switchScreen(hideId, showId) {
             const hideEl = document.getElementById(hideId);
@@ -651,40 +457,45 @@
             setTimeout(() => {
                 hideEl.classList.remove('active'); hideEl.style.display = 'none';
                 showEl.style.display = 'flex';
-                setTimeout(() => { showEl.classList.add('active'); showEl.style.opacity = '1'; }, 400);
-            }, 400);
+                setTimeout(() => { showEl.classList.add('active'); showEl.style.opacity = '1'; }, 100);
+            }, 300);
         }
 
         onSnapshot(gameRef, async (snap) => {
             if (!snap.exists()) return;
             const data = snap.data();
+            gameDataCache = data;
 
+            // Actualizar Marcadores
             document.getElementById('score-g1').innerText = data.g1_score;
             document.getElementById('score-g2').innerText = data.g2_score;
             document.getElementById('score-g3').innerText = data.g3_score;
 
-            document.getElementById('status-g1').innerHTML = `Fuego: ${data.g1_ready ? '✅' : '❌'}`;
-            document.getElementById('status-g2').innerHTML = `Voceros: ${data.g2_ready ? '✅' : '❌'}`;
-            document.getElementById('status-g3').innerHTML = `Latido: ${data.g3_ready ? '✅' : '❌'}`;
-
-            // Revisar si este equipo fue atacado
-            let attackTimestamp = data[`g${myTeamId}_attacked`] || 0;
-            if (attackTimestamp > 0) {
-                let alertBox = document.getElementById('attack-alert');
-                alertBox.classList.remove('hidden');
-                setTimeout(() => { alertBox.classList.add('hidden'); }, 6000);
+            // SISTEMA DE PRESIÓN EN VIVO (TOASTS)
+            // Si el juego ya empezó (fase 2) y no es mi equipo el que anotó
+            if (data.fase === 2) {
+                [1, 2, 3].forEach(id => {
+                    if (id !== myTeamId && data[`g${id}_score`] > prevScores[id]) {
+                        // Un equipo rival acaba de ganar puntos
+                        showToastAlert(`¡Cuidado! ${teamData[id].nombre} acaba de avanzar rápido 🔥`);
+                    }
+                    prevScores[id] = data[`g${id}_score`];
+                });
             }
 
-            if (data.fase === 0 && data.g1_ready && data.g2_ready && data.g3_ready) {
-                if (data[`g${myTeamId}_ready`]) {
-                    await updateDoc(gameRef, { fase: 1 });
-                }
+            // LOBBY STATUS
+            document.getElementById('status-g1').innerText = `Fuego: ${data.g1_ready ? '✅' : '❌'}`;
+            document.getElementById('status-g2').innerText = `Luz: ${data.g2_ready ? '✅' : '❌'}`;
+            document.getElementById('status-g3').innerText = `Latido: ${data.g3_ready ? '✅' : '❌'}`;
+
+            // ARRANQUE FASE 1: TODOS LISTOS
+            if (data.fase === 0 && data.g1_ready && data.g2_ready && data.g3_ready && data[`g${myTeamId}_ready`]) {
+                await updateDoc(gameRef, { fase: 1 });
             }
 
+            // FASE 1: CONTADOR GIGANTE
             if (data.fase === 1) {
-                document.getElementById('waiting-status').classList.add('hidden');
                 document.getElementById('start-countdown-box').classList.remove('hidden');
-                
                 let t = 10;
                 let timerBox = document.getElementById('start-timer');
                 let intv = setInterval(async () => {
@@ -697,9 +508,23 @@
                 }, 1000);
             }
 
+            // FASE 2: ENTRAR A LA ARENA
             if (data.fase === 2 && document.getElementById('screen-lobby').classList.contains('active')) {
+                // Inicializar puntajes previos al entrar a la arena
+                prevScores = { 1: data.g1_score, 2: data.g2_score, 3: data.g3_score };
                 loadCurrentMission();
                 switchScreen('screen-lobby', 'screen-game');
+            }
+
+            // CONDICIÓN DE VICTORIA GLOBAL: BASTA QUE 1 o 2 TERMINEN
+            // Si hay 2 ganadores en el array (basta que el segundo termine, o puedes cambiar a 1)
+            if (data.ganadores && data.ganadores.length >= 2 && data.fase !== 3) {
+                if (myTeamId === 1) await updateDoc(gameRef, { fase: 3 }); // El admin G1 cierra
+            }
+
+            // FASE 3: FIN DEL JUEGO PARA TODOS
+            if (data.fase === 3) {
+                endGlobalGame(data);
             }
         });
     </script>
