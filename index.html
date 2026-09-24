@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>El Eco de la Verdad - Arena Suprema v6</title>
+    <title>El Eco de la Verdad - Arena Suprema v7 (Penitencias y Modo Extendido)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Librería para Drag & Drop fluido -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     <style>
@@ -32,73 +30,37 @@
 
         .font-epic { font-family: 'Cinzel', serif; }
 
-        #particle-canvas {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; pointer-events: none; mix-blend-mode: screen;
-        }
+        #particle-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; mix-blend-mode: screen; }
+        .vignette { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, transparent 30%, #000 100%); z-index: 1; pointer-events: none; }
 
-        .vignette {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, transparent 30%, #000 100%);
-            z-index: 1; pointer-events: none;
-        }
+        .cyber-panel { background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(6, 182, 212, 0.05); position: relative; overflow: hidden; }
 
-        .cyber-panel {
-            background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(6, 182, 212, 0.05);
-            position: relative; overflow: hidden;
-        }
-
-        .btn-core {
-            position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em;
-            display: flex; align-items: center; justify-content: center; gap: 0.75rem; cursor: pointer;
-        }
+        .btn-core { position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em; display: flex; align-items: center; justify-content: center; gap: 0.75rem; cursor: pointer; }
         .btn-core:active { transform: scale(0.96); }
-        
         .btn-cyan { background: linear-gradient(135deg, #0284c7, #06b6d4); border: 1px solid #22d3ee; box-shadow: 0 0 20px var(--neon-cyan-glow); color: white; }
         .btn-cyan:hover { box-shadow: 0 0 40px var(--neon-cyan); text-shadow: 0 0 10px white; }
-        
         .btn-gold { background: linear-gradient(135deg, #b45309, #f59e0b); border: 1px solid #fbbf24; box-shadow: 0 0 20px var(--neon-gold-glow); color: #000; }
         .btn-gold:hover { box-shadow: 0 0 40px var(--neon-gold); }
-
         .btn-danger { background: linear-gradient(135deg, #991b1b, #ef4444); border: 1px solid #f87171; box-shadow: 0 0 20px var(--neon-red-glow); color: white; }
         
-        .cyber-input {
-            width: 100%; background: rgba(0,0,0,0.6); border: 2px solid #0369a1;
-            color: #22d3ee; border-radius: 1rem; padding: 1rem; font-weight: 700;
-            transition: all 0.3s; text-align: center; font-size: 1.1rem;
-        }
+        .cyber-input { width: 100%; background: rgba(0,0,0,0.6); border: 2px solid #0369a1; color: #22d3ee; border-radius: 1rem; padding: 1rem; font-weight: 700; transition: all 0.3s; text-align: center; font-size: 1.1rem; }
         .cyber-input:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 20px rgba(14, 165, 233, 0.4); }
         .cyber-input::placeholder { color: #475569; }
 
-        @keyframes divine-float {
-            0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 20px var(--neon-gold)); }
-            50% { transform: translateY(-15px) scale(1.05); filter: drop-shadow(0 0 50px #fff); }
-        }
+        @keyframes divine-float { 0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 20px var(--neon-gold)); } 50% { transform: translateY(-15px) scale(1.05); filter: drop-shadow(0 0 50px #fff); } }
         .animate-divine { animation: divine-float 4s ease-in-out infinite; }
 
-        .screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100dvh;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 10; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth;
-            padding-bottom: 2rem;
-        }
+        @keyframes glitch-anim { 0% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } 100% { transform: translate(0) } }
+        .glitch-error { animation: glitch-anim 0.3s infinite; border-color: var(--neon-red) !important; color: var(--neon-red); }
+
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; padding-bottom: 2rem; }
         .screen.active { opacity: 1; pointer-events: all; }
-        
         .screen-content { width: 100%; max-width: 600px; margin: auto; padding: 2rem 0; flex-shrink: 0; }
 
-        .roulette-viewport {
-            height: 120px; overflow: hidden; position: relative;
-            background: rgba(0,0,0,0.8); border: 2px solid var(--neon-cyan); border-radius: 1rem;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
-        }
+        .roulette-viewport { height: 120px; overflow: hidden; position: relative; background: rgba(0,0,0,0.8); border: 2px solid var(--neon-cyan); border-radius: 1rem; box-shadow: inset 0 0 30px rgba(0,0,0,0.9); }
         .roulette-viewport::before, .roulette-viewport::after { content:''; position:absolute; left:0; width:100%; height:40px; z-index:2; pointer-events:none; }
         .roulette-viewport::before { top:0; background: linear-gradient(to bottom, #000, transparent); }
         .roulette-viewport::after { bottom:0; background: linear-gradient(to top, #000, transparent); }
-        
         .roulette-wheel { display: flex; flex-direction: column; align-items: center; transition: transform 4s cubic-bezier(0.15, 0.85, 0.1, 1); }
         .roulette-item { height: 40px; line-height: 40px; font-size: 1.5rem; font-weight: 900; color: #475569; transition: color 0.2s, text-shadow 0.2s, transform 0.2s; }
         .roulette-item.selected { color: var(--neon-cyan); text-shadow: 0 0 20px var(--neon-cyan); transform: scale(1.2); }
@@ -107,13 +69,8 @@
         .progress-fill { height: 100%; background: var(--neon-cyan); transition: width 0.1s linear, background 0.3s; }
         .progress-fill.danger { background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
 
-        /* Estilos optimizados para SortableJS */
         .dnd-container { display: flex; flex-direction: column; gap: 0.75rem; min-height: 200px; padding: 1rem; background: rgba(0,0,0,0.4); border-radius: 1rem; touch-action: none; }
-        .dnd-item { 
-            padding: 1.25rem 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; 
-            color: white; font-weight: bold; cursor: grab; text-align: left; transition: border-color 0.2s;
-            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
-        }
+        .dnd-item { padding: 1.25rem 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; color: white; font-weight: bold; cursor: grab; text-align: left; transition: border-color 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .dnd-item:active { cursor: grabbing; }
         .dnd-item.dragging { opacity: 0.4; background: #0f172a; border: 2px dashed var(--neon-cyan); transform: scale(1.02); }
 
@@ -123,12 +80,13 @@
         #toast-live { position: fixed; top: 1.5rem; left: 50%; transform: translate(-50%, -150%); z-index: 10000; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #toast-live.show { transform: translate(-50%, 0); }
 
-        .ice-texture { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>'); background-color: rgba(2, 132, 199, 0.9); }
-
-        #admin-panel {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98);
-            z-index: 99999; display: none; flex-direction: column; padding: 1.5rem; overflow-y: auto; backdrop-filter: blur(10px);
+        /* Estilo Penitencia */
+        .penalty-texture {
+            background: radial-gradient(circle at center, #7f1d1d 0%, #450a0a 100%);
+            background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 10px, transparent 10px, transparent 20px);
         }
+
+        #admin-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 99999; display: none; flex-direction: column; padding: 1.5rem; overflow-y: auto; backdrop-filter: blur(10px); }
     </style>
 </head>
 <body>
@@ -141,7 +99,6 @@
         <span id="toast-msg" class="uppercase tracking-widest text-sm">NOTIFICACIÓN</span>
     </div>
 
-    <!-- OVERLAYS DE RESPUESTA -->
     <div id="ov-success" class="overlay-fx bg-slate-900/90 border-4 border-yellow-400">
         <div class="animate-divine text-yellow-400 mb-6 relative">
             <i class="fas fa-sun text-9xl absolute opacity-30 animate-spin" style="animation-duration: 8s; top:-20px; left:-20px;"></i>
@@ -157,15 +114,18 @@
         <p id="ov-err-msg" class="text-xl font-bold text-red-300 text-center px-6 mt-4 uppercase">La respuesta era...</p>
     </div>
 
-    <div id="ov-frozen" class="overlay-fx ice-texture border-8 border-cyan-300">
-        <i class="fas fa-snowflake text-9xl text-white mb-6 animate-spin" style="animation-duration: 10s; filter: drop-shadow(0 0 20px #fff);"></i>
-        <h2 class="font-epic text-5xl font-black text-white text-center drop-shadow-lg">SABOTAJE</h2>
-        <p class="text-xl font-bold text-cyan-100 text-center mt-4 uppercase tracking-widest">Un rival te ha congelado</p>
-        <p class="text-7xl font-black text-white mt-8 drop-shadow-[0_0_20px_#fff]" id="frozen-timer">10</p>
+    <!-- OVERLAY DE PENITENCIA (REEMPLAZA AL HIELO) -->
+    <div id="ov-penalty" class="overlay-fx penalty-texture border-8 border-red-500">
+        <i class="fas fa-bolt text-9xl text-yellow-400 mb-6 animate-pulse drop-shadow-[0_0_30px_#fbbf24]"></i>
+        <h2 class="font-epic text-5xl font-black text-white text-center drop-shadow-lg">¡ATAQUE RIVAL!</h2>
+        <p class="text-xl font-bold text-red-200 text-center mt-2 uppercase tracking-widest">CUMPLE LA PENITENCIA PARA CONTINUAR:</p>
+        <p id="penalty-text" class="text-3xl font-black text-white text-center mt-6 px-6 drop-shadow-md">...</p>
+        
+        <button id="btn-clear-penalty" onclick="System.clearPenalty()" class="btn-core btn-gold mt-10 px-8 py-5 rounded-2xl hidden shadow-[0_0_30px_rgba(251,191,36,0.6)]">
+            <i class="fas fa-check-double"></i> ¡PENITENCIA CUMPLIDA!
+        </button>
     </div>
 
-    <!-- VISTAS DE LA APP -->
-    
     <!-- 0. BIENVENIDA -->
     <div id="view-welcome" class="screen active">
         <div class="screen-content flex flex-col items-center text-center">
@@ -191,7 +151,7 @@
     <div id="view-teams" class="screen">
         <div class="screen-content text-center">
             <h2 class="text-3xl font-black font-epic text-cyan-300 mb-2 uppercase">Identifica tu Legión</h2>
-            <p class="text-slate-400 text-sm mb-8">Selecciona tu subgrupo (pueden participar de 3 hasta 5 equipos).</p>
+            <p class="text-slate-400 text-sm mb-8">Selecciona tu subgrupo (pueden participar de 1 hasta 5 equipos).</p>
             
             <div class="flex flex-col gap-4 w-full max-w-md mx-auto max-h-[60vh] overflow-y-auto pr-1 pb-4">
                 <button onclick="System.selectTeam(1)" class="cyber-panel p-5 flex items-center justify-between hover:border-orange-500 transition group cursor-pointer">
@@ -336,7 +296,8 @@
         </div>
         
         <div class="bg-cyan-950/60 p-5 rounded-2xl border border-cyan-500 mb-6 shadow-[0_0_20px_rgba(6,182,212,0.2)] text-center">
-            <p class="text-cyan-200 font-bold mb-4 text-sm">Control de Partida. Inicia cuando los equipos que deseas participen estén listos (✅).</p>
+            <p class="text-cyan-200 font-bold mb-4 text-sm">Inicia la partida cuando los equipos deseados estén listos (✅).</p>
+            <p class="text-yellow-400 text-xs font-bold mb-4 bg-black/50 p-2 rounded">💡 Si juegas con 1 solo equipo, el modo será de 20 misiones automáticamente.</p>
             <button id="btn-admin-start" onclick="System.adminStartGame()" class="btn-core btn-cyan w-full py-4 text-lg rounded-xl shadow-lg cursor-pointer">
                 <i class="fas fa-rocket"></i> INICIAR MARATÓN AHORA
             </button>
@@ -356,7 +317,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT PRINCIPAL DINÁMICO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -371,7 +331,7 @@
         };
         const app = initializeApp(fbConfig);
         const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "arena_engine_admin_v4"); // ID Renombrado para iniciar limpio
+        const gameRef = doc(db, "juego", "arena_engine_admin_v5"); // Nueva ID para evitar caché
 
         const AudioSys = {
             ctx: null,
@@ -406,7 +366,7 @@
                 { type: "dnd", badge: "LÓGICA GÉNESIS", q: "Ordena los días de la Creación arrastrando los bloques.", items: ["La Luz", "El Cielo y Mar", "Animales Terrestres"], ans: [0, 1, 2], pts: 30 },
                 { type: "text", badge: "ACERTIJO PROFÉTICO", q: "Fui arrojado a un foso de leones por orar a mi Dios, pero un ángel cerró sus bocas. ¿Quién soy?", ans: ["daniel"], pts: 25 },
                 { type: "hold", badge: "SOPORTA LA CRUZ", q: "Carga en la espalda a un compañero y mantén presionado el botón 7 segundos.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "EL BESO DE JUDAS", q: "Elige estratégicamente a un equipo rival para congelar sus pantallas por 10 segundos.", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
                 { type: "motion", badge: "TERREMOTO EN PRISIÓN", q: "¡Como Pablo y Silas! Agita tu celular o toca el botón 40 veces rápido.", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "PROFETAS", q: "En Isaías 40, 31, se menciona que los que esperan en el Señor subirán con alas como...", opts: ["Palomas", "Águilas", "Leones", "Cóndores"], ans: 1, time: 15, pts: 20 },
                 { type: "sequence", badge: "EL CÓDIGO BÍBLICO", q: "Orden de sacramentos: Bautismo, Comunión, Confirmación.", items: ["Comunión", "Confirmación", "Bautismo"], ans: [2, 0, 1], pts: 30 },
@@ -418,7 +378,7 @@
                 { type: "dnd", badge: "LÓGICA", q: "Ordena cronológicamente estos eventos de la vida de Jesús:", items: ["Bautismo", "Crucifixión", "Nacimiento"], ans: [2, 0, 1], pts: 30 },
                 { type: "text", badge: "ACERTIJO", q: "Dije 'Hágase en mí según tu palabra' cuando el ángel me visitó. ¿Quién soy?", ans: ["maria", "virgen maria"], pts: 25 },
                 { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos mientras tu equipo canta una alabanza.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE", q: "Elige a un equipo rival para congelar sus pantallas 10 segundos.", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
                 { type: "motion", badge: "LUZ DEL MUNDO", q: "¡Tapéa rápido 40 veces para encender la luz espiritual en la pantalla!", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "SALMOS", q: "En el Salmo 119, 105, se declara que la palabra de Dios es una _______ para los pasos.", opts: ["Antorcha", "Guía", "Lámpara", "Luz"], ans: 2, time: 15, pts: 20 },
                 { type: "sequence", badge: "CÓDIGO", q: "Ordena los elementos del Credo: Encarnación, Pasión, Resurrección.", items: ["Pasión", "Resurrección", "Encarnación"], ans: [2, 0, 1], pts: 30 },
@@ -430,7 +390,7 @@
                 { type: "dnd", badge: "LÓGICA", q: "Ordena los siguientes pilares de la Iglesia primitiva:", items: ["Pentecostés", "La Última Cena", "Ascensión"], ans: [1, 2, 0], pts: 30 },
                 { type: "text", badge: "ACERTIJO", q: "Fui llamado el discípulo amado y escribí el Apocalipsis. ¿Quién soy?", ans: ["juan", "san juan"], pts: 25 },
                 { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos repitiendo 'Jesús es el Señor'.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE", q: "Congela las pantallas de un equipo rival por 10 segundos.", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
                 { type: "motion", badge: "PENTECOSTÉS", q: "¡Tapéa 40 veces rápido simulando el descenso del Espíritu Santo!", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "CARTAS", q: "En 1 Juan 4, 8, se afirma con contundencia una sola palabra como la definición suprema de Dios:", opts: ["Justicia", "Poder", "Amor", "Fuego"], ans: 2, time: 15, pts: 20 },
                 { type: "sequence", badge: "CÓDIGO", q: "Ordena los misterios del Rosario: Dolorosos, Gozosos, Gloriosos.", items: ["Gozosos", "Gloriosos", "Dolorosos"], ans: [0, 2, 1], pts: 30 },
@@ -442,7 +402,7 @@
                 { type: "dnd", badge: "LÓGICA", q: "Ordena los siguientes jueces de Israel:", items: ["Sansón", "Gedeón", "Otoniel"], ans: [2, 1, 0], pts: 30 },
                 { type: "text", badge: "ACERTIJO", q: "Derribé las murallas de Jericó tocando trompetas y dando gritos de fe. ¿Quién soy?", ans: ["josue", "josué"], pts: 25 },
                 { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos mientras declaran 'Dios es nuestro escudo'.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE", q: "Congela a un equipo rival durante 10 segundos con tu escudo.", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
                 { type: "motion", badge: "BATALLA", q: "¡Tapéa 40 veces rápido simulando la victoria de la fe!", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "CARTAS", q: "En Hebreos 11, 1 se define la fe como la garantía de lo que se...", opts: ["espera", "siente", "busca", "piensa"], ans: 0, time: 15, pts: 20 },
                 { type: "sequence", badge: "CÓDIGO", q: "Ordena las virtudes teologales: Caridad, Fe, Esperanza.", items: ["Fe", "Esperanza", "Caridad"], ans: [0, 1, 2], pts: 30 },
@@ -454,7 +414,7 @@
                 { type: "dnd", badge: "LÓGICA", q: "Ordena las etapas de la expansión de la Iglesia en Hechos:", items: ["Hasta los confines del mundo", "Jerusalén", "Judea y Samaria"], ans: [1, 2, 0], pts: 30 },
                 { type: "text", badge: "ACERTIJO", q: "Fui el primer mártir de la Iglesia apedreado por confesar a Jesús. ¿Quién soy?", ans: ["esteban", "san esteban"], pts: 25 },
                 { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos proclamando el Reino de Dios.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE", q: "Congela las pantallas de un equipo rival por 10 segundos.", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
                 { type: "motion", badge: "TESTIGO", q: "¡Tapéa 40 veces rápido cumpliendo la Gran Comisión!", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "PROCLAMA", q: "Jesús dijo: 'Vayan por todo el mundo y...'", opts: ["Prediquen el Evangelio", "Hagan templos", "Enseñen historia", "Sanen enfermos"], ans: 0, time: 15, pts: 20 },
                 { type: "sequence", badge: "CÓDIGO", q: "Ordena las etapas del juicio de Jesús: Getsemaní, Calvario, Ante Pilato.", items: ["Getsemaní", "Ante Pilato", "Calvario"], ans: [0, 1, 2], pts: 30 },
@@ -462,9 +422,23 @@
             ]
         };
 
+        // EXTENSIÓN PARA MODO SOLITARIO (Misiones 11 al 20 - Aplican para cualquier equipo que juegue solo)
+        const ExtraMissionsDB = [
+            { type: "trivia", badge: "MANDAMIENTOS", q: "¿En qué monte recibió Moisés las Tablas de la Ley?", opts: ["Monte Carmelo", "Monte Sinaí", "Monte Sión", "Monte Tabor"], ans: 1, time: 15, pts: 20 },
+            { type: "dnd", badge: "LÓGICA", q: "Ordena estos frutos del Espíritu Santo:", items: ["Paz", "Gozo", "Amor"], ans: [2, 1, 0], pts: 30 },
+            { type: "text", badge: "ACERTIJO", q: "Derroté a un gigante con una honda y cinco piedras del río. ¿Quién soy?", ans: ["david", "el rey david"], pts: 25 },
+            { type: "camera", badge: "RETO FÍSICO", q: "Tómense una foto creativa de rodillas simulando estar en oración profunda.", pts: 35, ac: "image/*" },
+            { type: "hold", badge: "SILENCIO SAGRADO", q: "Mantén presionado 10 segundos en absoluto silencio recordando el sacrificio de Jesús.", dur: 10000, pts: 35 },
+            { type: "motion", badge: "LLUVIA DE BENDICIONES", q: "¡Tapéa 50 veces rápido para hacer descender las bendiciones!", taps: 50, time: 12, pts: 40 },
+            { type: "sequence", badge: "CÓDIGO", q: "Ordena los tres primeros libros de la Biblia:", items: ["Levítico", "Éxodo", "Génesis"], ans: [2, 1, 0], pts: 30 },
+            { type: "trivia", badge: "APÓSTOLES", q: "¿A quién se le conoce como el 'Apóstol de los Gentiles'?", opts: ["Pedro", "Pablo", "Mateo", "Tomás"], ans: 1, time: 15, pts: 20 },
+            { type: "text", badge: "MEMORIA", q: "Completa la frase del Salmo 23: 'El Señor es mi...'", ans: ["pastor"], pts: 25 },
+            { type: "camera", badge: "JEFE FINAL ABSOLUTO", q: "¡Misión 20! Tomen la Biblia física, levántenla todos juntos y graben un video gritando '¡CRISTO VIVE EN NOSOTROS!'.", pts: 100, ac: "video/*,image/*" }
+        ];
+
         const System = {
             id: 0, score: 100, missIdx: 0, names: [], customName: "",
-            dbCache: null, isFrozen: false, timerInt: null,
+            dbCache: null, isFrozen: false, timerInt: null, lastSabotageTime: 0, activeTeamsCount: 0,
             
             nav(toId) {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -537,12 +511,25 @@
             },
 
             renderArena() {
-                const MisionsDB = TeamMisionsDB[this.id] || TeamMisionsDB[1];
-                if(this.missIdx >= MisionsDB.length) return;
-                this.nav('view-arena');
-                const m = MisionsDB[this.missIdx];
+                let MisionsDB = TeamMisionsDB[this.id] || TeamMisionsDB[1];
+                let maxMissions = this.activeTeamsCount === 1 ? 20 : 10;
                 
-                document.getElementById('arena-counter').innerText = `${this.missIdx + 1}/10`;
+                if (this.missIdx >= maxMissions) return;
+                this.nav('view-arena');
+                
+                let m;
+                if (this.missIdx < 10) {
+                    m = MisionsDB[this.missIdx];
+                } else {
+                    m = ExtraMissionsDB[this.missIdx - 10];
+                }
+
+                // SI JUEGA SOLO 1 EQUIPO Y TOCA SABOTAJE, SE CAMBIA POR BONO
+                if (m.type === "sabotage" && this.activeTeamsCount === 1) {
+                    m = { type: "text", badge: "BONUS SOLITARIO", q: "No hay rivales a quien sabotear. Escribe 'AMEN' para ganar 10 pts gratis.", ans: ["amen", "amén"], pts: 10 };
+                }
+                
+                document.getElementById('arena-counter').innerText = `${this.missIdx + 1}/${maxMissions}`;
                 document.getElementById('arena-badge').innerText = m.badge;
                 document.getElementById('arena-reward').innerText = m.pts;
                 document.getElementById('my-arena-score').innerText = this.score;
@@ -580,18 +567,23 @@
                     btn.addEventListener('mousedown', startH); btn.addEventListener('mouseup', stopH); btn.addEventListener('mouseleave', stopH);
                 }
                 else if (m.type === "sabotage") {
+                    let hasRivals = false;
                     [1,2,3,4,5].forEach(id => {
                         if(id !== this.id && this.dbCache && this.dbCache[`g${id}_r`]) {
+                            hasRivals = true;
                             let tName = this.dbCache[`g${id}_cname`] || TeamMeta[id].name;
                             let b = document.createElement('button');
                             b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-4 rounded-xl mb-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer text-sm uppercase";
-                            b.innerHTML = `<i class="fas fa-snowflake mr-2 text-xl"></i> ATACAR A: ${tName}`;
+                            b.innerHTML = `<i class="fas fa-bolt mr-2 text-xl text-yellow-400"></i> ATACAR A: ${tName}`;
                             b.onclick = async () => {
                                 const upd = {}; upd[`sab_${id}`] = Date.now();
                                 await updateDoc(gameRef, upd); this.win(m.pts);
                             }; area.appendChild(b);
                         }
                     });
+                    if(!hasRivals) {
+                        area.innerHTML = `<button onclick="System.win(${m.pts})" class="btn-core btn-cyan w-full py-4 rounded-xl cursor-pointer">CONTINUAR (NO HAY RIVALES)</button>`;
+                    }
                 }
                 else if (m.type === "motion") {
                     let c = 0; this.startTimer(m.time, () => this.fail("¡Faltó energía!"));
@@ -682,8 +674,9 @@
 
             async advance() {
                 this.missIdx++;
-                const MisionsDB = TeamMisionsDB[this.id] || TeamMisionsDB[1];
-                if(this.missIdx >= MisionsDB.length) {
+                let maxMissions = this.activeTeamsCount === 1 ? 20 : 10;
+                
+                if(this.missIdx >= maxMissions) {
                     await updateDoc(gameRef, { end: true });
                 } else {
                     this.runRoulette(); 
@@ -697,7 +690,36 @@
                 setTimeout(()=>t.classList.remove('show'), 3500);
             },
 
-            // --- ACCESO ADMIN Y CONTROL MAESTRO ---
+            // --- LÓGICA DE PENITENCIA (SABOTAJE) ---
+            showPenalty() {
+                this.isFrozen = true; this.vibrate([500,200,500,200,500]); AudioSys.error();
+                const penalties = [
+                    "¡Todo el equipo debe dar 5 saltos y gritar AMÉN!",
+                    "¡Canten el coro de una alabanza a todo pulmón!",
+                    "¡Hagan una pirámide humana de 3 personas rápido!",
+                    "¡Todos deben abrazarse durante 10 segundos!",
+                    "¡Busquen un objeto azul y pónganlo sobre el celular!"
+                ];
+                document.getElementById('penalty-text').innerText = penalties[Math.floor(Math.random()*penalties.length)];
+                
+                const ov = document.getElementById('ov-penalty');
+                const btn = document.getElementById('btn-clear-penalty');
+                btn.classList.add('hidden');
+                ov.classList.add('show');
+                
+                // Forzamos a que lean y hagan la penitencia por al menos 5 seg antes de poder quitarla
+                setTimeout(() => {
+                    btn.classList.remove('hidden');
+                    AudioSys.tick();
+                }, 5000);
+            },
+            clearPenalty() {
+                document.getElementById('ov-penalty').classList.remove('show');
+                this.isFrozen = false;
+                AudioSys.success();
+            },
+
+            // --- ACCESO ADMIN ---
             loginAdmin() {
                 let pin = prompt("Introduce el PIN de Coordinador:");
                 if(pin === "777") {
@@ -712,10 +734,13 @@
                 let listos = 0;
                 for(let i=1; i<=5; i++) { if(this.dbCache[`g${i}_r`]) listos++; }
                 
-                if(listos === 0) {
-                    alert("No hay ningún equipo conectado en la sala de espera aún."); return;
-                }
-                if(confirm(`Hay ${listos} equipos listos. ¿Deseas iniciar la maratón AHORA?`)) {
+                if(listos === 0) { alert("No hay equipos conectados aún."); return; }
+                
+                let msg = listos === 1 
+                    ? "Solo hay 1 equipo listo. ¿Iniciar en Modo Solitario (20 misiones)?"
+                    : `Hay ${listos} equipos listos. ¿Deseas iniciar la maratón AHORA?`;
+
+                if(confirm(msg)) {
                     await updateDoc(gameRef, { fase: 1 });
                     document.getElementById('admin-panel').style.display = 'none';
                 }
@@ -766,7 +791,8 @@
             if(!snap.exists()) return;
             const d = snap.data(); System.dbCache = d;
 
-            // HUD Superior Dinámico (Nombres Personalizados)
+            // Contar activos para el Modo Solitario o Multijugador
+            let activeCount = 0;
             let hudHTML = "";
             let sortedAdmin = [];
             
@@ -776,6 +802,7 @@
                 let tName = d[`g${i}_cname`] || TeamMeta[i].name;
                 
                 if(isReady) {
+                    activeCount++;
                     sortedAdmin.push({ id: i, n: tName, s: score });
                     let shortName = tName.length > 8 ? tName.substring(0,8)+"." : tName;
                     hudHTML += `<span class="${TeamMeta[i].color} uppercase">${shortName}:<b>${score}</b></span><span class="text-slate-700">|</span>`;
@@ -810,6 +837,7 @@
 
             // INICIO DIRIGIDO POR EL ADMIN (Transición Fase 0 -> 1)
             if(d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
+                System.activeTeamsCount = activeCount; // Guarda cuántos equipos juegan para el Modo Solitario
                 System.prevScores = {};
                 for(let i=1; i<=5; i++) System.prevScores[i] = d[`g${i}_s`] || 100;
                 System.runRoulette();
@@ -826,17 +854,11 @@
                 }
             }
 
-            // SABOTAJE
-            if(d.fase >= 1 && d[`sab_${System.id}`]) {
-                const diff = Date.now() - d[`sab_${System.id}`];
-                if(diff < 2000 && !System.isFrozen) {
-                    System.isFrozen = true; System.vibrate([500,200,500,200,500]); AudioSys.error();
-                    const ice = document.getElementById('ov-frozen'); ice.classList.add('show');
-                    let t = 10; document.getElementById('frozen-timer').innerText = t;
-                    let iv = setInterval(() => {
-                        t--; document.getElementById('frozen-timer').innerText = t; AudioSys.tick();
-                        if(t<=0){ clearInterval(iv); ice.classList.remove('show'); System.isFrozen=false; AudioSys.success(); }
-                    }, 1000);
+            // DETECTOR DE SABOTAJE (PENITENCIA FÍSICA)
+            if(d.fase >= 1 && d[`sab_${System.id}`] > System.lastSabotageTime) {
+                System.lastSabotageTime = d[`sab_${System.id}`];
+                if(!System.isFrozen) {
+                    System.showPenalty();
                 }
             }
 
