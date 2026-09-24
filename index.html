@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>El Eco de la Verdad - Arena Suprema v6</title>
     
-    <!-- Librerías de CSS y Fuentes -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- LIBRERÍA PROFESIONAL PARA ARRASTRAR Y SOLTAR (SortableJS) -->
+    <!-- Librería para Drag & Drop fluido -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     <style>
@@ -80,16 +79,6 @@
         }
         .animate-divine { animation: divine-float 4s ease-in-out infinite; }
 
-        @keyframes glitch-anim {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-        }
-        .glitch-error { animation: glitch-anim 0.3s infinite; border-color: var(--neon-red) !important; color: var(--neon-red); }
-
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100dvh;
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
@@ -118,7 +107,7 @@
         .progress-fill { height: 100%; background: var(--neon-cyan); transition: width 0.1s linear, background 0.3s; }
         .progress-fill.danger { background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
 
-        /* ESTILOS MEJORADOS PARA DRAG AND DROP */
+        /* Estilos optimizados para SortableJS */
         .dnd-container { display: flex; flex-direction: column; gap: 0.75rem; min-height: 200px; padding: 1rem; background: rgba(0,0,0,0.4); border-radius: 1rem; touch-action: none; }
         .dnd-item { 
             padding: 1.25rem 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; 
@@ -136,7 +125,6 @@
 
         .ice-texture { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>'); background-color: rgba(2, 132, 199, 0.9); }
 
-        /* PANEL ADMIN */
         #admin-panel {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98);
             z-index: 99999; display: none; flex-direction: column; padding: 1.5rem; overflow-y: auto; backdrop-filter: blur(10px);
@@ -193,7 +181,6 @@
                 <i class="fas fa-power-off"></i> INICIAR SISTEMA
             </button>
             
-            <!-- Botón Admin -->
             <button onclick="System.loginAdmin()" class="mt-12 text-slate-500 text-xs uppercase font-bold tracking-widest hover:text-cyan-400 transition flex items-center gap-2 cursor-pointer p-2">
                 <i class="fas fa-lock"></i> Acceso Coordinador
             </button>
@@ -204,7 +191,7 @@
     <div id="view-teams" class="screen">
         <div class="screen-content text-center">
             <h2 class="text-3xl font-black font-epic text-cyan-300 mb-2 uppercase">Identifica tu Legión</h2>
-            <p class="text-slate-400 text-sm mb-8">Selecciona tu subgrupo para configurar la base de datos.</p>
+            <p class="text-slate-400 text-sm mb-8">Selecciona tu subgrupo (pueden participar de 3 hasta 5 equipos).</p>
             
             <div class="flex flex-col gap-4 w-full max-w-md mx-auto max-h-[60vh] overflow-y-auto pr-1 pb-4">
                 <button onclick="System.selectTeam(1)" class="cyber-panel p-5 flex items-center justify-between hover:border-orange-500 transition group cursor-pointer">
@@ -217,7 +204,7 @@
                 <button onclick="System.selectTeam(2)" class="cyber-panel p-5 flex items-center justify-between hover:border-yellow-400 transition group cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-yellow-950 border border-yellow-400 flex items-center justify-center text-yellow-400 text-xl group-hover:bg-yellow-400 group-hover:text-black transition"><i class="fas fa-bolt"></i></div>
-                        <span class="text-lg font-black text-white uppercase tracking-wider">Voceros de Luz</span>
+                        <span class="text-lg font-black text-white uppercase tracking-wider">Voceros de la Luz</span>
                     </div>
                     <i class="fas fa-chevron-right text-slate-500"></i>
                 </button>
@@ -270,9 +257,7 @@
                 
                 <div id="lobby-waiting" class="hidden mt-4">
                     <p class="text-yellow-400 font-bold uppercase text-center text-sm mb-4 animate-pulse"><i class="fas fa-satellite-dish mr-2"></i> ¡Conectado! Esperando que el Coordinador inicie la maratón...</p>
-                    <div id="sync-grid" class="grid grid-cols-5 gap-1.5 text-center text-[10px] font-black uppercase">
-                        <!-- Generado dinámicamente -->
-                    </div>
+                    <div id="sync-grid" class="grid grid-cols-5 gap-1.5 text-center text-[10px] font-black uppercase"></div>
                 </div>
             </div>
         </div>
@@ -298,15 +283,11 @@
     <!-- 4. ARENA PRINCIPAL -->
     <div id="view-arena" class="screen">
         <div class="w-full max-w-lg mx-auto flex flex-col min-h-[90%] py-4 flex-shrink-0">
-            <!-- HUD SUPERIOR -->
             <div class="flex justify-between items-center bg-slate-900 border border-slate-700 rounded-2xl p-3 mb-4 shadow-lg flex-shrink-0">
                 <div class="bg-cyan-950 text-cyan-400 font-black text-xs px-3 py-2 rounded-xl border border-cyan-800 uppercase tracking-widest">
                     FASE <span id="arena-counter" class="text-white text-sm">1/10</span>
                 </div>
-                <!-- Puntuaciones dinámicas -->
-                <div id="hud-scores" class="flex gap-2 text-xs font-black bg-black rounded-xl px-3 py-1.5 border border-slate-800 overflow-x-auto whitespace-nowrap max-w-[60%]">
-                    <!-- JS -->
-                </div>
+                <div id="hud-scores" class="flex gap-2 text-xs font-black bg-black rounded-xl px-3 py-1.5 border border-slate-800 overflow-x-auto whitespace-nowrap max-w-[60%]"></div>
             </div>
 
             <div class="cyber-panel p-6 w-full flex-grow flex flex-col relative">
@@ -331,7 +312,6 @@
 
                 <h2 id="arena-q" class="text-xl md:text-2xl font-black text-white leading-snug mb-8 border-l-4 border-cyan-500 pl-4 py-1 flex-shrink-0">...</h2>
 
-                <!-- ZONA DE ACCIÓN: Se inyectan los botones o bloques aquí -->
                 <div id="arena-action" class="w-full flex-grow flex flex-col justify-end gap-3 pb-2"></div>
             </div>
         </div>
@@ -344,9 +324,7 @@
             <h1 class="text-4xl md:text-5xl font-black font-epic text-white mb-2">CONSUMATUM EST</h1>
             <p class="text-slate-400 text-sm tracking-[0.3em] uppercase mb-10">La Maratón ha concluido</p>
             
-            <div id="podium-container" class="cyber-panel p-6 w-full max-w-sm mx-auto flex flex-col gap-3">
-                <!-- JS -->
-            </div>
+            <div id="podium-container" class="cyber-panel p-6 w-full max-w-sm mx-auto flex flex-col gap-3"></div>
         </div>
     </div>
 
@@ -370,9 +348,7 @@
         </div>
 
         <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">Modificador de Puntos</h3>
-        <div id="admin-teams-control" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            <!-- JS -->
-        </div>
+        <div id="admin-teams-control" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></div>
 
         <div class="flex gap-4 mt-auto">
             <button onclick="System.adminForceEnd()" class="btn-core btn-danger py-4 rounded-xl w-full uppercase cursor-pointer text-xs"><i class="fas fa-skull"></i> Terminar Juego</button>
@@ -395,7 +371,7 @@
         };
         const app = initializeApp(fbConfig);
         const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "arena_engine_admin_v2"); // Refreshed ID
+        const gameRef = doc(db, "juego", "arena_engine_admin_v4"); // ID Renombrado para iniciar limpio
 
         const AudioSys = {
             ctx: null,
@@ -639,7 +615,6 @@
                         box.appendChild(el);
                     });
                     
-                    // Inicializar SortableJS para Drag & Drop Profesional
                     new Sortable(box, {
                         animation: 150,
                         ghostClass: 'dragging',
@@ -711,7 +686,7 @@
                 if(this.missIdx >= MisionsDB.length) {
                     await updateDoc(gameRef, { end: true });
                 } else {
-                    this.renderArena(); 
+                    this.runRoulette(); 
                 }
             },
 
@@ -737,7 +712,9 @@
                 let listos = 0;
                 for(let i=1; i<=5; i++) { if(this.dbCache[`g${i}_r`]) listos++; }
                 
-                if(listos === 0) { alert("No hay equipos conectados aún."); return; }
+                if(listos === 0) {
+                    alert("No hay ningún equipo conectado en la sala de espera aún."); return;
+                }
                 if(confirm(`Hay ${listos} equipos listos. ¿Deseas iniciar la maratón AHORA?`)) {
                     await updateDoc(gameRef, { fase: 1 });
                     document.getElementById('admin-panel').style.display = 'none';
@@ -767,7 +744,7 @@
                 await updateDoc(gameRef, upd);
             },
             async adminForceEnd() {
-                if(confirm("¿Forzar el final de la maratón para todos los equipos?")) {
+                if(confirm("¿Forzar el final de la maratón para todos los equipos en pantalla?")) {
                     await updateDoc(gameRef, { end: true });
                     document.getElementById('admin-panel').style.display = 'none';
                 }
@@ -789,7 +766,7 @@
             if(!snap.exists()) return;
             const d = snap.data(); System.dbCache = d;
 
-            // HUD Superior Dinámico
+            // HUD Superior Dinámico (Nombres Personalizados)
             let hudHTML = "";
             let sortedAdmin = [];
             
@@ -807,6 +784,7 @@
             if(hudHTML) hudHTML = hudHTML.slice(0, -42);
             document.getElementById('hud-scores').innerHTML = hudHTML || '<span class="text-slate-500">Esperando...</span>';
 
+            // Actualizar Panel de Admin en Vivo si está abierto
             if(document.getElementById('admin-panel').style.display === 'flex') {
                 System.buildAdminControls();
             }
@@ -820,7 +798,7 @@
             });
             document.getElementById('admin-live-podium').innerHTML = livePodHTML || '<span class="text-slate-500 text-xs">Sin datos...</span>';
 
-            // Lobby update
+            // Lobby (Actualización del grid)
             if (document.getElementById('view-lobby').classList.contains('active')) {
                 let gridHTML = "";
                 for(let i=1; i<=5; i++) {
@@ -830,14 +808,14 @@
                 document.getElementById('sync-grid').innerHTML = gridHTML;
             }
 
-            // INICIO ADMIN (Fase 1)
+            // INICIO DIRIGIDO POR EL ADMIN (Transición Fase 0 -> 1)
             if(d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
                 System.prevScores = {};
                 for(let i=1; i<=5; i++) System.prevScores[i] = d[`g${i}_s`] || 100;
                 System.runRoulette();
             }
 
-            // TOASTS
+            // TOASTS DE COMPETENCIA
             if(d.fase >= 1 && System.prevScores) {
                 for(let i=1; i<=5; i++) {
                     if(i !== System.id && d[`g${i}_r`] && (d[`g${i}_s`] || 100) > System.prevScores[i]) {
