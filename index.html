@@ -2,270 +2,440 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Eco de la Verdad - Maratón Bíblica de Maycol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>El Eco de la Verdad - Motor Dios v2</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* ==========================================================================
+           1. VARIABLES GLOBALES Y RESETEO CORE
+           ========================================================================== */
         :root {
-            --card-bg: rgba(15, 23, 42, 0.94);
+            --neon-cyan: #06b6d4; --neon-cyan-glow: rgba(6, 182, 212, 0.6);
+            --neon-gold: #fbbf24; --neon-gold-glow: rgba(251, 191, 36, 0.6);
+            --neon-red: #ef4444;  --neon-red-glow: rgba(239, 68, 68, 0.6);
+            --neon-purple: #a855f7;
+            --bg-deep: #020617;   --bg-glass: rgba(15, 23, 42, 0.75);
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
             font-family: 'Montserrat', sans-serif;
-            background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #030712 90%);
-            color: #f8fafc; min-height: 100vh; overflow-x: hidden;
-            display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 1rem;
-            position: relative;
+            background-color: var(--bg-deep); color: #f8fafc;
+            min-height: 100vh; overflow-x: hidden; overflow-y: hidden;
+            touch-action: manipulation; user-select: none; -webkit-user-select: none;
+            display: flex; flex-direction: column; position: relative;
         }
-
-        .bg-particles {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
-            background-image: radial-gradient(circle, rgba(56,189,248,0.15) 1.5px, transparent 1.5px);
-            background-size: 35px 35px;
-            animation: bg-shift 25s linear infinite;
-        }
-        @keyframes bg-shift { 0% { background-position: 0 0; } 100% { background-position: 35px 35px; } }
 
         .font-epic { font-family: 'Cinzel', serif; }
 
-        .card-glass {
-            background: var(--card-bg);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            border-radius: 2rem;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.15);
-            position: relative; overflow: hidden; z-index: 10;
-            animation: card-appear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes card-appear {
-            0% { opacity: 0; transform: translateY(15px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        /* ==========================================================================
+           2. MOTOR DE RENDERIZADO VISUAL (CANVAS & OVERLAYS)
+           ========================================================================== */
+        #particle-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none; mix-blend-mode: screen;
         }
 
-        .btn-modern {
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-            color: white; border: 1px solid rgba(56, 189, 248, 0.6); border-radius: 1.25rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
-            box-shadow: 0 4px 25px rgba(2, 132, 199, 0.6);
-            text-transform: uppercase; font-weight: 800; letter-spacing: 1.5px;
-        }
-        .btn-modern:hover {
-            transform: translateY(-4px) scale(1.03);
-            box-shadow: 0 10px 40px rgba(56, 189, 248, 0.8);
-            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+        .vignette {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, #000 100%);
+            z-index: 1; pointer-events: none;
         }
 
-        .btn-physical {
-            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.5);
-            border-color: rgba(248, 113, 113, 0.8);
-            animation: pulse-physical 1.5s infinite;
+        /* ==========================================================================
+           3. SISTEMA DE COMPONENTES UI (GLASSMORPHISM AVANZADO)
+           ========================================================================== */
+        .cyber-panel {
+            background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(6, 182, 212, 0.05);
+            position: relative; overflow: hidden;
         }
-        @keyframes pulse-physical {
-            0% { transform: scale(1); box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
-            50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(239, 68, 68, 0.9); }
-            100% { transform: scale(1); box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+        .cyber-panel::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-20deg); animation: shine 6s infinite;
         }
+
+        /* Botones Interactivos Core */
+        .btn-core {
+            position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em;
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+        }
+        .btn-core:active { transform: scale(0.96); }
         
-        .btn-physical:hover {
-            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-            animation: none;
-            transform: scale(1.05);
+        .btn-cyan { background: linear-gradient(135deg, #0284c7, #06b6d4); border: 1px solid #22d3ee; box-shadow: 0 0 20px var(--neon-cyan-glow); color: white; }
+        .btn-cyan:hover { box-shadow: 0 0 40px var(--neon-cyan); text-shadow: 0 0 10px white; }
+        
+        .btn-gold { background: linear-gradient(135deg, #b45309, #f59e0b); border: 1px solid #fbbf24; box-shadow: 0 0 20px var(--neon-gold-glow); color: #000; }
+        .btn-gold:hover { box-shadow: 0 0 40px var(--neon-gold); }
+
+        .btn-danger { background: linear-gradient(135deg, #991b1b, #ef4444); border: 1px solid #f87171; box-shadow: 0 0 20px var(--neon-red-glow); color: white; }
+        
+        /* Inputs */
+        .cyber-input {
+            width: 100%; background: rgba(0,0,0,0.6); border: 2px solid #0369a1;
+            color: #22d3ee; border-radius: 1rem; padding: 1rem; font-weight: 700;
+            transition: all 0.3s; text-align: center; font-size: 1.1rem;
+        }
+        .cyber-input:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 20px rgba(14, 165, 233, 0.4); }
+        .cyber-input::placeholder { color: #475569; }
+
+        /* ==========================================================================
+           4. ANIMACIONES COMPLEJAS (KEYFRAMES)
+           ========================================================================== */
+        @keyframes shine { 0% { left: -100%; } 20%, 100% { left: 200%; } }
+        
+        @keyframes divine-float {
+            0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 20px var(--neon-gold)); }
+            50% { transform: translateY(-15px) scale(1.05); filter: drop-shadow(0 0 50px #fff); }
+        }
+        .animate-divine { animation: divine-float 4s ease-in-out infinite; }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+        .glitch-error { animation: glitch-anim 0.3s infinite; border-color: var(--neon-red) !important; color: var(--neon-red); }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .pulse-danger { animation: pulse-ring 2s infinite; }
+
+        /* ==========================================================================
+           5. GESTIÓN DE PANTALLAS Y Z-INDEX
+           ========================================================================== */
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10; overflow-y: auto; overflow-x: hidden;
+        }
+        .screen.active { opacity: 1; pointer-events: all; }
+        
+        /* Contenedor principal para centrar contenido vertical largo */
+        .screen-content { width: 100%; max-width: 600px; margin: auto; padding: 2rem 0; }
+
+        /* ==========================================================================
+           6. COMPONENTES DE MISIONES ESPECÍFICAS
+           ========================================================================== */
+        /* Ruleta 3D */
+        .roulette-viewport {
+            height: 120px; overflow: hidden; position: relative;
+            background: rgba(0,0,0,0.8); border: 2px solid var(--neon-cyan); border-radius: 1rem;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+        }
+        .roulette-viewport::before, .roulette-viewport::after {
+            content:''; position:absolute; left:0; width:100%; height:40px; z-index:2; pointer-events:none;
+        }
+        .roulette-viewport::before { top:0; background: linear-gradient(to bottom, #000, transparent); }
+        .roulette-viewport::after { bottom:0; background: linear-gradient(to top, #000, transparent); }
+        
+        .roulette-wheel {
+            display: flex; flex-direction: column; align-items: center;
+            transition: transform 4s cubic-bezier(0.15, 0.85, 0.1, 1); /* Curva de desaceleración realista */
+        }
+        .roulette-item {
+            height: 40px; line-height: 40px; font-size: 1.5rem; font-weight: 900; color: #475569;
+            transition: color 0.2s, text-shadow 0.2s, transform 0.2s;
+        }
+        .roulette-item.selected { color: var(--neon-cyan); text-shadow: 0 0 20px var(--neon-cyan); transform: scale(1.2); }
+
+        /* Barras de Progreso */
+        .progress-hud { width: 100%; height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+        .progress-fill { height: 100%; background: var(--neon-cyan); transition: width 0.1s linear, background 0.3s; }
+        .progress-fill.danger { background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
+
+        /* Sistema Drag & Drop (Misión 9) */
+        .dnd-container { display: flex; flex-direction: column; gap: 0.5rem; min-height: 200px; padding: 1rem; background: rgba(0,0,0,0.4); border-radius: 1rem; }
+        .dnd-item { 
+            padding: 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; 
+            color: white; font-weight: bold; cursor: grab; text-align: center; transition: transform 0.2s;
+        }
+        .dnd-item:active { cursor: grabbing; transform: scale(1.05); border-color: var(--neon-cyan); z-index: 50; }
+        .dnd-item.dragging { opacity: 0.5; }
+
+        /* Overlays Feedback */
+        .overlay-fx {
+            position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(10px);
+        }
+        .overlay-fx.show { opacity: 1; pointer-events: all; }
+        #toast-live {
+            position: fixed; top: 1.5rem; left: 50%; transform: translate(-50%, -150%); z-index: 10000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #toast-live.show { transform: translate(-50%, 0); }
+
+        /* Sabotaje Hielo */
+        .ice-texture {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>');
+            background-color: rgba(2, 132, 199, 0.9);
         }
 
-        .btn-option {
-            background: rgba(15, 23, 42, 0.85); border: 2px solid rgba(56, 189, 248, 0.35);
-            color: white; border-radius: 1.25rem; padding: 1.15rem; font-weight: 700; text-align: left;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 1rem; cursor: pointer;
+        /* Panel Admin Oculto */
+        #admin-panel {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+            z-index: 99999; display: none; flex-direction: column; padding: 2rem; overflow-y: auto;
         }
-        .btn-option:hover {
-            background: rgba(14, 165, 233, 0.3); border-color: #38bdf8; transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
-        }
-
-        .screen { display: none; opacity: 0; transition: opacity 0.5s ease; width: 100%; max-width: 48rem; z-index: 10; }
-        .screen.active { display: flex; opacity: 1; flex-direction: column; align-items: center; }
-
-        .red-alert-bg {
-            background: radial-gradient(circle at center, #991b1b 0%, #450a0a 70%, #030712 100%) !important;
-            animation: pulse-alert-bg 1s infinite alternate;
-        }
-        @keyframes pulse-alert-bg {
-            0% { background: radial-gradient(circle at center, #991b1b 0%, #450a0a 70%, #030712 100%); }
-            100% { background: radial-gradient(circle at center, #dc2626 0%, #7f1d1d 70%, #030712 100%); }
-        }
-
-        /* NOTIFICACIÓN DE PRESIÓN TOAST */
-        #pressure-toast {
-            position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-150%);
-            z-index: 999; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        #pressure-toast.show { transform: translateX(-50%) translateY(0); }
-
-        .giant-timer { font-size: 10rem; line-height: 1; font-weight: 900; text-shadow: 0 0 50px rgba(56,189,248,1); }
     </style>
 </head>
-<body class="justify-center items-center">
+<body>
 
-    <div class="bg-particles"></div>
+    <!-- 1. MOTOR DE RENDERIZADO BG -->
+    <canvas id="particle-canvas"></canvas>
+    <div class="vignette"></div>
 
-    <!-- TOAST DE PRESIÓN EN VIVO -->
-    <div id="pressure-toast" class="bg-red-600 border-2 border-yellow-400 text-white font-black px-6 py-3 rounded-2xl shadow-[0_0_30px_rgba(220,38,38,0.9)] flex items-center gap-3">
+    <!-- 2. TOAST DE PRESIÓN EN VIVO -->
+    <div id="toast-live" class="bg-red-600 border-2 border-yellow-400 text-white font-black px-6 py-3 rounded-2xl shadow-[0_0_30px_rgba(239,68,68,1)] flex items-center gap-3 w-max">
         <i class="fas fa-siren-on text-2xl animate-pulse text-yellow-300"></i>
-        <span id="pressure-msg" class="uppercase tracking-widest text-sm md:text-base">¡Alguien avanzó!</span>
+        <span id="toast-msg" class="uppercase tracking-widest text-sm">NOTIFICACIÓN</span>
     </div>
 
-    <div class="w-full flex flex-col items-center justify-center flex-grow z-10">
-
-        <!-- 0. PANTALLA DE ENTRADA CINEMÁTICA -->
-        <div id="screen-welcome" class="screen active text-center py-6">
-            <div class="card-glass p-8 md:p-12 flex flex-col items-center border-cyan-400 shadow-[0_0_60px_rgba(56,189,248,0.4)]">
-                <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-cyan-600 to-blue-400 flex items-center justify-center text-white text-4xl mb-6 shadow-[0_0_50px_rgba(56,189,248,1)] animate-bounce">
-                    <i class="fas fa-cross"></i>
-                </div>
-                <h1 class="text-4xl md:text-6xl font-black font-epic text-white mb-3 tracking-wide">EL ECO DE LA VERDAD</h1>
-                <p class="text-slate-300 text-sm font-semibold tracking-[0.2em] uppercase mb-8">Batalla Bíblica • Confirmación</p>
-                <button onclick="enterPortal()" class="btn-modern px-10 py-5 text-lg w-full max-w-sm shadow-[0_0_35px_rgba(2,132,199,0.9)]">
-                    <i class="fas fa-play mr-2"></i> Iniciar Batalla
-                </button>
-            </div>
+    <!-- 3. OVERLAYS DE FEEDBACK -->
+    <div id="ov-success" class="overlay-fx bg-slate-900/90 border-4 border-yellow-400">
+        <div class="animate-divine text-yellow-400 mb-6 relative">
+            <i class="fas fa-sun text-9xl absolute opacity-30 animate-spin" style="animation-duration: 8s; top:-20px; left:-20px;"></i>
+            <i class="fas fa-dove text-8xl relative z-10 drop-shadow-[0_0_20px_#fff]"></i>
         </div>
+        <h2 class="font-epic text-5xl font-black text-white text-center mb-2 tracking-widest">GLORIA</h2>
+        <p id="ov-pts" class="text-3xl font-black text-yellow-400 drop-shadow-[0_0_10px_#fbbf24]">+PUNTOS</p>
+    </div>
 
-        <!-- 1. PANTALLA INICIAL: SELECCIÓN DE EQUIPO -->
-        <div id="screen-intro" class="screen text-center py-4">
-            <h1 class="text-3xl md:text-5xl font-black mb-6 font-epic text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400">
-                ELIGE TU EQUIPO
+    <div id="ov-error" class="overlay-fx bg-red-950/95 border-4 border-red-500">
+        <i class="fas fa-skull-crossbones text-9xl text-red-500 mb-6 drop-shadow-[0_0_30px_#ef4444] glitch-error"></i>
+        <h2 class="font-epic text-5xl font-black text-white text-center mb-2">FALLO</h2>
+        <p id="ov-err-msg" class="text-xl font-bold text-red-300 text-center px-6 mt-4 uppercase">La respuesta era...</p>
+    </div>
+
+    <div id="ov-frozen" class="overlay-fx ice-texture border-8 border-cyan-300">
+        <i class="fas fa-snowflake text-9xl text-white mb-6 animate-spin" style="animation-duration: 10s; filter: drop-shadow(0 0 20px #fff);"></i>
+        <h2 class="font-epic text-5xl font-black text-white text-center drop-shadow-lg">SABOTAJE</h2>
+        <p class="text-xl font-bold text-cyan-100 text-center mt-4 uppercase tracking-widest">Judas te ha congelado</p>
+        <p class="text-7xl font-black text-white mt-8 drop-shadow-[0_0_20px_#fff]" id="frozen-timer">10</p>
+    </div>
+
+    <!-- ==========================================================================
+         4. PANTALLAS DE LA APLICACIÓN (STATE MACHINE VIEWS)
+         ========================================================================== -->
+
+    <!-- A. BIENVENIDA -->
+    <div id="view-welcome" class="screen active">
+        <div class="screen-content flex flex-col items-center text-center">
+            <div class="relative mb-8">
+                <i class="fas fa-shield-cross text-8xl text-cyan-400 drop-shadow-[0_0_30px_#06b6d4] animate-divine"></i>
+            </div>
+            <!-- El título es el trigger oculto para el Modo Dios (Click 7 veces) -->
+            <h1 id="god-mode-trigger" class="text-5xl md:text-6xl font-black font-epic text-white mb-4 leading-tight tracking-wide">
+                EL ECO DE<br><span class="text-cyan-400">LA VERDAD</span>
             </h1>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
-                <button onclick="selectTeam(1)" class="card-glass p-6 hover:scale-105 transition-all text-center border-orange-500/40 cursor-pointer">
-                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-3xl text-white mb-4 shadow-[0_0_25px_rgba(249,115,22,0.8)]">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                    <h3 class="text-lg font-black uppercase text-white font-epic">Huellas de Fuego</h3>
-                </button>
-                <button onclick="selectTeam(2)" class="card-glass p-6 hover:scale-105 transition-all text-center border-yellow-500/40 cursor-pointer">
-                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-3xl text-white mb-4 shadow-[0_0_25px_rgba(250,204,21,0.8)]">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3 class="text-lg font-black uppercase text-white font-epic">Voceros de la Luz</h3>
-                </button>
-                <button onclick="selectTeam(3)" class="card-glass p-6 hover:scale-105 transition-all text-center border-red-500/40 cursor-pointer">
-                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-rose-500 to-red-700 flex items-center justify-center text-3xl text-white mb-4 shadow-[0_0_25px_rgba(244,63,94,0.8)]">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3 class="text-lg font-black uppercase text-white font-epic">Latido Eterno</h3>
-                </button>
-            </div>
+            <p class="text-slate-400 text-sm tracking-[0.4em] uppercase mb-12 font-bold">Protocolo de Confirmación</p>
+            <button onclick="System.initAudioAndStart()" class="btn-core btn-cyan w-full max-w-sm py-5 text-xl rounded-2xl">
+                <i class="fas fa-power-off"></i> INICIAR SISTEMA
+            </button>
         </div>
-
-        <!-- 2. LOBBY -->
-        <div id="screen-lobby" class="screen text-center">
-            <div class="card-glass p-8 w-full max-w-xl text-left">
-                <div class="flex items-center gap-4 mb-5 border-b border-slate-800 pb-4">
-                    <div id="lobby-icon-container" class="w-14 h-14 rounded-xl bg-cyan-950 flex items-center justify-center text-2xl text-cyan-400"></div>
-                    <div>
-                        <h2 id="lobby-title" class="text-2xl font-epic font-black text-cyan-300 uppercase">Subgrupo</h2>
-                        <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Registro de guerreros</p>
-                    </div>
-                </div>
-
-                <textarea id="team-names" class="w-full bg-slate-900 border-2 border-cyan-500/50 text-white rounded-xl p-4 font-bold h-32 mb-6" placeholder="Escriban sus nombres aquí..."></textarea>
-                
-                <button id="btn-ready" onclick="setReady()" class="btn-modern w-full py-4 text-lg"><i class="fas fa-check-double mr-2"></i> ¡Listos para la Batalla!</button>
-                
-                <div id="waiting-status" class="mt-6 hidden text-center">
-                    <p class="text-yellow-400 font-bold uppercase animate-pulse mb-3">Esperando a que los rivales tengan valor...</p>
-                    <div class="flex justify-around text-sm font-black text-slate-300 bg-slate-900 p-4 rounded-xl border border-slate-700">
-                        <span id="status-g1">Fuego: ❌</span>
-                        <span id="status-g2">Luz: ❌</span>
-                        <span id="status-g3">Latido: ❌</span>
-                    </div>
-                </div>
-
-                <!-- CUENTA REGRESIVA GIGANTE -->
-                <div id="start-countdown-box" class="mt-6 hidden text-center absolute inset-0 bg-black/95 z-50 flex flex-col items-center justify-center backdrop-blur-md">
-                    <h2 class="text-red-500 font-black text-4xl uppercase tracking-widest animate-pulse mb-6">PREPÁRENSE</h2>
-                    <div id="start-timer" class="giant-timer text-white font-mono drop-shadow-[0_0_20px_#fff]">10</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. ARENA DE JUEGO -->
-        <div id="screen-game" class="screen flex-grow z-10 my-2">
-            <header class="card-glass p-4 mb-4 flex justify-between items-center bg-slate-900/95 border-b-2 border-cyan-500/40 max-w-none">
-                <div class="flex items-center gap-3">
-                    <span id="game-team-name" class="text-cyan-300 font-extrabold uppercase font-epic text-sm md:text-lg">Equipo</span>
-                </div>
-                <div class="flex items-center gap-3 text-sm md:text-base font-black bg-black/80 px-4 py-2 rounded-xl border border-slate-700">
-                    <span class="text-orange-400">🔥 <b id="score-g1">100</b></span> <span class="text-slate-600">|</span> 
-                    <span class="text-yellow-400">⚡ <b id="score-g2">100</b></span> <span class="text-slate-600">|</span> 
-                    <span class="text-rose-400">❤️ <b id="score-g3">100</b></span>
-                </div>
-            </header>
-
-            <main class="card-glass p-6 md:p-8 flex-grow text-center flex flex-col justify-between max-w-none w-full">
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <span id="mission-counter" class="text-cyan-300 font-black text-sm bg-cyan-950 px-4 py-2 rounded-lg border border-cyan-500">Misión 1 / 8</span>
-                        <span class="text-yellow-400 font-black text-sm bg-black/60 px-4 py-2 rounded-lg border border-yellow-500 shadow">
-                            <i class="fas fa-star mr-1"></i> <span id="my-score">100</span>
-                        </span>
-                    </div>
-
-                    <div class="bg-slate-950/90 border border-cyan-500/50 p-6 rounded-2xl text-left mb-6 shadow-2xl">
-                        <div id="mission-badge" class="inline-block bg-cyan-900 text-cyan-300 px-3 py-1 rounded text-xs font-black mb-3 border border-cyan-500">TIPO DE RETO</div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-1"><i class="fas fa-crosshairs mr-1"></i> Objetivo:</p>
-                        <p id="trivia-source" class="text-sm font-bold text-cyan-200 mb-4 bg-cyan-950/60 p-3 rounded-xl border border-cyan-800/60">Cita...</p>
-                        
-                        <p id="trivia-question" class="text-lg md:text-2xl text-white font-black leading-tight">Pregunta o Instrucción...</p>
-                    </div>
-
-                    <div id="mission-action-container"></div>
-                </div>
-
-                <div id="feedback-msg" class="mt-6 font-black text-lg hidden p-4 rounded-xl shadow-2xl transition-all"></div>
-            </main>
-        </div>
-
-        <!-- 4. PANTALLA FINAL PODIUM -->
-        <div id="screen-final" class="screen text-center py-6 z-50">
-            <div class="card-glass p-8 md:p-12 text-center border-t-8 border-yellow-400 w-full shadow-[0_0_100px_rgba(250,204,21,0.5)]">
-                <h1 class="text-5xl font-black font-epic text-white mb-2 uppercase animate-pulse">¡JUEGO TERMINADO!</h1>
-                <p id="winner-announcement" class="text-yellow-300 font-extrabold text-2xl mb-8 uppercase tracking-widest bg-yellow-900/50 py-3 rounded-xl">Alguien ha llegado a la meta...</p>
-                
-                <div class="space-y-4 font-black text-xl text-left max-w-md mx-auto">
-                    <div id="podium-1" class="flex justify-between p-5 bg-yellow-500/30 rounded-2xl border-2 border-yellow-400 text-yellow-300 transform scale-110 shadow-[0_0_30px_rgba(250,204,21,0.4)]">
-                        <span>🥇 1er Lugar</span><b id="p-1-score"></b>
-                    </div>
-                    <div id="podium-2" class="flex justify-between p-4 bg-slate-400/20 rounded-xl border-2 border-slate-400 text-slate-200">
-                        <span>🥈 2do Lugar</span><b id="p-2-score"></b>
-                    </div>
-                    <div id="podium-3" class="flex justify-between p-4 bg-amber-900/30 rounded-xl border-2 border-amber-700 text-amber-500">
-                        <span>🥉 3er Lugar</span><b id="p-3-score"></b>
-                    </div>
-                </div>
-
-                <button onclick="location.reload()" class="mt-10 btn-modern px-8 py-4 text-sm bg-slate-800 shadow-md">Volver al inicio</button>
-            </div>
-        </div>
-
     </div>
 
-    <!-- FIRMA CATEQUISTA -->
-    <footer class="w-full text-center py-4 text-xs font-black text-cyan-500 tracking-widest uppercase border-t border-slate-800/80 mt-4 bg-slate-950/90 backdrop-blur-md z-10">
-        Diseñado para la Gloria de Dios por el Catequista Maycol
-    </footer>
+    <!-- B. SELECCIÓN DE LEGIÓN -->
+    <div id="view-teams" class="screen">
+        <div class="screen-content text-center">
+            <h2 class="text-3xl font-black font-epic text-cyan-300 mb-2 uppercase">Identifica tu Legión</h2>
+            <p class="text-slate-400 text-sm mb-8">Un solo dispositivo será la espada del equipo.</p>
+            
+            <div class="flex flex-col gap-5 w-full max-w-md mx-auto">
+                <button onclick="System.selectTeam(1)" class="cyber-panel p-6 flex items-center justify-between hover:border-orange-500 transition group">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 rounded-full bg-orange-950 border border-orange-500 flex items-center justify-center text-orange-500 text-2xl group-hover:bg-orange-500 group-hover:text-white transition"><i class="fas fa-fire"></i></div>
+                        <span class="text-xl font-black text-white uppercase tracking-wider">Huellas de Fuego</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-500"></i>
+                </button>
+                <button onclick="System.selectTeam(2)" class="cyber-panel p-6 flex items-center justify-between hover:border-yellow-400 transition group">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 rounded-full bg-yellow-950 border border-yellow-400 flex items-center justify-center text-yellow-400 text-2xl group-hover:bg-yellow-400 group-hover:text-black transition"><i class="fas fa-bolt"></i></div>
+                        <span class="text-xl font-black text-white uppercase tracking-wider">Voceros de la Luz</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-500"></i>
+                </button>
+                <button onclick="System.selectTeam(3)" class="cyber-panel p-6 flex items-center justify-between hover:border-rose-500 transition group">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 rounded-full bg-rose-950 border border-rose-500 flex items-center justify-center text-rose-500 text-2xl group-hover:bg-rose-500 group-hover:text-white transition"><i class="fas fa-heart"></i></div>
+                        <span class="text-xl font-black text-white uppercase tracking-wider">Latido Eterno</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-500"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <!-- LÓGICA DEL JUEGO CON FIREBASE -->
+    <!-- C. LOBBY (REGISTRO Y ESPERA) -->
+    <div id="view-lobby" class="screen">
+        <div class="screen-content text-center">
+            <div class="cyber-panel p-8 w-full max-w-md mx-auto text-left">
+                <div class="flex items-center gap-4 mb-6 border-b border-slate-700 pb-4">
+                    <div id="lobby-icon" class="text-3xl"></div>
+                    <div>
+                        <h2 id="lobby-name" class="text-2xl font-black font-epic text-cyan-400 uppercase">Equipo</h2>
+                        <span class="text-xs text-slate-400 tracking-widest uppercase">Sala de Preparación</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 border-l-4 border-cyan-500 p-4 mb-6 text-sm text-slate-300 font-medium">
+                    <i class="fas fa-info-circle text-cyan-400 mr-2"></i> Anota a tus <b class="text-white">7 guerreros</b> separados por coma. La IA del sistema elegirá quién ejecuta cada misión.
+                </div>
+                
+                <textarea id="input-names" class="cyber-input h-32 mb-6" placeholder="Ej: Juan, Pedro, Maria, Carlos, Ana, Luis, Sofia"></textarea>
+                
+                <button id="btn-ready" onclick="System.commitLobby()" class="btn-core btn-cyan w-full py-5 rounded-xl text-lg">
+                    <i class="fas fa-satellite-dish"></i> ENLAZAR AL SERVIDOR
+                </button>
+                
+                <div id="lobby-waiting" class="hidden mt-4">
+                    <p class="text-yellow-400 font-bold uppercase text-center text-sm mb-4 animate-pulse"><i class="fas fa-spinner fa-spin mr-2"></i> Esperando conexión de rivales...</p>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs font-black uppercase">
+                        <div class="bg-slate-900 border border-slate-700 rounded p-2 text-slate-500" id="sync-1">Fuego<br><span class="text-lg">❌</span></div>
+                        <div class="bg-slate-900 border border-slate-700 rounded p-2 text-slate-500" id="sync-2">Luz<br><span class="text-lg">❌</span></div>
+                        <div class="bg-slate-900 border border-slate-700 rounded p-2 text-slate-500" id="sync-3">Latido<br><span class="text-lg">❌</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- D. RULETA (ASIGNACIÓN DE TURNO) -->
+    <div id="view-roulette" class="screen">
+        <div class="screen-content text-center flex flex-col items-center justify-center">
+            <i class="fas fa-fingerprint text-6xl text-cyan-500 mb-8 animate-pulse drop-shadow-[0_0_20px_#06b6d4]"></i>
+            <h3 class="text-lg font-bold text-slate-400 uppercase tracking-widest mb-2">Reconocimiento Biométrico</h3>
+            <p class="text-2xl font-black text-white mb-8">EL DISPOSITIVO PERTENECE A:</p>
+            
+            <div class="w-full max-w-sm roulette-viewport mb-10">
+                <div id="roulette-wheel" class="roulette-wheel"></div>
+            </div>
+
+            <button id="btn-accept-mission" onclick="System.renderArena()" class="btn-core btn-gold px-10 py-5 rounded-2xl text-xl w-full max-w-sm opacity-0 transition-opacity duration-500 pointer-events-none">
+                <i class="fas fa-hand-paper"></i> SOY YO. ACEPTO.
+            </button>
+        </div>
+    </div>
+
+    <!-- E. LA ARENA (MISIONES HÍBRIDAS) -->
+    <div id="view-arena" class="screen">
+        <div class="w-full max-w-lg mx-auto flex flex-col h-full py-4">
+            
+            <!-- HUD SUPERIOR -->
+            <div class="flex justify-between items-center bg-slate-900 border border-slate-700 rounded-2xl p-3 mb-4 shadow-lg">
+                <div class="bg-cyan-950 text-cyan-400 font-black text-xs px-3 py-2 rounded-xl border border-cyan-800 uppercase tracking-widest">
+                    FASE <span id="arena-counter" class="text-white text-sm">1/10</span>
+                </div>
+                <div class="flex gap-2 text-xs md:text-sm font-black bg-black rounded-xl px-3 py-1.5 border border-slate-800">
+                    <span class="text-orange-500">🔥<span id="sc-1">0</span></span><span class="text-slate-700">|</span>
+                    <span class="text-yellow-400">⚡<span id="sc-2">0</span></span><span class="text-slate-700">|</span>
+                    <span class="text-rose-500">❤️<span id="sc-3">0</span></span>
+                </div>
+            </div>
+
+            <!-- CONTENEDOR DE MISIÓN -->
+            <div class="cyber-panel p-6 w-full flex-grow flex flex-col relative">
+                <!-- Info Misioón -->
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span id="arena-badge" class="bg-purple-900 text-purple-200 text-[10px] font-black px-2 py-1 rounded border border-purple-500 uppercase tracking-widest">TIPO DE MISIÓN</span>
+                        <div class="text-yellow-400 text-xs font-bold mt-2"><i class="fas fa-star"></i> Premio: <span id="arena-reward">0</span> pts</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Mi Puntaje</div>
+                        <div class="text-2xl font-black text-white font-epic drop-shadow-[0_0_10px_#fff]" id="my-arena-score">0</div>
+                    </div>
+                </div>
+
+                <!-- HUD Tiempo -->
+                <div id="timer-ui" class="mb-6 hidden">
+                    <div class="flex justify-between text-xs font-bold text-slate-400 mb-1">
+                        <span class="uppercase tracking-widest text-cyan-500"><i class="fas fa-stopwatch"></i> Tiempo Crítico</span>
+                        <span id="timer-text" class="text-white">0.0s</span>
+                    </div>
+                    <div class="progress-hud"><div id="timer-bar" class="progress-fill w-full"></div></div>
+                </div>
+
+                <!-- Pregunta / Instrucción -->
+                <h2 id="arena-q" class="text-xl md:text-2xl font-black text-white leading-snug mb-8 border-l-4 border-cyan-500 pl-4 py-1">...</h2>
+
+                <!-- ZONA DE ACCIÓN DINÁMICA -->
+                <div id="arena-action" class="w-full flex-grow flex flex-col justify-end gap-3 pb-2">
+                    <!-- Se inyectan botones, inputs, canvas, dnd aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- F. PODIO FINAL -->
+    <div id="view-podium" class="screen">
+        <div class="screen-content text-center">
+            <i class="fas fa-trophy text-8xl text-yellow-400 mb-6 drop-shadow-[0_0_40px_#fbbf24] animate-divine"></i>
+            <h1 class="text-4xl md:text-5xl font-black font-epic text-white mb-2">CONSUMATUM EST</h1>
+            <p class="text-slate-400 text-sm tracking-[0.3em] uppercase mb-10">La Maratón ha concluido</p>
+            
+            <div class="cyber-panel p-6 w-full max-w-sm mx-auto flex flex-col gap-4">
+                <div id="pod-1" class="flex justify-between items-center p-5 bg-gradient-to-r from-yellow-600/40 to-yellow-900/40 rounded-xl border-2 border-yellow-400 text-yellow-400 transform scale-110 shadow-[0_0_20px_rgba(251,191,36,0.2)]">
+                    <div class="flex items-center gap-3"><span class="text-3xl">🥇</span><span class="font-black uppercase text-lg pod-name">N/A</span></div>
+                    <b class="text-2xl pod-sc">0</b>
+                </div>
+                <div id="pod-2" class="flex justify-between items-center p-4 bg-slate-700/40 rounded-xl border-2 border-slate-400 text-slate-300">
+                    <div class="flex items-center gap-3"><span class="text-2xl">🥈</span><span class="font-bold uppercase pod-name">N/A</span></div>
+                    <b class="text-xl pod-sc">0</b>
+                </div>
+                <div id="pod-3" class="flex justify-between items-center p-4 bg-amber-900/40 rounded-xl border-2 border-amber-700 text-amber-500">
+                    <div class="flex items-center gap-3"><span class="text-xl">🥉</span><span class="font-bold uppercase pod-name">N/A</span></div>
+                    <b class="text-lg pod-sc">0</b>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- G. MODO DIOS (ADMIN PANEL) -->
+    <div id="admin-panel">
+        <h2 class="text-3xl font-black text-red-500 mb-6 border-b border-red-900 pb-2"><i class="fas fa-terminal"></i> PANEL CATEQUISTA (GOD MODE)</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <h3 class="text-orange-500 font-black mb-2">Huellas de Fuego</h3>
+                <div class="flex gap-2"><button onclick="System.adminModScore(1, 50)" class="bg-green-700 px-3 py-1 rounded font-bold">+50</button><button onclick="System.adminModScore(1, -50)" class="bg-red-700 px-3 py-1 rounded font-bold">-50</button></div>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <h3 class="text-yellow-500 font-black mb-2">Voceros de Luz</h3>
+                <div class="flex gap-2"><button onclick="System.adminModScore(2, 50)" class="bg-green-700 px-3 py-1 rounded font-bold">+50</button><button onclick="System.adminModScore(2, -50)" class="bg-red-700 px-3 py-1 rounded font-bold">-50</button></div>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <h3 class="text-rose-500 font-black mb-2">Latido Eterno</h3>
+                <div class="flex gap-2"><button onclick="System.adminModScore(3, 50)" class="bg-green-700 px-3 py-1 rounded font-bold">+50</button><button onclick="System.adminModScore(3, -50)" class="bg-red-700 px-3 py-1 rounded font-bold">-50</button></div>
+            </div>
+        </div>
+        <button onclick="System.adminForceEnd()" class="bg-red-600 text-white font-black py-4 rounded-xl w-full mb-4 uppercase hover:bg-red-500 transition shadow-[0_0_20px_#ef4444]">Terminar Juego Ahora</button>
+        <button onclick="document.getElementById('admin-panel').style.display='none'" class="bg-slate-800 text-white font-bold py-3 rounded-xl w-full">Cerrar Panel</button>
+    </div>
+
+    <!-- ==========================================================================
+         5. MOTOR JAVASCRIPT (LÓGICA, AUDIO, FÍSICAS, FIREBASE)
+         ========================================================================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-        const firebaseConfig = {
+        /* --- CONFIG FIREBASE --- */
+        const fbConfig = {
             apiKey: "AIzaSyCZsdoYHsk-B21sCnc4pNAVqP0h3pfw9oA",
             authDomain: "eco-de-la-verdad.firebaseapp.com",
             projectId: "eco-de-la-verdad",
@@ -273,258 +443,418 @@
             messagingSenderId: "1079674721987",
             appId: "1:1079674721987:web:c0933d3297ff246d473476"
         };
-
-        const app = initializeApp(firebaseConfig);
+        const app = initializeApp(fbConfig);
         const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "arena_v6"); // Cambié el nombre del doc para iniciar limpio
+        const gameRef = doc(db, "juego", "arena_engine_v1"); // Nueva instancia limpia
 
-        window.enterPortal = () => { switchScreen('screen-welcome', 'screen-intro'); };
-
-        // RETOS FÍSICOS Y BÍBLICOS DINÁMICOS
-        const teamMissions = {
-            1: [
-                { type: "digital", badge: "TRIVIA VELOZ", source: "Antiguo Testamento", q: "¿Quién derribó a Goliat con una honda?", options: ["Salomón", "David", "Moisés", "Josué"], correct: 1 },
-                { type: "physical", badge: "RETO FÍSICO: EL BUEN SAMARITANO", source: "Lucas 10, 25", title: "¡Carga a tu Prójimo!", desc: "Elige a un compañero de tu equipo. ¡Cárgalo en tu espalda (o caballito) y den una vuelta completa a la sala gritando '¡Tengo a mi prójimo!' Una vez terminen, presiona el botón." },
-                { type: "digital", badge: "TRIVIA VELOZ", source: "El Diluvio", q: "¿Cuántos días y noches llovió en el Arca de Noé?", options: ["7", "12", "40", "100"], correct: 2 },
-                { type: "physical", badge: "RETO FÍSICO: LOS MUROS DE JERICÓ", source: "Josué 6", title: "¡A Derrumbar!", desc: "Todo el equipo debe correr dando 7 vueltas alrededor de un grupo de sillas. En la vuelta 7, ¡griten a todo pulmón para 'derrumbar' los muros! Presionen el botón al terminar." },
-                { type: "digital", badge: "TRIVIA VELOZ", source: "El Éxodo", q: "¿Qué mar abrió Moisés con el poder de Dios?", options: ["Mar Muerto", "Mar Rojo", "Mar Mediterráneo", "Río Jordán"], correct: 1 },
-                { type: "physical", badge: "RETO FÍSICO: CAMINANDO SOBRE EL AGUA", source: "Mateo 14, 29", title: "¡Fe en un solo pie!", desc: "Todos los del equipo deben cruzar el aula saltando EN UN SOLO PIE (simulando caminar sobre el agua). Si alguien toca el piso con el otro pie, todo el equipo repite. ¡Rápido!" }
-            ],
-            2: [
-                { type: "digital", badge: "TRIVIA VELOZ", source: "Nuevo Testamento", q: "¿Quién traicionó a Jesús por 30 monedas de plata?", options: ["Pedro", "Judas", "Juan", "Tomás"], correct: 1 },
-                { type: "physical", badge: "RETO FÍSICO: LA PESCA MILAGROSA", source: "Lucas 5, 1", title: "¡La Red Humana!", desc: "Todo el equipo debe tomarse de los brazos formando un círculo (la red). Corran juntos, atrapen (suavemente) a un jugador de otro equipo dentro del círculo y tráiganlo a su base." },
-                { type: "digital", badge: "TRIVIA VELOZ", source: "Los Milagros", q: "¿Qué multiplicó Jesús para alimentar a 5000 personas?", options: ["Agua y Vino", "Panes y Peces", "Ovejas", "Monedas"], correct: 1 },
-                { type: "physical", badge: "RETO FÍSICO: LA TORRE DE BABEL", source: "Génesis 11", title: "¡Confusión de Lenguas!", desc: "Quítense un zapato cada uno y armen una torre. MIENTRAS LA ARMAN, todos deben hablar al mismo tiempo en un idioma inventado (balbucear) sin usar español. ¡Demuestren la confusión!" },
-                { type: "digital", badge: "TRIVIA VELOZ", source: "Pentecostés", q: "¿En forma de qué bajó el Espíritu Santo?", options: ["Lluvia", "Lenguas de fuego", "Luz", "Viento"], correct: 1 },
-                { type: "physical", badge: "RETO FÍSICO: DAVID Y GOLIAT", source: "1 Samuel 17", title: "¡Apunta a la cabeza!", desc: "Hagan una bola de papel. Un jugador debe pararse en una silla (Goliat). Otro debe lanzarle la bola de papel (piedra) y darle en la cabeza para 'derribarlo'. ¡Solo tienen 5 intentos, corran!" }
-            ],
-            3: [
-                { type: "digital", badge: "TRIVIA VELOZ", source: "Los Apóstoles", q: "¿Sobre qué apóstol edificó Jesús su Iglesia?", options: ["Juan", "Pablo", "Pedro", "Mateo"], correct: 2 },
-                { type: "physical", badge: "RETO FÍSICO: EL ARCA DE NOÉ", source: "Génesis 7", title: "¡Parejas de Animales!", desc: "El equipo debe dividirse en parejas. Cada pareja debe cruzar el cuarto ida y vuelta imitando el sonido y caminar de un animal DIFERENTE (ej. monos, perros, ranas). ¡Que se note!" },
-                { type: "digital", badge: "TRIVIA VELOZ", source: "Primer Milagro", q: "¿En qué bodas Jesús convirtió el agua en vino?", options: ["Bodas de Caná", "Bodas de Jerusalén", "Bodas de Nazaret", "Bodas de Belén"], correct: 0 },
-                { type: "physical", badge: "RETO FÍSICO: EL PARALÍTICO BAJADO DEL TECHO", source: "Marcos 2", title: "¡Abran paso!", desc: "Deben acostar a un compañero en el piso. Cuatro miembros del equipo deben levantarlo (uno por cada brazo y pierna) y cargarlo 3 metros hacia adelante como al paralítico de la historia." },
-                { type: "digital", badge: "TRIVIA VELOZ", source: "Zaqueo", q: "¿A qué árbol se subió Zaqueo para ver a Jesús?", options: ["Higuera", "Sicomoro", "Olivo", "Palmera"], correct: 1 },
-                { type: "physical", badge: "RETO FÍSICO: LAVATORIO DE PIES", source: "Juan 13", title: "¡El mayor es el servidor!", desc: "Un miembro del equipo debe quitarle los zapatos y medias a otro compañero y hacer la mímica de lavarle los pies con extrema humildad durante 15 segundos. ¡Rápido!" }
-            ]
+        /* --- SINTETIZADOR DE AUDIO WEB (SIN ARCHIVOS EXTERNOS) --- */
+        const AudioSys = {
+            ctx: null,
+            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+            playTone(freq, type, duration, vol=0.1) {
+                if(!this.ctx) return;
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.type = type; osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + duration);
+            },
+            tick() { this.playTone(800, 'square', 0.05, 0.05); },
+            success() { this.playTone(440, 'sine', 0.3, 0.2); setTimeout(()=>this.playTone(554, 'sine', 0.4, 0.2), 100); setTimeout(()=>this.playTone(659, 'sine', 0.8, 0.2), 200); },
+            error() { this.playTone(150, 'sawtooth', 0.4, 0.3); setTimeout(()=>this.playTone(100, 'sawtooth', 0.5, 0.3), 150); },
+            alarm() { this.playTone(900, 'square', 0.2, 0.1); setTimeout(()=>this.playTone(700, 'square', 0.2, 0.1), 200); }
         };
 
-        let myTeamId = 0;
-        let currentMissionIndex = 0;
-        let myScore = 100;
-        let gameDataCache = null;
-        let prevScores = { 1: 0, 2: 0, 3: 0 };
-
-        const teamData = {
-            1: { nombre: "Huellas de Fuego" },
-            2: { nombre: "Voceros de la Luz" },
-            3: { nombre: "Latido Eterno" }
-        };
-
-        async function initDoc() {
-            const snap = await getDoc(gameRef);
-            if (!snap.exists() || snap.data().fase === 3) {
-                await setDoc(gameRef, {
-                    fase: 0,
-                    g1_ready: false, g2_ready: false, g3_ready: false,
-                    g1_score: 100, g2_score: 100, g3_score: 100,
-                    ganadores: [] // Array para saber quién acaba primero
+        /* --- MOTOR DE PARTÍCULAS CANVAS --- */
+        const ParticleSys = {
+            canvas: document.getElementById('particle-canvas'),
+            ctx: null, particles: [], w: 0, h: 0,
+            init() {
+                this.ctx = this.canvas.getContext('2d');
+                this.resize(); window.addEventListener('resize', () => this.resize());
+                for(let i=0; i<50; i++) this.particles.push(this.createParticle());
+                this.animate();
+            },
+            resize() { this.w = this.canvas.width = window.innerWidth; this.h = this.canvas.height = window.innerHeight; },
+            createParticle() {
+                return {
+                    x: Math.random() * this.w, y: Math.random() * this.h + this.h,
+                    size: Math.random() * 3 + 1, speed: Math.random() * 2 + 0.5,
+                    opacity: Math.random() * 0.5 + 0.1,
+                    color: Math.random() > 0.5 ? '#06b6d4' : '#fbbf24'
+                };
+            },
+            animate() {
+                this.ctx.clearRect(0, 0, this.w, this.h);
+                this.particles.forEach(p => {
+                    p.y -= p.speed; p.x += Math.sin(p.y / 50) * 0.5;
+                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color; this.ctx.globalAlpha = p.opacity; this.ctx.fill();
+                    if (p.y < -10) { Object.assign(p, this.createParticle()); p.y = this.h + 10; }
                 });
+                requestAnimationFrame(() => this.animate());
             }
-        }
-        initDoc();
+        };
+        ParticleSys.init();
 
-        window.selectTeam = (id) => {
-            myTeamId = id;
-            document.getElementById('lobby-title').innerText = teamData[id].nombre;
-            switchScreen('screen-intro', 'screen-lobby');
+        /* --- BASE DE DATOS DE MISIONES EXTENDIDA --- */
+        const MisionsDB = [
+            // 0: Trivia
+            { type: "trivia", badge: "TEOLOGÍA RÁPIDA", q: "¿Qué apóstol caminó sobre el agua hacia Jesús antes de hundirse por dudar?", opts: ["Juan", "Pedro", "Santiago", "Andrés"], ans: 1, time: 15, pts: 20 },
+            // 1: Hardware (Cámara)
+            { type: "camera", badge: "RETO FÍSICO (7 Jugadores)", q: "¡LA TORRE DE BABEL! Quítense 1 zapato todos. Armen una torre en el piso. Abran la cámara aquí y tómenle foto para validarlo.", pts: 35, ac: "image/*" },
+            // 2: Drag & Drop Nativo (Lógica)
+            { type: "dnd", badge: "LÓGICA GENESIS", q: "Ordena los días de la Creación arrastrando los bloques de arriba hacia abajo.", items: ["La Luz", "El Cielo y Mar", "Animales Terrestres"], ans: [0, 1, 2], pts: 30 },
+            // 3: Texto libre
+            { type: "text", badge: "ACERTIJO PROFÉTICO", q: "Fui arrojado a un foso de leones por orar a mi Dios, pero un ángel cerró sus bocas. ¿Quién soy?", ans: ["daniel"], pts: 25 },
+            // 4: Hold (Resistencia)
+            { type: "hold", badge: "SOPORTA LA CRUZ", q: "¡RETO FÍSICO! Un compañero debe cargar en la espalda a otro. Mientras lo carga, el que tiene el celular debe MANTENER el botón presionado 7 segundos.", dur: 7000, pts: 35 },
+            // 5: Sabotaje Red
+            { type: "sabotage", badge: "EL BESO DE JUDAS", q: "Elige estratégicamente a un equipo rival. Ejecutaremos un ataque de red que congelará sus pantallas por 10 segundos.", pts: 10 },
+            // 6: Hardware (Acelerómetro / Tap)
+            { type: "motion", badge: "TERREMOTO EN PRISIÓN", q: "Como Pablo y Silas, ¡hagan temblar la tierra! El jugador debe agitar violentamente el celular o tocar el botón 40 veces rápido.", taps: 40, time: 10, pts: 40 },
+            // 7: Trivia Múltiple
+            { type: "trivia", badge: "MANDAMIENTOS", q: "¿Cuál de estos NO es uno de los 10 Mandamientos originales?", opts: ["No robarás", "No codiciarás", "Amarás a tus enemigos", "No matarás"], ans: 2, time: 15, pts: 20 },
+            // 8: Secuencia Memoria
+            { type: "sequence", badge: "EL CÓDIGO BÍBLICO", q: "Toca los botones en el orden correcto de estos sacramentos: Bautismo, Comunión, Confirmación.", items: ["Comunión", "Confirmación", "Bautismo"], ans: [2, 0, 1], pts: 30 },
+            // 9: Final Jefe
+            { type: "camera", badge: "LA GRAN COMISIÓN", q: "¡JEFE FINAL! Graben un video selfie de todo el grupo gritando: '¡CRISTO VIVE!'. Al aceptar, ganan y terminan la maratón.", pts: 100, ac: "video/*,image/*" }
+        ];
+
+        /* --- CORE SYSTEM & STATE MACHINE --- */
+        const System = {
+            id: 0, score: 100, missIdx: 0, names: [],
+            dbCache: null, isFrozen: false, timerInt: null,
+            teamRef: { 1: "Huellas de Fuego", 2: "Voceros de la Luz", 3: "Latido Eterno" },
+            
+            nav(toId) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(toId).classList.add('active');
+            },
+            vibrate(p) { if(navigator.vibrate) navigator.vibrate(p); },
+            
+            // Inicio
+            initAudioAndStart() { AudioSys.init(); this.nav('view-teams'); },
+            
+            // Selección
+            selectTeam(tid) {
+                this.id = tid; AudioSys.tick(); this.vibrate(50);
+                document.getElementById('lobby-name').innerText = this.teamRef[tid];
+                const icons = {1:'<i class="fas fa-fire text-orange-500"></i>', 2:'<i class="fas fa-bolt text-yellow-400"></i>', 3:'<i class="fas fa-heart text-rose-500"></i>'};
+                document.getElementById('lobby-icon').innerHTML = icons[tid];
+                this.nav('view-lobby');
+            },
+
+            // Lobby
+            async commitLobby() {
+                const raw = document.getElementById('input-names').value;
+                this.names = raw.split(',').map(n=>n.trim()).filter(n=>n);
+                if(this.names.length < 3) return alert("Error: Se requieren los nombres de los integrantes (separados por coma).");
+                
+                AudioSys.success(); this.vibrate([100,50,100]);
+                document.getElementById('btn-ready').style.display = 'none';
+                document.getElementById('lobby-waiting').classList.remove('hidden');
+                
+                // Setear DB
+                const upd = {}; upd[`g${this.id}_r`] = true;
+                await updateDoc(gameRef, upd);
+            },
+
+            // Generador de Ruleta Visual
+            runRoulette() {
+                this.nav('view-roulette');
+                const wheel = document.getElementById('roulette-wheel');
+                const btn = document.getElementById('btn-accept-mission');
+                wheel.innerHTML = ''; btn.classList.add('pointer-events-none', 'opacity-0');
+                
+                // Quien le toca (secuencial basado en misión para asegurar que todos pasen)
+                const targetName = this.names[this.missIdx % this.names.length];
+                let pool = [];
+                for(let i=0; i<20; i++) pool.push(this.names[Math.floor(Math.random()*this.names.length)]);
+                pool[17] = targetName; // Target position
+                
+                pool.forEach(n => { let div = document.createElement('div'); div.className='roulette-item'; div.innerText=n; wheel.appendChild(div); });
+                wheel.style.transform = `translateY(0px)`;
+                
+                // Animar
+                setTimeout(() => {
+                    const itemH = 40;
+                    const offset = -(17 * itemH) + (120/2) - (itemH/2); // Centrar el item 17
+                    wheel.style.transform = `translateY(${offset}px)`;
+                    
+                    // Sonidos de tick
+                    let t=0; let intv = setInterval(()=>{ AudioSys.tick(); this.vibrate(20); t+=200; if(t>3000) clearInterval(intv); }, 200);
+
+                    setTimeout(() => {
+                        AudioSys.success(); this.vibrate([200, 100, 300]);
+                        wheel.children[17].classList.add('selected');
+                        btn.classList.remove('pointer-events-none', 'opacity-0');
+                    }, 4000);
+                }, 100);
+            },
+
+            // Renderizar la Arena
+            renderArena() {
+                if(this.missIdx >= MisionsDB.length) return; // Finalizado
+                this.nav('view-arena');
+                const m = MisionsDB[this.missIdx];
+                
+                document.getElementById('arena-counter').innerText = `${this.missIdx + 1}/10`;
+                document.getElementById('arena-badge').innerText = m.badge;
+                document.getElementById('arena-reward').innerText = m.pts;
+                document.getElementById('my-arena-score').innerText = this.score;
+                document.getElementById('arena-q').innerText = m.q;
+                
+                const area = document.getElementById('arena-action');
+                area.innerHTML = ''; clearInterval(this.timerInt); document.getElementById('timer-ui').classList.add('hidden');
+
+                // LÓGICA DE RENDERIZADO POR TIPO
+                if (m.type === "trivia") {
+                    this.startTimer(m.time, () => this.fail(m.opts[m.ans]));
+                    m.opts.forEach((o, i) => {
+                        let btn = document.createElement('button');
+                        btn.className = "w-full p-4 mb-2 bg-slate-800 border-2 border-slate-600 rounded-xl text-left font-bold text-white hover:border-cyan-400 hover:bg-slate-700 transition active:scale-95 shadow-md";
+                        btn.innerText = o;
+                        btn.onclick = () => { clearInterval(this.timerInt); i === m.ans ? this.win(m.pts) : this.fail(m.opts[m.ans]); };
+                        area.appendChild(btn);
+                    });
+                }
+                else if (m.type === "camera") {
+                    area.innerHTML = `<label class="btn-core btn-cyan w-full py-8 rounded-2xl flex-col cursor-pointer"><i class="fas fa-camera text-4xl mb-2"></i><span>ABRIR CÁMARA / SUBIR EVIDENCIA</span><input type="file" accept="${m.ac}" capture="environment" class="hidden" onchange="System.win(${m.pts})"></label>`;
+                }
+                else if (m.type === "text") {
+                    area.innerHTML = `<input type="text" id="ans-txt" class="cyber-input mb-4" placeholder="Escribe la respuesta..."><button onclick="System.valText()" class="btn-core btn-cyan w-full py-4 rounded-xl">VALIDAR</button>`;
+                    this.valText = () => {
+                        let v = document.getElementById('ans-txt').value.toLowerCase();
+                        m.ans.some(a => v.includes(a)) ? this.win(m.pts) : this.fail(m.ans[0]);
+                    };
+                }
+                else if (m.type === "hold") {
+                    area.innerHTML = `<button id="btn-hold" class="btn-core btn-danger w-full py-10 rounded-3xl text-xl flex-col"><i class="fas fa-fingerprint text-5xl mb-2"></i><span>MANTÉN PRESIONADO ${m.dur/1000}s</span><div id="hold-bar" class="w-full h-2 bg-black/50 mt-4 rounded overflow-hidden hidden"><div id="hold-fill" class="h-full bg-white w-0 transition-all duration-${m.dur} linear"></div></div></button>`;
+                    let btn = document.getElementById('btn-hold'), hBar = document.getElementById('hold-bar'), hFill = document.getElementById('hold-fill'), ht;
+                    const startH = (e) => { e.preventDefault(); AudioSys.tick(); hBar.classList.remove('hidden'); hFill.style.width = '100%'; ht = setTimeout(()=>this.win(m.pts), m.dur); };
+                    const stopH = (e) => { e.preventDefault(); clearTimeout(ht); hFill.style.transition='none'; hFill.style.width='0'; setTimeout(()=>hFill.style.transition=`all ${m.dur}ms linear`,50); };
+                    btn.addEventListener('touchstart', startH); btn.addEventListener('touchend', stopH);
+                    btn.addEventListener('mousedown', startH); btn.addEventListener('mouseup', stopH); btn.addEventListener('mouseleave', stopH);
+                }
+                else if (m.type === "sabotage") {
+                    [1,2,3].forEach(id => {
+                        if(id !== this.id) {
+                            let b = document.createElement('button');
+                            b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-5 rounded-xl mb-3 shadow-[0_0_15px_rgba(6,182,212,0.4)]";
+                            b.innerHTML = `<i class="fas fa-snowflake mr-2 text-2xl"></i> ATACAR A: ${this.teamRef[id]}`;
+                            b.onclick = async () => {
+                                const upd = {}; upd[`sab_${id}`] = Date.now();
+                                await updateDoc(gameRef, upd); this.win(m.pts);
+                            }; area.appendChild(b);
+                        }
+                    });
+                }
+                else if (m.type === "motion") {
+                    let c = 0; this.startTimer(m.time, () => this.fail("¡Faltó energía!"));
+                    area.innerHTML = `<div class="text-center text-cyan-400 font-black text-3xl mb-4" id="tap-c">0 / ${m.taps}</div><button id="btn-mot" class="btn-core btn-gold w-full py-12 rounded-3xl text-2xl"><i class="fas fa-hand-rock text-4xl mr-2"></i> ¡TAPEA RÁPIDO!</button>`;
+                    document.getElementById('btn-mot').onclick = () => {
+                        c++; document.getElementById('tap-c').innerText = `${c} / ${m.taps}`; this.vibrate(20);
+                        if(c >= m.taps){ clearInterval(this.timerInt); this.win(m.pts); }
+                    };
+                }
+                else if (m.type === "dnd") {
+                    // Vanilla JS Drag and Drop implementation for Mobile/Desktop
+                    area.innerHTML = `<div id="dnd-box" class="dnd-container"></div><button id="btn-dnd" class="btn-core btn-cyan w-full py-4 mt-4 rounded-xl hidden">CONFIRMAR ORDEN</button>`;
+                    let box = document.getElementById('dnd-box'), btn = document.getElementById('btn-dnd');
+                    let dragged = null, startY = 0;
+                    
+                    // Shuffle items visually but keep track of original ID
+                    let shuffled = m.items.map((it, i) => ({it, i})).sort(()=>Math.random()-0.5);
+                    
+                    shuffled.forEach(obj => {
+                        let el = document.createElement('div'); el.className = 'dnd-item'; el.innerText = obj.it; el.dataset.id = obj.i;
+                        
+                        // Touch events for mobile DND
+                        el.addEventListener('touchstart', e => { dragged = el; el.classList.add('dragging'); startY = e.touches[0].clientY; this.vibrate(20); }, {passive:true});
+                        el.addEventListener('touchmove', e => {
+                            if(!dragged) return;
+                            e.preventDefault(); // prevent scroll
+                            const touchY = e.touches[0].clientY;
+                            const siblings = [...box.querySelectorAll('.dnd-item:not(.dragging)')];
+                            let nextNode = siblings.find(sib => { return touchY <= sib.getBoundingClientRect().top + sib.offsetHeight / 2; });
+                            box.insertBefore(dragged, nextNode);
+                            btn.classList.remove('hidden');
+                        });
+                        el.addEventListener('touchend', () => { if(dragged){ dragged.classList.remove('dragging'); dragged = null; AudioSys.tick(); }});
+                        box.appendChild(el);
+                    });
+                    
+                    btn.onclick = () => {
+                        let currentOrder = [...box.children].map(el => parseInt(el.dataset.id));
+                        JSON.stringify(currentOrder) === JSON.stringify(m.ans) ? this.win(m.pts) : this.fail("Orden Incorrecto");
+                    };
+                }
+                else if (m.type === "sequence") {
+                    area.innerHTML = `<div id="seq-res" class="flex justify-center gap-2 mb-6 h-10"></div>`;
+                    let res = document.getElementById('seq-res'), userSeq = [];
+                    m.items.forEach((it, i) => {
+                        let b = document.createElement('button');
+                        b.className = "w-full p-4 mb-3 bg-slate-800 border-2 border-slate-500 rounded-xl text-white font-bold active:scale-95 transition";
+                        b.innerText = it;
+                        b.onclick = () => {
+                            b.disabled = true; b.style.opacity = '0.4'; AudioSys.tick(); this.vibrate(20);
+                            userSeq.push(i); res.innerHTML += `<span class="bg-cyan-900 px-3 py-1 rounded text-cyan-200 text-xs font-bold border border-cyan-500">${it}</span>`;
+                            if(userSeq.length === m.items.length) {
+                                JSON.stringify(userSeq) === JSON.stringify(m.ans) ? this.win(m.pts) : this.fail("Secuencia Errónea");
+                            }
+                        }; area.appendChild(b);
+                    });
+                }
+            },
+
+            // Lógica de Tiempo
+            startTimer(sec, onEnd) {
+                document.getElementById('timer-ui').classList.remove('hidden');
+                let bar = document.getElementById('timer-bar'), txt = document.getElementById('timer-text');
+                bar.className = "progress-fill w-full"; let left = sec;
+                this.timerInt = setInterval(() => {
+                    left -= 0.1; let pct = (left/sec)*100; bar.style.width = `${pct}%`; txt.innerText = left.toFixed(1)+"s";
+                    if(pct < 25 && !bar.classList.contains('danger')) { bar.classList.add('danger'); AudioSys.alarm(); }
+                    if(left <= 0) { clearInterval(this.timerInt); onEnd(); }
+                }, 100);
+            },
+
+            // Lógica Win/Fail
+            async win(pts) {
+                this.score += pts; AudioSys.success(); this.vibrate([100,50,100,50,200]);
+                document.getElementById('ov-pts').innerText = `+${pts} PTS`;
+                let ov = document.getElementById('ov-success'); ov.classList.add('show');
+                await this.syncDB();
+                setTimeout(() => { ov.classList.remove('show'); this.advance(); }, 2500);
+            },
+            
+            async fail(msg) {
+                this.score = Math.max(0, this.score - 10); AudioSys.error(); this.vibrate([300,100,300,100,400]);
+                document.getElementById('ov-err-msg').innerText = `Respuesta correcta:\n${msg}\n\n-10 PTS`;
+                let ov = document.getElementById('ov-error'); ov.classList.add('show');
+                await this.syncDB();
+                setTimeout(() => { ov.classList.remove('show'); this.advance(); }, 3500);
+            },
+
+            async syncDB() {
+                const upd = {}; upd[`g${this.id}_s`] = this.score;
+                await updateDoc(gameRef, upd);
+            },
+
+            async advance() {
+                this.missIdx++;
+                if(this.missIdx >= MisionsDB.length) {
+                    await updateDoc(gameRef, { end: true }); // Gatilla el final global
+                } else {
+                    this.runRoulette();
+                }
+            },
+
+            // Toast Notifications
+            showToast(msg) {
+                const t = document.getElementById('toast-live');
+                document.getElementById('toast-msg').innerText = msg;
+                t.classList.add('show'); AudioSys.alarm(); this.vibrate([50,50]);
+                setTimeout(()=>t.classList.remove('show'), 3500);
+            },
+
+            // --- GOD MODE (ADMIN) ---
+            godClicks: 0,
+            initGodMode() {
+                document.getElementById('god-mode-trigger').onclick = () => {
+                    this.godClicks++;
+                    if(this.godClicks >= 7) { document.getElementById('admin-panel').style.display = 'flex'; this.godClicks = 0; }
+                    setTimeout(()=>this.godClicks=0, 3000); // Reset after 3s
+                };
+            },
+            async adminModScore(team, val) {
+                if(!this.dbCache) return;
+                const upd = {}; upd[`g${team}_s`] = Math.max(0, this.dbCache[`g${team}_s`] + val);
+                await updateDoc(gameRef, upd);
+            },
+            async adminForceEnd() {
+                if(confirm("¿Forzar el final de la maratón para todos?")) await updateDoc(gameRef, { end: true });
+            }
         };
 
-        window.setReady = async () => {
-            document.getElementById('btn-ready').style.display = 'none';
-            document.getElementById('waiting-status').classList.remove('hidden');
-            const upd = {}; upd[`g${myTeamId}_ready`] = true;
-            await updateDoc(gameRef, upd);
-        };
+        // Inicializar Secretos
+        System.initGodMode();
 
-        // NOTIFICACIÓN EN PANTALLA
-        function showToastAlert(msg) {
-            const toast = document.getElementById('pressure-toast');
-            document.getElementById('pressure-msg').innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 4000);
-        }
+        // Expone API para el HTML
+        window.System = System;
 
-        window.checkAnswer = async (selectedIndex) => {
-            const m = teamMissions[myTeamId][currentMissionIndex];
-            const feedback = document.getElementById('feedback-msg');
-            feedback.classList.remove('hidden');
-
-            if (selectedIndex === m.correct) {
-                myScore += 20;
-                feedback.className = "mt-6 font-black text-lg bg-emerald-600 text-white p-4 rounded-xl shadow-2xl";
-                feedback.innerHTML = `¡CORRECTO! +20 puntos. ¡Sigan avanzando!`;
-            } else {
-                myScore -= 10;
-                feedback.className = "mt-6 font-black text-lg bg-red-600 text-white p-4 rounded-xl shadow-2xl";
-                feedback.innerHTML = `MAL. La respuesta era: ${m.options[m.correct]}. Pierden 10 pts.`;
-            }
-            
-            document.getElementById('my-score').innerText = myScore;
-            
-            currentMissionIndex++;
-            await progressGame();
-            
-            setTimeout(() => {
-                feedback.classList.add('hidden');
-                checkNextStep();
-            }, 1500);
-        };
-
-        window.completeManualMission = async () => {
-            myScore += 30; // Los retos físicos dan más puntos
-            document.getElementById('my-score').innerText = myScore;
-            currentMissionIndex++;
-            await progressGame();
-            checkNextStep();
-        };
-
-        async function progressGame() {
-            const upd = {};
-            upd[`g${myTeamId}_score`] = myScore;
-            
-            // Si llegamos al final de nuestras misiones, nos registramos como ganadores
-            if (currentMissionIndex >= teamMissions[myTeamId].length) {
-                upd.ganadores = arrayUnion(myTeamId);
-            }
-            await updateDoc(gameRef, upd);
-        }
-
-        function checkNextStep() {
-            if (currentMissionIndex < teamMissions[myTeamId].length) {
-                loadCurrentMission();
-            } else {
-                // Pantalla de espera personal mientras otros acaban
-                document.getElementById('mission-action-container').innerHTML = `<h2 class="text-3xl font-black text-emerald-400 mt-10 animate-bounce">¡MISIONES COMPLETADAS! ESPERANDO A QUE TERMINE OTRO EQUIPO...</h2>`;
-                document.getElementById('mission-badge').style.display = 'none';
-            }
-        }
-
-        function loadCurrentMission() {
-            const m = teamMissions[myTeamId][currentMissionIndex];
-            document.getElementById('game-team-name').innerText = teamData[myTeamId].nombre;
-            document.getElementById('mission-counter').innerText = `Ronda ${currentMissionIndex + 1} / ${teamMissions[myTeamId].length}`;
-            document.getElementById('mission-badge').innerText = m.badge;
-            document.getElementById('trivia-source').innerText = m.source;
-            document.getElementById('trivia-question').innerText = m.q || m.title + ": " + m.desc;
-
-            const container = document.getElementById('mission-action-container');
-            if (m.type === "digital") {
-                let optHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">';
-                m.options.forEach((opt, idx) => {
-                    optHtml += `<button onclick="checkAnswer(${idx})" class="btn-option text-lg">${opt}</button>`;
-                });
-                container.innerHTML = optHtml + '</div>';
-            } else if (m.type === "physical") {
-                container.innerHTML = `
-                    <div class="mt-8">
-                        <button onclick="completeManualMission()" class="btn-physical w-full py-6 text-xl font-black text-white rounded-2xl uppercase tracking-widest"><i class="fas fa-bolt mr-2"></i> ¡Reto Físico Completado (+30 pts)!</button>
-                    </div>
-                `;
-            }
-        }
-
-        async function endGlobalGame(data) {
-            if(document.getElementById('screen-final').style.display === 'flex') return;
-            switchScreen('screen-game', 'screen-final');
-            
-            let scores = [
-                { name: "Huellas de Fuego", score: data.g1_score },
-                { name: "Voceros de la Luz", score: data.g2_score },
-                { name: "Latido Eterno", score: data.g3_score }
-            ];
-            scores.sort((a, b) => b.score - a.score);
-
-            document.getElementById('winner-announcement').innerText = `¡${scores[0].name} es el Campeón de la Fe!`;
-            document.getElementById('p-1-score').innerText = `${scores[0].score} pts`;
-            document.getElementById('p-2-score').innerText = `${scores[1].score} pts`;
-            document.getElementById('p-3-score').innerText = `${scores[2].score} pts`;
-        }
-
-        function switchScreen(hideId, showId) {
-            const hideEl = document.getElementById(hideId);
-            const showEl = document.getElementById(showId);
-            hideEl.style.opacity = '0';
-            setTimeout(() => {
-                hideEl.classList.remove('active'); hideEl.style.display = 'none';
-                showEl.style.display = 'flex';
-                setTimeout(() => { showEl.classList.add('active'); showEl.style.opacity = '1'; }, 100);
-            }, 300);
-        }
-
+        /* --- LISTENER MAESTRO (FIREBASE SYNC) --- */
         onSnapshot(gameRef, async (snap) => {
-            if (!snap.exists()) return;
-            const data = snap.data();
-            gameDataCache = data;
+            if(!snap.exists()) return;
+            const d = snap.data(); System.dbCache = d;
 
-            // Actualizar Marcadores
-            document.getElementById('score-g1').innerText = data.g1_score;
-            document.getElementById('score-g2').innerText = data.g2_score;
-            document.getElementById('score-g3').innerText = data.g3_score;
+            // Actualizar Marcadores Globales (Si estamos en lobby, arena o podio)
+            document.getElementById('sc-1').innerText = d.g1_s;
+            document.getElementById('sc-2').innerText = d.g2_s;
+            document.getElementById('sc-3').innerText = d.g3_s;
+            
+            // LOBBY STATUS
+            if (document.getElementById('view-lobby').classList.contains('active')) {
+                document.getElementById('sync-1').innerHTML = `Fuego<br><span class="text-lg">${d.g1_r ? '✅' : '❌'}</span>`;
+                document.getElementById('sync-1').className = d.g1_r ? "bg-green-900 border border-green-500 rounded p-2 text-white" : "bg-slate-900 border border-slate-700 rounded p-2 text-slate-500";
+                document.getElementById('sync-2').innerHTML = `Luz<br><span class="text-lg">${d.g2_r ? '✅' : '❌'}</span>`;
+                document.getElementById('sync-2').className = d.g2_r ? "bg-green-900 border border-green-500 rounded p-2 text-white" : "bg-slate-900 border border-slate-700 rounded p-2 text-slate-500";
+                document.getElementById('sync-3').innerHTML = `Latido<br><span class="text-lg">${d.g3_r ? '✅' : '❌'}</span>`;
+                document.getElementById('sync-3').className = d.g3_r ? "bg-green-900 border border-green-500 rounded p-2 text-white" : "bg-slate-900 border border-slate-700 rounded p-2 text-slate-500";
+                
+                // Transición a Arena
+                if(d.fase === 0 && d.g1_r && d.g2_r && d.g3_r && d[`g${System.id}_r`]) {
+                    await updateDoc(gameRef, { fase: 1 });
+                }
+            }
 
-            // SISTEMA DE PRESIÓN EN VIVO (TOASTS)
-            // Si el juego ya empezó (fase 2) y no es mi equipo el que anotó
-            if (data.fase === 2) {
-                [1, 2, 3].forEach(id => {
-                    if (id !== myTeamId && data[`g${id}_score`] > prevScores[id]) {
-                        // Un equipo rival acaba de ganar puntos
-                        showToastAlert(`¡Cuidado! ${teamData[id].nombre} acaba de avanzar rápido 🔥`);
+            // INICIO GLOBAL
+            if(d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
+                // Setear scores base para alertas
+                System.prevScores = { 1: d.g1_s, 2: d.g2_s, 3: d.g3_s };
+                System.runRoulette();
+            }
+
+            // DETECCIÓN DE TOASTS (RIVAL ANOTA)
+            if(d.fase >= 1 && System.prevScores) {
+                [1,2,3].forEach(id => {
+                    if(id !== System.id && d[`g${id}_s`] > System.prevScores[id]) {
+                        System.showToast(`🔥 ¡${System.teamRef[id]} avanzó! ¡Aceleren!`);
                     }
-                    prevScores[id] = data[`g${id}_score`];
+                    System.prevScores[id] = d[`g${id}_s`];
                 });
             }
 
-            // LOBBY STATUS
-            document.getElementById('status-g1').innerText = `Fuego: ${data.g1_ready ? '✅' : '❌'}`;
-            document.getElementById('status-g2').innerText = `Luz: ${data.g2_ready ? '✅' : '❌'}`;
-            document.getElementById('status-g3').innerText = `Latido: ${data.g3_ready ? '✅' : '❌'}`;
-
-            // ARRANQUE FASE 1: TODOS LISTOS
-            if (data.fase === 0 && data.g1_ready && data.g2_ready && data.g3_ready && data[`g${myTeamId}_ready`]) {
-                await updateDoc(gameRef, { fase: 1 });
+            // SABOTAJE DE RED (CONGELAMIENTO)
+            if(d.fase >= 1 && d[`sab_${System.id}`]) {
+                const diff = Date.now() - d[`sab_${System.id}`];
+                if(diff < 2000 && !System.isFrozen) { // 2 seconds threshold
+                    System.isFrozen = true; System.vibrate([500,200,500,200,500]); AudioSys.error();
+                    const ice = document.getElementById('ov-frozen'); ice.classList.add('show');
+                    let t = 10; document.getElementById('frozen-timer').innerText = t;
+                    let iv = setInterval(() => {
+                        t--; document.getElementById('frozen-timer').innerText = t; AudioSys.tick();
+                        if(t<=0){ clearInterval(iv); ice.classList.remove('show'); System.isFrozen=false; AudioSys.success(); }
+                    }, 1000);
+                }
             }
 
-            // FASE 1: CONTADOR GIGANTE
-            if (data.fase === 1) {
-                document.getElementById('start-countdown-box').classList.remove('hidden');
-                let t = 10;
-                let timerBox = document.getElementById('start-timer');
-                let intv = setInterval(async () => {
-                    t--;
-                    if(timerBox) timerBox.innerText = t;
-                    if(t <= 0) {
-                        clearInterval(intv);
-                        if(myTeamId === 1) await updateDoc(gameRef, { fase: 2 });
-                    }
-                }, 1000);
-            }
-
-            // FASE 2: ENTRAR A LA ARENA
-            if (data.fase === 2 && document.getElementById('screen-lobby').classList.contains('active')) {
-                // Inicializar puntajes previos al entrar a la arena
-                prevScores = { 1: data.g1_score, 2: data.g2_score, 3: data.g3_score };
-                loadCurrentMission();
-                switchScreen('screen-lobby', 'screen-game');
-            }
-
-            // CONDICIÓN DE VICTORIA GLOBAL: BASTA QUE 1 o 2 TERMINEN
-            // Si hay 2 ganadores en el array (basta que el segundo termine, o puedes cambiar a 1)
-            if (data.ganadores && data.ganadores.length >= 2 && data.fase !== 3) {
-                if (myTeamId === 1) await updateDoc(gameRef, { fase: 3 }); // El admin G1 cierra
-            }
-
-            // FASE 3: FIN DEL JUEGO PARA TODOS
-            if (data.fase === 3) {
-                endGlobalGame(data);
+            // FIN DEL JUEGO
+            if(d.end === true) {
+                if(document.getElementById('view-podium').classList.contains('active')) return;
+                clearInterval(System.timerInt); AudioSys.success(); System.vibrate([1000]);
+                System.nav('view-podium');
+                
+                // Ordenar Podium
+                let sorted = [
+                    {n: System.teamRef[1], s: d.g1_s}, {n: System.teamRef[2], s: d.g2_s}, {n: System.teamRef[3], s: d.g3_s}
+                ].sort((a,b) => b.s - a.s);
+                
+                document.querySelector('#pod-1 .pod-name').innerText = sorted[0].n; document.querySelector('#pod-1 .pod-sc').innerText = sorted[0].s;
+                document.querySelector('#pod-2 .pod-name').innerText = sorted[1].n; document.querySelector('#pod-2 .pod-sc').innerText = sorted[1].s;
+                document.querySelector('#pod-3 .pod-name').innerText = sorted[2].n; document.querySelector('#pod-3 .pod-sc').innerText = sorted[2].s;
             }
         });
     </script>
