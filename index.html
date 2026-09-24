@@ -10,15 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* ==========================================================================
-           1. VARIABLES GLOBALES Y RESETEO CORE
-           ========================================================================== */
         :root {
             --neon-cyan: #06b6d4; --neon-cyan-glow: rgba(6, 182, 212, 0.6);
             --neon-gold: #fbbf24; --neon-gold-glow: rgba(251, 191, 36, 0.6);
             --neon-red: #ef4444;  --neon-red-glow: rgba(239, 68, 68, 0.6);
             --neon-purple: #a855f7;
-            --bg-deep: #020617;   --bg-glass: rgba(15, 23, 42, 0.75);
+            --bg-deep: #020617;    --bg-glass: rgba(15, 23, 42, 0.75);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -33,9 +30,6 @@
 
         .font-epic { font-family: 'Cinzel', serif; }
 
-        /* ==========================================================================
-           2. MOTOR DE RENDERIZADO VISUAL (CANVAS & OVERLAYS)
-           ========================================================================== */
         #particle-canvas {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0; pointer-events: none; mix-blend-mode: screen;
@@ -47,9 +41,6 @@
             z-index: 1; pointer-events: none;
         }
 
-        /* ==========================================================================
-           3. SISTEMA DE COMPONENTES UI (GLASSMORPHISM AVANZADO)
-           ========================================================================== */
         .cyber-panel {
             background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 1.5rem;
@@ -62,7 +53,6 @@
             transform: skewX(-20deg); animation: shine 6s infinite;
         }
 
-        /* Botones Interactivos Core */
         .btn-core {
             position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em;
@@ -70,15 +60,14 @@
         }
         .btn-core:active { transform: scale(0.96); }
         
-        .btn-cyan { background: linear-gradient(135deg, #0284c7, #06b6d4); border: 1px solid #22d3ee; box-shadow: 0 0 20px var(--neon-cyan-glow); color: white; }
+        .btn-cyan { background: linear-gradient(135deg, #0284c7, #06b6d4); border: 1px solid #22d3ee; box-shadow: 0 0 20px var(--neon-cyan-glow); color: white; cursor: pointer; }
         .btn-cyan:hover { box-shadow: 0 0 40px var(--neon-cyan); text-shadow: 0 0 10px white; }
         
-        .btn-gold { background: linear-gradient(135deg, #b45309, #f59e0b); border: 1px solid #fbbf24; box-shadow: 0 0 20px var(--neon-gold-glow); color: #000; }
+        .btn-gold { background: linear-gradient(135deg, #b45309, #f59e0b); border: 1px solid #fbbf24; box-shadow: 0 0 20px var(--neon-gold-glow); color: #000; cursor: pointer; }
         .btn-gold:hover { box-shadow: 0 0 40px var(--neon-gold); }
 
-        .btn-danger { background: linear-gradient(135deg, #991b1b, #ef4444); border: 1px solid #f87171; box-shadow: 0 0 20px var(--neon-red-glow); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #991b1b, #ef4444); border: 1px solid #f87171; box-shadow: 0 0 20px var(--neon-red-glow); color: white; cursor: pointer; }
         
-        /* Inputs */
         .cyber-input {
             width: 100%; background: rgba(0,0,0,0.6); border: 2px solid #0369a1;
             color: #22d3ee; border-radius: 1rem; padding: 1rem; font-weight: 700;
@@ -87,9 +76,6 @@
         .cyber-input:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 20px rgba(14, 165, 233, 0.4); }
         .cyber-input::placeholder { color: #475569; }
 
-        /* ==========================================================================
-           4. ANIMACIONES COMPLEJAS (KEYFRAMES)
-           ========================================================================== */
         @keyframes shine { 0% { left: -100%; } 20%, 100% { left: 200%; } }
         
         @keyframes divine-float {
@@ -108,16 +94,6 @@
         }
         .glitch-error { animation: glitch-anim 0.3s infinite; border-color: var(--neon-red) !important; color: var(--neon-red); }
 
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
-            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-        .pulse-danger { animation: pulse-ring 2s infinite; }
-
-        /* ==========================================================================
-           5. GESTIÓN DE PANTALLAS Y Z-INDEX
-           ========================================================================== */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -126,13 +102,8 @@
         }
         .screen.active { opacity: 1; pointer-events: all; }
         
-        /* Contenedor principal para centrar contenido vertical largo */
         .screen-content { width: 100%; max-width: 600px; margin: auto; padding: 2rem 0; }
 
-        /* ==========================================================================
-           6. COMPONENTES DE MISIONES ESPECÍFICAS
-           ========================================================================== */
-        /* Ruleta 3D */
         .roulette-viewport {
             height: 120px; overflow: hidden; position: relative;
             background: rgba(0,0,0,0.8); border: 2px solid var(--neon-cyan); border-radius: 1rem;
@@ -146,7 +117,7 @@
         
         .roulette-wheel {
             display: flex; flex-direction: column; align-items: center;
-            transition: transform 4s cubic-bezier(0.15, 0.85, 0.1, 1); /* Curva de desaceleración realista */
+            transition: transform 4s cubic-bezier(0.15, 0.85, 0.1, 1);
         }
         .roulette-item {
             height: 40px; line-height: 40px; font-size: 1.5rem; font-weight: 900; color: #475569;
@@ -154,12 +125,10 @@
         }
         .roulette-item.selected { color: var(--neon-cyan); text-shadow: 0 0 20px var(--neon-cyan); transform: scale(1.2); }
 
-        /* Barras de Progreso */
         .progress-hud { width: 100%; height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; margin-top: 4px; }
         .progress-fill { height: 100%; background: var(--neon-cyan); transition: width 0.1s linear, background 0.3s; }
         .progress-fill.danger { background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
 
-        /* Sistema Drag & Drop (Misión 9) */
         .dnd-container { display: flex; flex-direction: column; gap: 0.5rem; min-height: 200px; padding: 1rem; background: rgba(0,0,0,0.4); border-radius: 1rem; }
         .dnd-item { 
             padding: 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; 
@@ -168,7 +137,6 @@
         .dnd-item:active { cursor: grabbing; transform: scale(1.05); border-color: var(--neon-cyan); z-index: 50; }
         .dnd-item.dragging { opacity: 0.5; }
 
-        /* Overlays Feedback */
         .overlay-fx {
             position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(10px);
@@ -180,13 +148,11 @@
         }
         #toast-live.show { transform: translate(-50%, 0); }
 
-        /* Sabotaje Hielo */
         .ice-texture {
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>');
             background-color: rgba(2, 132, 199, 0.9);
         }
 
-        /* Panel Admin Oculto */
         #admin-panel {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95);
             z-index: 99999; display: none; flex-direction: column; padding: 2rem; overflow-y: auto;
@@ -195,17 +161,14 @@
 </head>
 <body>
 
-    <!-- 1. MOTOR DE RENDERIZADO BG -->
     <canvas id="particle-canvas"></canvas>
     <div class="vignette"></div>
 
-    <!-- 2. TOAST DE PRESIÓN EN VIVO -->
     <div id="toast-live" class="bg-red-600 border-2 border-yellow-400 text-white font-black px-6 py-3 rounded-2xl shadow-[0_0_30px_rgba(239,68,68,1)] flex items-center gap-3 w-max">
         <i class="fas fa-siren-on text-2xl animate-pulse text-yellow-300"></i>
         <span id="toast-msg" class="uppercase tracking-widest text-sm">NOTIFICACIÓN</span>
     </div>
 
-    <!-- 3. OVERLAYS DE FEEDBACK -->
     <div id="ov-success" class="overlay-fx bg-slate-900/90 border-4 border-yellow-400">
         <div class="animate-divine text-yellow-400 mb-6 relative">
             <i class="fas fa-sun text-9xl absolute opacity-30 animate-spin" style="animation-duration: 8s; top:-20px; left:-20px;"></i>
@@ -228,18 +191,13 @@
         <p class="text-7xl font-black text-white mt-8 drop-shadow-[0_0_20px_#fff]" id="frozen-timer">10</p>
     </div>
 
-    <!-- ==========================================================================
-         4. PANTALLAS DE LA APLICACIÓN (STATE MACHINE VIEWS)
-         ========================================================================== -->
-
-    <!-- A. BIENVENIDA -->
+    <!-- VISTAS -->
     <div id="view-welcome" class="screen active">
         <div class="screen-content flex flex-col items-center text-center">
             <div class="relative mb-8">
                 <i class="fas fa-shield-cross text-8xl text-cyan-400 drop-shadow-[0_0_30px_#06b6d4] animate-divine"></i>
             </div>
-            <!-- El título es el trigger oculto para el Modo Dios (Click 7 veces) -->
-            <h1 id="god-mode-trigger" class="text-5xl md:text-6xl font-black font-epic text-white mb-4 leading-tight tracking-wide">
+            <h1 id="god-mode-trigger" class="text-5xl md:text-6xl font-black font-epic text-white mb-4 leading-tight tracking-wide cursor-pointer">
                 EL ECO DE<br><span class="text-cyan-400">LA VERDAD</span>
             </h1>
             <p class="text-slate-400 text-sm tracking-[0.4em] uppercase mb-12 font-bold">Protocolo de Confirmación</p>
@@ -249,28 +207,27 @@
         </div>
     </div>
 
-    <!-- B. SELECCIÓN DE LEGIÓN -->
     <div id="view-teams" class="screen">
         <div class="screen-content text-center">
             <h2 class="text-3xl font-black font-epic text-cyan-300 mb-2 uppercase">Identifica tu Legión</h2>
             <p class="text-slate-400 text-sm mb-8">Un solo dispositivo será la espada del equipo.</p>
             
             <div class="flex flex-col gap-5 w-full max-w-md mx-auto">
-                <button onclick="System.selectTeam(1)" class="cyber-panel p-6 flex items-center justify-between hover:border-orange-500 transition group">
+                <button onclick="System.selectTeam(1)" class="cyber-panel p-6 flex items-center justify-between hover:border-orange-500 transition group cursor-pointer">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 rounded-full bg-orange-950 border border-orange-500 flex items-center justify-center text-orange-500 text-2xl group-hover:bg-orange-500 group-hover:text-white transition"><i class="fas fa-fire"></i></div>
                         <span class="text-xl font-black text-white uppercase tracking-wider">Huellas de Fuego</span>
                     </div>
                     <i class="fas fa-chevron-right text-slate-500"></i>
                 </button>
-                <button onclick="System.selectTeam(2)" class="cyber-panel p-6 flex items-center justify-between hover:border-yellow-400 transition group">
+                <button onclick="System.selectTeam(2)" class="cyber-panel p-6 flex items-center justify-between hover:border-yellow-400 transition group cursor-pointer">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 rounded-full bg-yellow-950 border border-yellow-400 flex items-center justify-center text-yellow-400 text-2xl group-hover:bg-yellow-400 group-hover:text-black transition"><i class="fas fa-bolt"></i></div>
                         <span class="text-xl font-black text-white uppercase tracking-wider">Voceros de la Luz</span>
                     </div>
                     <i class="fas fa-chevron-right text-slate-500"></i>
                 </button>
-                <button onclick="System.selectTeam(3)" class="cyber-panel p-6 flex items-center justify-between hover:border-rose-500 transition group">
+                <button onclick="System.selectTeam(3)" class="cyber-panel p-6 flex items-center justify-between hover:border-rose-500 transition group cursor-pointer">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 rounded-full bg-rose-950 border border-rose-500 flex items-center justify-center text-rose-500 text-2xl group-hover:bg-rose-500 group-hover:text-white transition"><i class="fas fa-heart"></i></div>
                         <span class="text-xl font-black text-white uppercase tracking-wider">Latido Eterno</span>
@@ -281,7 +238,6 @@
         </div>
     </div>
 
-    <!-- C. LOBBY (REGISTRO Y ESPERA) -->
     <div id="view-lobby" class="screen">
         <div class="screen-content text-center">
             <div class="cyber-panel p-8 w-full max-w-md mx-auto text-left">
@@ -294,7 +250,7 @@
                 </div>
 
                 <div class="bg-slate-800 border-l-4 border-cyan-500 p-4 mb-6 text-sm text-slate-300 font-medium">
-                    <i class="fas fa-info-circle text-cyan-400 mr-2"></i> Anota a tus <b class="text-white">7 guerreros</b> separados por coma. La IA del sistema elegirá quién ejecuta cada misión.
+                    <i class="fas fa-info-circle text-cyan-400 mr-2"></i> Anota a tus <b class="text-white">guerreros</b> separados por coma. La IA elegirá quién ejecuta cada misión.
                 </div>
                 
                 <textarea id="input-names" class="cyber-input h-32 mb-6" placeholder="Ej: Juan, Pedro, Maria, Carlos, Ana, Luis, Sofia"></textarea>
@@ -315,7 +271,6 @@
         </div>
     </div>
 
-    <!-- D. RULETA (ASIGNACIÓN DE TURNO) -->
     <div id="view-roulette" class="screen">
         <div class="screen-content text-center flex flex-col items-center justify-center">
             <i class="fas fa-fingerprint text-6xl text-cyan-500 mb-8 animate-pulse drop-shadow-[0_0_20px_#06b6d4]"></i>
@@ -332,11 +287,8 @@
         </div>
     </div>
 
-    <!-- E. LA ARENA (MISIONES HÍBRIDAS) -->
     <div id="view-arena" class="screen">
         <div class="w-full max-w-lg mx-auto flex flex-col h-full py-4">
-            
-            <!-- HUD SUPERIOR -->
             <div class="flex justify-between items-center bg-slate-900 border border-slate-700 rounded-2xl p-3 mb-4 shadow-lg">
                 <div class="bg-cyan-950 text-cyan-400 font-black text-xs px-3 py-2 rounded-xl border border-cyan-800 uppercase tracking-widest">
                     FASE <span id="arena-counter" class="text-white text-sm">1/10</span>
@@ -348,9 +300,7 @@
                 </div>
             </div>
 
-            <!-- CONTENEDOR DE MISIÓN -->
             <div class="cyber-panel p-6 w-full flex-grow flex flex-col relative">
-                <!-- Info Misioón -->
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <span id="arena-badge" class="bg-purple-900 text-purple-200 text-[10px] font-black px-2 py-1 rounded border border-purple-500 uppercase tracking-widest">TIPO DE MISIÓN</span>
@@ -362,7 +312,6 @@
                     </div>
                 </div>
 
-                <!-- HUD Tiempo -->
                 <div id="timer-ui" class="mb-6 hidden">
                     <div class="flex justify-between text-xs font-bold text-slate-400 mb-1">
                         <span class="uppercase tracking-widest text-cyan-500"><i class="fas fa-stopwatch"></i> Tiempo Crítico</span>
@@ -371,18 +320,13 @@
                     <div class="progress-hud"><div id="timer-bar" class="progress-fill w-full"></div></div>
                 </div>
 
-                <!-- Pregunta / Instrucción -->
                 <h2 id="arena-q" class="text-xl md:text-2xl font-black text-white leading-snug mb-8 border-l-4 border-cyan-500 pl-4 py-1">...</h2>
 
-                <!-- ZONA DE ACCIÓN DINÁMICA -->
-                <div id="arena-action" class="w-full flex-grow flex flex-col justify-end gap-3 pb-2">
-                    <!-- Se inyectan botones, inputs, canvas, dnd aquí -->
-                </div>
+                <div id="arena-action" class="w-full flex-grow flex flex-col justify-end gap-3 pb-2"></div>
             </div>
         </div>
     </div>
 
-    <!-- F. PODIO FINAL -->
     <div id="view-podium" class="screen">
         <div class="screen-content text-center">
             <i class="fas fa-trophy text-8xl text-yellow-400 mb-6 drop-shadow-[0_0_40px_#fbbf24] animate-divine"></i>
@@ -406,35 +350,31 @@
         </div>
     </div>
 
-    <!-- G. MODO DIOS (ADMIN PANEL) -->
     <div id="admin-panel">
         <h2 class="text-3xl font-black text-red-500 mb-6 border-b border-red-900 pb-2"><i class="fas fa-terminal"></i> PANEL CATEQUISTA (GOD MODE)</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
                 <h3 class="text-orange-500 font-black mb-2">Huellas de Fuego</h3>
-                <div class="flex gap-2"><button onclick="System.adminModScore(1, 50)" class="bg-green-700 px-3 py-1 rounded font-bold">+50</button><button onclick="System.adminModScore(1, -50)" class="bg-red-700 px-3 py-1 rounded font-bold">-50</button></div>
+                <div class="flex gap-2"><button onclick="System.adminModScore(1, 50)" class="bg-green-700 px-3 py-1 rounded font-bold cursor-pointer">+50</button><button onclick="System.adminModScore(1, -50)" class="bg-red-700 px-3 py-1 rounded font-bold cursor-pointer">-50</button></div>
             </div>
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
                 <h3 class="text-yellow-500 font-black mb-2">Voceros de Luz</h3>
-                <div class="flex gap-2"><button onclick="System.adminModScore(2, 50)" class="bg-green-700 px-3 py-1 rounded font-bold">+50</button><button onclick="System.adminModScore(2, -50)" class="bg-red-700 px-3 py-1 rounded font-bold">-50</button></div>
+                <div class="flex gap-2"><button onclick="System.adminModScore(2, 50)" class="bg-green-700 px-3 py-1 rounded font-bold cursor-pointer">+50</button><button onclick="System.adminModScore(2, -50)" class="bg-red-700 px-3 py-1 rounded font-bold cursor-pointer">-50</button></div>
             </div>
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
                 <h3 class="text-rose-500 font-black mb-2">Latido Eterno</h3>
-                <div class="flex gap-2"><button onclick="System.adminModScore(3, 50)" class="bg-green-700 px-3 py-1 rounded font-bold">+50</button><button onclick="System.adminModScore(3, -50)" class="bg-red-700 px-3 py-1 rounded font-bold">-50</button></div>
+                <div class="flex gap-2"><button onclick="System.adminModScore(3, 50)" class="bg-green-700 px-3 py-1 rounded font-bold cursor-pointer">+50</button><button onclick="System.adminModScore(3, -50)" class="bg-red-700 px-3 py-1 rounded font-bold cursor-pointer">-50</button></div>
             </div>
         </div>
-        <button onclick="System.adminForceEnd()" class="bg-red-600 text-white font-black py-4 rounded-xl w-full mb-4 uppercase hover:bg-red-500 transition shadow-[0_0_20px_#ef4444]">Terminar Juego Ahora</button>
-        <button onclick="document.getElementById('admin-panel').style.display='none'" class="bg-slate-800 text-white font-bold py-3 rounded-xl w-full">Cerrar Panel</button>
+        <button onclick="System.adminForceEnd()" class="bg-red-600 text-white font-black py-4 rounded-xl w-full mb-4 uppercase hover:bg-red-500 transition shadow-[0_0_20px_#ef4444] cursor-pointer">Terminar Juego Ahora</button>
+        <button onclick="document.getElementById('admin-panel').style.display='none'" class="bg-slate-800 text-white font-bold py-3 rounded-xl w-full cursor-pointer">Cerrar Panel</button>
     </div>
 
-    <!-- ==========================================================================
-         5. MOTOR JAVASCRIPT (LÓGICA, AUDIO, FÍSICAS, FIREBASE)
-         ========================================================================== -->
+    <!-- SCRIPT PRINCIPAL -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-        /* --- CONFIG FIREBASE --- */
         const fbConfig = {
             apiKey: "AIzaSyCZsdoYHsk-B21sCnc4pNAVqP0h3pfw9oA",
             authDomain: "eco-de-la-verdad.firebaseapp.com",
@@ -445,9 +385,8 @@
         };
         const app = initializeApp(fbConfig);
         const db = getFirestore(app);
-        const gameRef = doc(db, "juego", "arena_engine_v1"); // Nueva instancia limpia
+        const gameRef = doc(db, "juego", "arena_engine_v1");
 
-        /* --- SINTETIZADOR DE AUDIO WEB (SIN ARCHIVOS EXTERNOS) --- */
         const AudioSys = {
             ctx: null,
             init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
@@ -466,7 +405,6 @@
             alarm() { this.playTone(900, 'square', 0.2, 0.1); setTimeout(()=>this.playTone(700, 'square', 0.2, 0.1), 200); }
         };
 
-        /* --- MOTOR DE PARTÍCULAS CANVAS --- */
         const ParticleSys = {
             canvas: document.getElementById('particle-canvas'),
             ctx: null, particles: [], w: 0, h: 0,
@@ -498,31 +436,19 @@
         };
         ParticleSys.init();
 
-        /* --- BASE DE DATOS DE MISIONES EXTENDIDA --- */
         const MisionsDB = [
-            // 0: Trivia
             { type: "trivia", badge: "TEOLOGÍA RÁPIDA", q: "¿Qué apóstol caminó sobre el agua hacia Jesús antes de hundirse por dudar?", opts: ["Juan", "Pedro", "Santiago", "Andrés"], ans: 1, time: 15, pts: 20 },
-            // 1: Hardware (Cámara)
-            { type: "camera", badge: "RETO FÍSICO (7 Jugadores)", q: "¡LA TORRE DE BABEL! Quítense 1 zapato todos. Armen una torre en el piso. Abran la cámara aquí y tómenle foto para validarlo.", pts: 35, ac: "image/*" },
-            // 2: Drag & Drop Nativo (Lógica)
-            { type: "dnd", badge: "LÓGICA GENESIS", q: "Ordena los días de la Creación arrastrando los bloques de arriba hacia abajo.", items: ["La Luz", "El Cielo y Mar", "Animales Terrestres"], ans: [0, 1, 2], pts: 30 },
-            // 3: Texto libre
+            { type: "camera", badge: "RETO FÍSICO", q: "¡TORRE DE BABEL! Quítense 1 zapato todos y armen una torre en el piso. Tomen una foto con la cámara para validar.", pts: 35, ac: "image/*" },
+            { type: "dnd", badge: "LÓGICA GÉNESIS", q: "Ordena los días de la Creación arrastrando los bloques.", items: ["La Luz", "El Cielo y Mar", "Animales Terrestres"], ans: [0, 1, 2], pts: 30 },
             { type: "text", badge: "ACERTIJO PROFÉTICO", q: "Fui arrojado a un foso de leones por orar a mi Dios, pero un ángel cerró sus bocas. ¿Quién soy?", ans: ["daniel"], pts: 25 },
-            // 4: Hold (Resistencia)
-            { type: "hold", badge: "SOPORTA LA CRUZ", q: "¡RETO FÍSICO! Un compañero debe cargar en la espalda a otro. Mientras lo carga, el que tiene el celular debe MANTENER el botón presionado 7 segundos.", dur: 7000, pts: 35 },
-            // 5: Sabotaje Red
-            { type: "sabotage", badge: "EL BESO DE JUDAS", q: "Elige estratégicamente a un equipo rival. Ejecutaremos un ataque de red que congelará sus pantallas por 10 segundos.", pts: 10 },
-            // 6: Hardware (Acelerómetro / Tap)
-            { type: "motion", badge: "TERREMOTO EN PRISIÓN", q: "Como Pablo y Silas, ¡hagan temblar la tierra! El jugador debe agitar violentamente el celular o tocar el botón 40 veces rápido.", taps: 40, time: 10, pts: 40 },
-            // 7: Trivia Múltiple
+            { type: "hold", badge: "SOPORTA LA CRUZ", q: "¡RETO FÍSICO! Carga en la espalda a un compañero y mantén presionado el botón 7 segundos.", dur: 7000, pts: 35 },
+            { type: "sabotage", badge: "EL BESO DE JUDAS", q: "Elige estratégicamente a un equipo rival para congelar sus pantallas por 10 segundos.", pts: 10 },
+            { type: "motion", badge: "TERREMOTO EN PRISIÓN", q: "¡Como Pablo y Silas! Agita tu celular o toca el botón 40 veces rápido.", taps: 40, time: 10, pts: 40 },
             { type: "trivia", badge: "MANDAMIENTOS", q: "¿Cuál de estos NO es uno de los 10 Mandamientos originales?", opts: ["No robarás", "No codiciarás", "Amarás a tus enemigos", "No matarás"], ans: 2, time: 15, pts: 20 },
-            // 8: Secuencia Memoria
-            { type: "sequence", badge: "EL CÓDIGO BÍBLICO", q: "Toca los botones en el orden correcto de estos sacramentos: Bautismo, Comunión, Confirmación.", items: ["Comunión", "Confirmación", "Bautismo"], ans: [2, 0, 1], pts: 30 },
-            // 9: Final Jefe
-            { type: "camera", badge: "LA GRAN COMISIÓN", q: "¡JEFE FINAL! Graben un video selfie de todo el grupo gritando: '¡CRISTO VIVE!'. Al aceptar, ganan y terminan la maratón.", pts: 100, ac: "video/*,image/*" }
+            { type: "sequence", badge: "EL CÓDIGO BÍBLICO", q: "Toca los botones en el orden correcto: Bautismo, Comunión, Confirmación.", items: ["Comunión", "Confirmación", "Bautismo"], ans: [2, 0, 1], pts: 30 },
+            { type: "camera", badge: "LA GRAN COMISIÓN", q: "¡JEFE FINAL! Graben un video selfie gritando: '¡CRISTO VIVE!'. Al aceptar ganan.", pts: 100, ac: "video/*,image/*" }
         ];
 
-        /* --- CORE SYSTEM & STATE MACHINE --- */
         const System = {
             id: 0, score: 100, missIdx: 0, names: [],
             dbCache: null, isFrozen: false, timerInt: null,
@@ -534,10 +460,8 @@
             },
             vibrate(p) { if(navigator.vibrate) navigator.vibrate(p); },
             
-            // Inicio
             initAudioAndStart() { AudioSys.init(); this.nav('view-teams'); },
             
-            // Selección
             selectTeam(tid) {
                 this.id = tid; AudioSys.tick(); this.vibrate(50);
                 document.getElementById('lobby-name').innerText = this.teamRef[tid];
@@ -546,44 +470,47 @@
                 this.nav('view-lobby');
             },
 
-            // Lobby
             async commitLobby() {
                 const raw = document.getElementById('input-names').value;
                 this.names = raw.split(',').map(n=>n.trim()).filter(n=>n);
-                if(this.names.length < 3) return alert("Error: Se requieren los nombres de los integrantes (separados por coma).");
+                if(this.names.length < 1) return alert("Error: Escribe al menos un nombre.");
                 
                 AudioSys.success(); this.vibrate([100,50,100]);
                 document.getElementById('btn-ready').style.display = 'none';
                 document.getElementById('lobby-waiting').classList.remove('hidden');
                 
-                // Setear DB
+                // Asegurar existencia del documento en Firestore antes de actualizar
+                const snap = await getDoc(gameRef);
+                if (!snap.exists()) {
+                    await setDoc(gameRef, {
+                        fase: 0, g1_r: false, g2_r: false, g3_r: false,
+                        g1_s: 100, g2_s: 100, g3_s: 100, end: false
+                    });
+                }
+
                 const upd = {}; upd[`g${this.id}_r`] = true;
                 await updateDoc(gameRef, upd);
             },
 
-            // Generador de Ruleta Visual
             runRoulette() {
                 this.nav('view-roulette');
                 const wheel = document.getElementById('roulette-wheel');
                 const btn = document.getElementById('btn-accept-mission');
                 wheel.innerHTML = ''; btn.classList.add('pointer-events-none', 'opacity-0');
                 
-                // Quien le toca (secuencial basado en misión para asegurar que todos pasen)
                 const targetName = this.names[this.missIdx % this.names.length];
                 let pool = [];
                 for(let i=0; i<20; i++) pool.push(this.names[Math.floor(Math.random()*this.names.length)]);
-                pool[17] = targetName; // Target position
+                pool[17] = targetName;
                 
                 pool.forEach(n => { let div = document.createElement('div'); div.className='roulette-item'; div.innerText=n; wheel.appendChild(div); });
                 wheel.style.transform = `translateY(0px)`;
                 
-                // Animar
                 setTimeout(() => {
                     const itemH = 40;
-                    const offset = -(17 * itemH) + (120/2) - (itemH/2); // Centrar el item 17
+                    const offset = -(17 * itemH) + (120/2) - (itemH/2);
                     wheel.style.transform = `translateY(${offset}px)`;
                     
-                    // Sonidos de tick
                     let t=0; let intv = setInterval(()=>{ AudioSys.tick(); this.vibrate(20); t+=200; if(t>3000) clearInterval(intv); }, 200);
 
                     setTimeout(() => {
@@ -594,9 +521,8 @@
                 }, 100);
             },
 
-            // Renderizar la Arena
             renderArena() {
-                if(this.missIdx >= MisionsDB.length) return; // Finalizado
+                if(this.missIdx >= MisionsDB.length) return;
                 this.nav('view-arena');
                 const m = MisionsDB[this.missIdx];
                 
@@ -609,12 +535,11 @@
                 const area = document.getElementById('arena-action');
                 area.innerHTML = ''; clearInterval(this.timerInt); document.getElementById('timer-ui').classList.add('hidden');
 
-                // LÓGICA DE RENDERIZADO POR TIPO
                 if (m.type === "trivia") {
                     this.startTimer(m.time, () => this.fail(m.opts[m.ans]));
                     m.opts.forEach((o, i) => {
                         let btn = document.createElement('button');
-                        btn.className = "w-full p-4 mb-2 bg-slate-800 border-2 border-slate-600 rounded-xl text-left font-bold text-white hover:border-cyan-400 hover:bg-slate-700 transition active:scale-95 shadow-md";
+                        btn.className = "w-full p-4 mb-2 bg-slate-800 border-2 border-slate-600 rounded-xl text-left font-bold text-white hover:border-cyan-400 hover:bg-slate-700 transition active:scale-95 shadow-md cursor-pointer";
                         btn.innerText = o;
                         btn.onclick = () => { clearInterval(this.timerInt); i === m.ans ? this.win(m.pts) : this.fail(m.opts[m.ans]); };
                         area.appendChild(btn);
@@ -624,17 +549,17 @@
                     area.innerHTML = `<label class="btn-core btn-cyan w-full py-8 rounded-2xl flex-col cursor-pointer"><i class="fas fa-camera text-4xl mb-2"></i><span>ABRIR CÁMARA / SUBIR EVIDENCIA</span><input type="file" accept="${m.ac}" capture="environment" class="hidden" onchange="System.win(${m.pts})"></label>`;
                 }
                 else if (m.type === "text") {
-                    area.innerHTML = `<input type="text" id="ans-txt" class="cyber-input mb-4" placeholder="Escribe la respuesta..."><button onclick="System.valText()" class="btn-core btn-cyan w-full py-4 rounded-xl">VALIDAR</button>`;
+                    area.innerHTML = `<input type="text" id="ans-txt" class="cyber-input mb-4" placeholder="Escribe la respuesta..."><button onclick="System.valText()" class="btn-core btn-cyan w-full py-4 rounded-xl cursor-pointer">VALIDAR</button>`;
                     this.valText = () => {
                         let v = document.getElementById('ans-txt').value.toLowerCase();
                         m.ans.some(a => v.includes(a)) ? this.win(m.pts) : this.fail(m.ans[0]);
                     };
                 }
                 else if (m.type === "hold") {
-                    area.innerHTML = `<button id="btn-hold" class="btn-core btn-danger w-full py-10 rounded-3xl text-xl flex-col"><i class="fas fa-fingerprint text-5xl mb-2"></i><span>MANTÉN PRESIONADO ${m.dur/1000}s</span><div id="hold-bar" class="w-full h-2 bg-black/50 mt-4 rounded overflow-hidden hidden"><div id="hold-fill" class="h-full bg-white w-0 transition-all duration-${m.dur} linear"></div></div></button>`;
+                    area.innerHTML = `<button id="btn-hold" class="btn-core btn-danger w-full py-10 rounded-3xl text-xl flex-col cursor-pointer"><i class="fas fa-fingerprint text-5xl mb-2"></i><span>MANTÉN PRESIONADO ${m.dur/1000}s</span><div id="hold-bar" class="w-full h-2 bg-black/50 mt-4 rounded overflow-hidden hidden"><div id="hold-fill" class="h-full bg-white w-0"></div></div></button>`;
                     let btn = document.getElementById('btn-hold'), hBar = document.getElementById('hold-bar'), hFill = document.getElementById('hold-fill'), ht;
-                    const startH = (e) => { e.preventDefault(); AudioSys.tick(); hBar.classList.remove('hidden'); hFill.style.width = '100%'; ht = setTimeout(()=>this.win(m.pts), m.dur); };
-                    const stopH = (e) => { e.preventDefault(); clearTimeout(ht); hFill.style.transition='none'; hFill.style.width='0'; setTimeout(()=>hFill.style.transition=`all ${m.dur}ms linear`,50); };
+                    const startH = (e) => { e.preventDefault(); AudioSys.tick(); hBar.classList.remove('hidden'); hFill.style.width = '100%'; hFill.style.transition = `all ${m.dur}ms linear`; ht = setTimeout(()=>this.win(m.pts), m.dur); };
+                    const stopH = (e) => { e.preventDefault(); clearTimeout(ht); hFill.style.transition='none'; hFill.style.width='0'; };
                     btn.addEventListener('touchstart', startH); btn.addEventListener('touchend', stopH);
                     btn.addEventListener('mousedown', startH); btn.addEventListener('mouseup', stopH); btn.addEventListener('mouseleave', stopH);
                 }
@@ -642,7 +567,7 @@
                     [1,2,3].forEach(id => {
                         if(id !== this.id) {
                             let b = document.createElement('button');
-                            b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-5 rounded-xl mb-3 shadow-[0_0_15px_rgba(6,182,212,0.4)]";
+                            b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-5 rounded-xl mb-3 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer";
                             b.innerHTML = `<i class="fas fa-snowflake mr-2 text-2xl"></i> ATACAR A: ${this.teamRef[id]}`;
                             b.onclick = async () => {
                                 const upd = {}; upd[`sab_${id}`] = Date.now();
@@ -653,35 +578,29 @@
                 }
                 else if (m.type === "motion") {
                     let c = 0; this.startTimer(m.time, () => this.fail("¡Faltó energía!"));
-                    area.innerHTML = `<div class="text-center text-cyan-400 font-black text-3xl mb-4" id="tap-c">0 / ${m.taps}</div><button id="btn-mot" class="btn-core btn-gold w-full py-12 rounded-3xl text-2xl"><i class="fas fa-hand-rock text-4xl mr-2"></i> ¡TAPEA RÁPIDO!</button>`;
+                    area.innerHTML = `<div class="text-center text-cyan-400 font-black text-3xl mb-4" id="tap-c">0 / ${m.taps}</div><button id="btn-mot" class="btn-core btn-gold w-full py-12 rounded-3xl text-2xl cursor-pointer"><i class="fas fa-hand-rock text-4xl mr-2"></i> ¡TAPEA RÁPIDO!</button>`;
                     document.getElementById('btn-mot').onclick = () => {
                         c++; document.getElementById('tap-c').innerText = `${c} / ${m.taps}`; this.vibrate(20);
                         if(c >= m.taps){ clearInterval(this.timerInt); this.win(m.pts); }
                     };
                 }
                 else if (m.type === "dnd") {
-                    // Vanilla JS Drag and Drop implementation for Mobile/Desktop
-                    area.innerHTML = `<div id="dnd-box" class="dnd-container"></div><button id="btn-dnd" class="btn-core btn-cyan w-full py-4 mt-4 rounded-xl hidden">CONFIRMAR ORDEN</button>`;
+                    area.innerHTML = `<div id="dnd-box" class="dnd-container"></div><button id="btn-dnd" class="btn-core btn-cyan w-full py-4 mt-4 rounded-xl hidden cursor-pointer">CONFIRMAR ORDEN</button>`;
                     let box = document.getElementById('dnd-box'), btn = document.getElementById('btn-dnd');
-                    let dragged = null, startY = 0;
+                    let dragged = null;
                     
-                    // Shuffle items visually but keep track of original ID
                     let shuffled = m.items.map((it, i) => ({it, i})).sort(()=>Math.random()-0.5);
                     
                     shuffled.forEach(obj => {
                         let el = document.createElement('div'); el.className = 'dnd-item'; el.innerText = obj.it; el.dataset.id = obj.i;
-                        
-                        // Touch events for mobile DND
-                        el.addEventListener('touchstart', e => { dragged = el; el.classList.add('dragging'); startY = e.touches[0].clientY; this.vibrate(20); }, {passive:true});
+                        el.addEventListener('touchstart', e => { dragged = el; el.classList.add('dragging'); this.vibrate(20); }, {passive:true});
                         el.addEventListener('touchmove', e => {
-                            if(!dragged) return;
-                            e.preventDefault(); // prevent scroll
+                            if(!dragged) return; e.preventDefault();
                             const touchY = e.touches[0].clientY;
                             const siblings = [...box.querySelectorAll('.dnd-item:not(.dragging)')];
-                            let nextNode = siblings.find(sib => { return touchY <= sib.getBoundingClientRect().top + sib.offsetHeight / 2; });
-                            box.insertBefore(dragged, nextNode);
-                            btn.classList.remove('hidden');
-                        });
+                            let nextNode = siblings.find(sib => touchY <= sib.getBoundingClientRect().top + sib.offsetHeight / 2);
+                            box.insertBefore(dragged, nextNode); btn.classList.remove('hidden');
+                        }, {passive:false});
                         el.addEventListener('touchend', () => { if(dragged){ dragged.classList.remove('dragging'); dragged = null; AudioSys.tick(); }});
                         box.appendChild(el);
                     });
@@ -696,7 +615,7 @@
                     let res = document.getElementById('seq-res'), userSeq = [];
                     m.items.forEach((it, i) => {
                         let b = document.createElement('button');
-                        b.className = "w-full p-4 mb-3 bg-slate-800 border-2 border-slate-500 rounded-xl text-white font-bold active:scale-95 transition";
+                        b.className = "w-full p-4 mb-3 bg-slate-800 border-2 border-slate-500 rounded-xl text-white font-bold active:scale-95 transition cursor-pointer";
                         b.innerText = it;
                         b.onclick = () => {
                             b.disabled = true; b.style.opacity = '0.4'; AudioSys.tick(); this.vibrate(20);
@@ -709,7 +628,6 @@
                 }
             },
 
-            // Lógica de Tiempo
             startTimer(sec, onEnd) {
                 document.getElementById('timer-ui').classList.remove('hidden');
                 let bar = document.getElementById('timer-bar'), txt = document.getElementById('timer-text');
@@ -721,7 +639,6 @@
                 }, 100);
             },
 
-            // Lógica Win/Fail
             async win(pts) {
                 this.score += pts; AudioSys.success(); this.vibrate([100,50,100,50,200]);
                 document.getElementById('ov-pts').innerText = `+${pts} PTS`;
@@ -746,13 +663,12 @@
             async advance() {
                 this.missIdx++;
                 if(this.missIdx >= MisionsDB.length) {
-                    await updateDoc(gameRef, { end: true }); // Gatilla el final global
+                    await updateDoc(gameRef, { end: true });
                 } else {
                     this.runRoulette();
                 }
             },
 
-            // Toast Notifications
             showToast(msg) {
                 const t = document.getElementById('toast-live');
                 document.getElementById('toast-msg').innerText = msg;
@@ -760,13 +676,12 @@
                 setTimeout(()=>t.classList.remove('show'), 3500);
             },
 
-            // --- GOD MODE (ADMIN) ---
             godClicks: 0,
             initGodMode() {
                 document.getElementById('god-mode-trigger').onclick = () => {
                     this.godClicks++;
                     if(this.godClicks >= 7) { document.getElementById('admin-panel').style.display = 'flex'; this.godClicks = 0; }
-                    setTimeout(()=>this.godClicks=0, 3000); // Reset after 3s
+                    setTimeout(()=>this.godClicks=0, 3000);
                 };
             },
             async adminModScore(team, val) {
@@ -779,23 +694,17 @@
             }
         };
 
-        // Inicializar Secretos
         System.initGodMode();
-
-        // Expone API para el HTML
         window.System = System;
 
-        /* --- LISTENER MAESTRO (FIREBASE SYNC) --- */
         onSnapshot(gameRef, async (snap) => {
             if(!snap.exists()) return;
             const d = snap.data(); System.dbCache = d;
 
-            // Actualizar Marcadores Globales (Si estamos en lobby, arena o podio)
             document.getElementById('sc-1').innerText = d.g1_s;
             document.getElementById('sc-2').innerText = d.g2_s;
             document.getElementById('sc-3').innerText = d.g3_s;
             
-            // LOBBY STATUS
             if (document.getElementById('view-lobby').classList.contains('active')) {
                 document.getElementById('sync-1').innerHTML = `Fuego<br><span class="text-lg">${d.g1_r ? '✅' : '❌'}</span>`;
                 document.getElementById('sync-1').className = d.g1_r ? "bg-green-900 border border-green-500 rounded p-2 text-white" : "bg-slate-900 border border-slate-700 rounded p-2 text-slate-500";
@@ -804,20 +713,16 @@
                 document.getElementById('sync-3').innerHTML = `Latido<br><span class="text-lg">${d.g3_r ? '✅' : '❌'}</span>`;
                 document.getElementById('sync-3').className = d.g3_r ? "bg-green-900 border border-green-500 rounded p-2 text-white" : "bg-slate-900 border border-slate-700 rounded p-2 text-slate-500";
                 
-                // Transición a Arena
                 if(d.fase === 0 && d.g1_r && d.g2_r && d.g3_r && d[`g${System.id}_r`]) {
                     await updateDoc(gameRef, { fase: 1 });
                 }
             }
 
-            // INICIO GLOBAL
             if(d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
-                // Setear scores base para alertas
                 System.prevScores = { 1: d.g1_s, 2: d.g2_s, 3: d.g3_s };
                 System.runRoulette();
             }
 
-            // DETECCIÓN DE TOASTS (RIVAL ANOTA)
             if(d.fase >= 1 && System.prevScores) {
                 [1,2,3].forEach(id => {
                     if(id !== System.id && d[`g${id}_s`] > System.prevScores[id]) {
@@ -827,10 +732,9 @@
                 });
             }
 
-            // SABOTAJE DE RED (CONGELAMIENTO)
             if(d.fase >= 1 && d[`sab_${System.id}`]) {
                 const diff = Date.now() - d[`sab_${System.id}`];
-                if(diff < 2000 && !System.isFrozen) { // 2 seconds threshold
+                if(diff < 2000 && !System.isFrozen) {
                     System.isFrozen = true; System.vibrate([500,200,500,200,500]); AudioSys.error();
                     const ice = document.getElementById('ov-frozen'); ice.classList.add('show');
                     let t = 10; document.getElementById('frozen-timer').innerText = t;
@@ -841,13 +745,11 @@
                 }
             }
 
-            // FIN DEL JUEGO
             if(d.end === true) {
                 if(document.getElementById('view-podium').classList.contains('active')) return;
                 clearInterval(System.timerInt); AudioSys.success(); System.vibrate([1000]);
                 System.nav('view-podium');
                 
-                // Ordenar Podium
                 let sorted = [
                     {n: System.teamRef[1], s: d.g1_s}, {n: System.teamRef[2], s: d.g2_s}, {n: System.teamRef[3], s: d.g3_s}
                 ].sort((a,b) => b.s - a.s);
