@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>El Eco de la Verdad - Arena Suprema v8 (Cuenta Regresiva Gigante)</title>
+    <title>El Eco de la Verdad - Arena Suprema v9</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
@@ -70,7 +70,7 @@
         .progress-fill.danger { background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
 
         .dnd-container { display: flex; flex-direction: column; gap: 0.75rem; min-height: 200px; padding: 1rem; background: rgba(0,0,0,0.4); border-radius: 1rem; touch-action: none; }
-        .dnd-item { padding: 1.25rem 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; color: white; font-weight: bold; cursor: grab; text-align: left; transition: border-color 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .dnd-item { padding: 1.25rem 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; color: white; font-weight: bold; cursor: grab; text-align: left; transition: border-color 0.2s; display: flex; align-items: center; font-size: 1.1rem; }
         .dnd-item:active { cursor: grabbing; }
         .dnd-item.dragging { opacity: 0.4; background: #0f172a; border: 2px dashed var(--neon-cyan); transform: scale(1.02); }
 
@@ -95,7 +95,7 @@
         <span id="toast-msg" class="uppercase tracking-widest text-sm">NOTIFICACIÓN</span>
     </div>
 
-    <!-- OVERLAYS -->
+    <!-- OVERLAYS DE RESPUESTA -->
     <div id="ov-success" class="overlay-fx bg-slate-900/90 border-4 border-yellow-400">
         <div class="animate-divine text-yellow-400 mb-6 relative">
             <i class="fas fa-sun text-9xl absolute opacity-30 animate-spin" style="animation-duration: 8s; top:-20px; left:-20px;"></i>
@@ -111,40 +111,39 @@
         <p id="ov-err-msg" class="text-xl font-bold text-red-300 text-center px-6 mt-4 uppercase">La respuesta era...</p>
     </div>
 
-    <!-- OVERLAY DE PENITENCIA -->
+    <!-- OVERLAY DE PENITENCIA DE SABOTAJE -->
     <div id="ov-penalty" class="overlay-fx penalty-texture border-8 border-red-500">
         <i class="fas fa-bolt text-9xl text-yellow-400 mb-6 animate-pulse drop-shadow-[0_0_30px_#fbbf24]"></i>
-        <h2 class="font-epic text-5xl font-black text-white text-center drop-shadow-lg">¡SABOTAJE RIVAL!</h2>
+        <h2 class="font-epic text-5xl font-black text-white text-center drop-shadow-lg">¡ATAQUE RIVAL!</h2>
         <p class="text-xl font-bold text-red-200 text-center mt-2 uppercase tracking-widest">CUMPLE LA PENITENCIA PARA CONTINUAR:</p>
-        <p id="penalty-text" class="text-3xl font-black text-white text-center mt-6 px-6 drop-shadow-md">...</p>
+        <p id="penalty-text" class="text-3xl md:text-4xl font-black text-white text-center mt-6 px-6 drop-shadow-md">...</p>
         
         <button id="btn-clear-penalty" onclick="System.clearPenalty()" class="btn-core btn-gold mt-10 px-8 py-5 rounded-2xl hidden shadow-[0_0_30px_rgba(251,191,36,0.6)]">
             <i class="fas fa-check-double"></i> ¡PENITENCIA CUMPLIDA!
         </button>
     </div>
 
-    <!-- 0. PANTALLA DE MODO DE JUEGO -->
+    <!-- 0. PANTALLA DE BIENVENIDA -->
     <div id="view-welcome" class="screen active">
         <div class="screen-content flex flex-col items-center text-center">
             <div class="relative mb-6">
                 <i class="fas fa-shield-cross text-8xl text-cyan-400 drop-shadow-[0_0_30px_#06b6d4] animate-divine"></i>
             </div>
-            <h1 id="god-mode-trigger" class="text-5xl md:text-6xl font-black font-epic text-white mb-2 leading-tight tracking-wide cursor-pointer">
+            <h1 class="text-5xl md:text-6xl font-black font-epic text-white mb-2 leading-tight tracking-wide">
                 EL ECO DE<br><span class="text-cyan-400">LA VERDAD</span>
             </h1>
             <p class="text-slate-400 text-sm tracking-[0.4em] uppercase mb-10 font-bold">Feria de Confirmación</p>
             
             <div class="flex flex-col gap-4 w-full max-w-sm">
                 <button onclick="System.playSolo()" class="btn-core btn-gold py-5 rounded-2xl cursor-pointer shadow-[0_0_20px_rgba(251,191,36,0.4)]">
-                    <i class="fas fa-user-astronaut text-2xl"></i> <span class="flex flex-col items-start leading-tight"><b>JUGAR EN SOLITARIO</b><small class="text-[10px] font-normal tracking-widest">1 Equipo • 20 Misiones Seguidas</small></span>
+                    <i class="fas fa-user-astronaut text-2xl"></i> <span class="flex flex-col items-start leading-tight"><b>JUGAR EN SOLITARIO</b><small class="text-[10px] font-normal tracking-widest text-black">1 Equipo • 20 Misiones</small></span>
                 </button>
 
                 <button onclick="System.playMultiplayer()" class="btn-core btn-cyan py-5 rounded-2xl cursor-pointer shadow-[0_0_20px_rgba(6,182,212,0.4)]">
-                    <i class="fas fa-users text-2xl"></i> <span class="flex flex-col items-start leading-tight"><b>COMPETIR EN EQUIPOS</b><small class="text-[10px] font-normal tracking-widest">2 a 5 Equipos • Online</small></span>
+                    <i class="fas fa-users text-2xl"></i> <span class="flex flex-col items-start leading-tight"><b>COMPETIR EN EQUIPOS</b><small class="text-[10px] font-normal tracking-widest text-white">2 a 5 Equipos • Online</small></span>
                 </button>
             </div>
             
-            <!-- ACCESO ADMIN -->
             <button onclick="System.loginAdmin()" class="mt-12 text-slate-500 text-xs uppercase font-bold tracking-widest hover:text-cyan-400 transition flex items-center gap-2 cursor-pointer p-2 border border-slate-800 rounded-full px-4">
                 <i class="fas fa-lock"></i> Acceso Coordinador
             </button>
@@ -197,20 +196,22 @@
         </div>
     </div>
 
-    <!-- 2. LOBBY -->
+    <!-- 2. LOBBY Y CONFIGURACIÓN -->
     <div id="view-lobby" class="screen">
         <div class="screen-content text-center">
             <div class="cyber-panel p-8 w-full max-w-md mx-auto text-left">
-                <div class="flex items-center gap-4 mb-6 border-b border-slate-700 pb-4">
-                    <div id="lobby-icon" class="text-3xl"></div>
-                    <div class="flex-grow">
-                        <label class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Edita el Nombre de tu Equipo:</label>
-                        <input type="text" id="custom-team-name" class="w-full bg-transparent border-b-2 border-cyan-500/50 text-xl font-black font-epic text-cyan-300 uppercase py-1 focus:outline-none focus:border-cyan-400 transition" value="Equipo">
+                
+                <div class="flex flex-col gap-2 mb-6 border-b border-slate-700 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div id="lobby-icon" class="text-3xl"></div>
+                        <span class="text-xs text-slate-400 tracking-widest uppercase font-bold">Sala de Preparación</span>
                     </div>
+                    <label class="text-[10px] text-cyan-400 uppercase tracking-widest font-bold mt-2"><i class="fas fa-pen mr-1"></i> Edita tu nombre de equipo si deseas:</label>
+                    <input type="text" id="custom-team-name" class="w-full bg-slate-900/50 border-b-2 border-cyan-500 text-xl md:text-2xl font-black font-epic text-white uppercase py-2 px-2 focus:outline-none focus:border-cyan-300 transition" value="Equipo">
                 </div>
 
                 <div class="bg-slate-800 border-l-4 border-cyan-500 p-4 mb-6 text-sm text-slate-300 font-medium">
-                    <i class="fas fa-info-circle text-cyan-400 mr-2"></i> Anota a tus <b class="text-white">guerreros</b> separados por coma.
+                    <i class="fas fa-users text-cyan-400 mr-2"></i> Anota a tus <b class="text-white">guerreros</b> separados por coma.
                 </div>
                 
                 <textarea id="input-names" class="cyber-input h-28 mb-6" placeholder="Ej: Juan, Pedro, Maria, Carlos..."></textarea>
@@ -221,12 +222,13 @@
                 
                 <div id="lobby-waiting" class="hidden mt-4">
                     <p id="lobby-waiting-text" class="text-yellow-400 font-bold uppercase text-center text-sm mb-4 animate-pulse"><i class="fas fa-satellite-dish mr-2"></i> ¡Conectado! Esperando al Coordinador...</p>
+                    <div id="sync-grid" class="grid grid-cols-5 gap-2 text-center text-xs font-black uppercase mt-2"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PANTALLA NUEVA: CUENTA REGRESIVA GIGANTE -->
+    <!-- 2.5 PANTALLA NUEVA: CUENTA REGRESIVA GIGANTE -->
     <div id="view-countdown" class="screen">
         <div class="screen-content flex flex-col items-center justify-center h-full">
             <h2 class="text-3xl md:text-5xl font-epic font-black text-cyan-400 mb-8 uppercase tracking-widest text-center">¡PREPÁRENSE!</h2>
@@ -348,6 +350,7 @@
         };
         const app = initializeApp(fbConfig);
         const db = getFirestore(app);
+        
         let gameRef = null; 
         let unsubscribeFB = null;
 
@@ -369,37 +372,6 @@
             alarm() { this.playTone(900, 'square', 0.2, 0.1); setTimeout(()=>this.playTone(700, 'square', 0.2, 0.1), 200); }
         };
 
-        const ParticleSys = {
-            canvas: document.getElementById('particle-canvas'),
-            ctx: null, particles: [], w: 0, h: 0,
-            init() {
-                this.ctx = this.canvas.getContext('2d');
-                this.resize(); window.addEventListener('resize', () => this.resize());
-                for(let i=0; i<50; i++) this.particles.push(this.createParticle());
-                this.animate();
-            },
-            resize() { this.w = this.canvas.width = window.innerWidth; this.h = this.canvas.height = window.innerHeight; },
-            createParticle() {
-                return {
-                    x: Math.random() * this.w, y: Math.random() * this.h + this.h,
-                    size: Math.random() * 3 + 1, speed: Math.random() * 2 + 0.5,
-                    opacity: Math.random() * 0.5 + 0.1,
-                    color: Math.random() > 0.5 ? '#06b6d4' : '#fbbf24'
-                };
-            },
-            animate() {
-                this.ctx.clearRect(0, 0, this.w, this.h);
-                this.particles.forEach(p => {
-                    p.y -= p.speed; p.x += Math.sin(p.y / 50) * 0.5;
-                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    this.ctx.fillStyle = p.color; this.ctx.globalAlpha = p.opacity; this.ctx.fill();
-                    if (p.y < -10) { Object.assign(p, this.createParticle()); p.y = this.h + 10; }
-                });
-                requestAnimationFrame(() => this.animate());
-            }
-        };
-        ParticleSys.init();
-
         const TeamMeta = {
             1: { name: "Huellas de Fuego", icon: "fa-fire", color: "text-orange-500" },
             2: { name: "Voceros de la Luz", icon: "fa-bolt", color: "text-yellow-400" },
@@ -415,7 +387,7 @@
                 { type: "dnd", badge: "LÓGICA GÉNESIS", q: "Ordena los días de la Creación arrastrando los bloques.", items: ["La Luz", "El Cielo y Mar", "Animales Terrestres"], ans: [0, 1, 2], pts: 30 },
                 { type: "text", badge: "ACERTIJO PROFÉTICO", q: "Fui arrojado a un foso de leones por orar a mi Dios, pero un ángel cerró sus bocas. ¿Quién soy?", ans: ["daniel"], pts: 25 },
                 { type: "hold", badge: "SOPORTA LA CRUZ", q: "Carga en la espalda a un compañero y mantén presionado el botón 7 segundos.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival!", pts: 10 },
                 { type: "motion", badge: "TERREMOTO EN PRISIÓN", q: "¡Como Pablo y Silas! Agita tu celular o toca el botón 40 veces rápido.", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "PROFETAS", q: "En Isaías 40, 31, se menciona que los que esperan en el Señor subirán con alas como...", opts: ["Palomas", "Águilas", "Leones", "Cóndores"], ans: 1, time: 15, pts: 20 },
                 { type: "sequence", badge: "EL CÓDIGO BÍBLICO", q: "Orden de sacramentos: Bautismo, Comunión, Confirmación.", items: ["Comunión", "Confirmación", "Bautismo"], ans: [2, 0, 1], pts: 30 },
@@ -427,7 +399,7 @@
                 { type: "dnd", badge: "LÓGICA", q: "Ordena cronológicamente estos eventos de la vida de Jesús:", items: ["Bautismo", "Crucifixión", "Nacimiento"], ans: [2, 0, 1], pts: 30 },
                 { type: "text", badge: "ACERTIJO", q: "Dije 'Hágase en mí según tu palabra' cuando el ángel me visitó. ¿Quién soy?", ans: ["maria", "virgen maria"], pts: 25 },
                 { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos mientras tu equipo canta una alabanza.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival!", pts: 10 },
                 { type: "motion", badge: "LUZ DEL MUNDO", q: "¡Tapéa rápido 40 veces para encender la luz espiritual en la pantalla!", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "SALMOS", q: "En el Salmo 119, 105, se declara que la palabra de Dios es una _______ para los pasos.", opts: ["Antorcha", "Guía", "Lámpara", "Luz"], ans: 2, time: 15, pts: 20 },
                 { type: "sequence", badge: "CÓDIGO", q: "Ordena los elementos del Credo: Encarnación, Pasión, Resurrección.", items: ["Pasión", "Resurrección", "Encarnación"], ans: [2, 0, 1], pts: 30 },
@@ -439,7 +411,7 @@
                 { type: "dnd", badge: "LÓGICA", q: "Ordena los siguientes pilares de la Iglesia primitiva:", items: ["Pentecostés", "La Última Cena", "Ascensión"], ans: [1, 2, 0], pts: 30 },
                 { type: "text", badge: "ACERTIJO", q: "Fui llamado el discípulo amado y escribí el Apocalipsis. ¿Quién soy?", ans: ["juan", "san juan"], pts: 25 },
                 { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos repitiendo 'Jesús es el Señor'.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival!", pts: 10 },
                 { type: "motion", badge: "PENTECOSTÉS", q: "¡Tapéa 40 veces rápido simulando el descenso del Espíritu Santo!", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "CARTAS", q: "En 1 Juan 4, 8, se afirma con contundencia una sola palabra como la definición suprema de Dios:", opts: ["Justicia", "Poder", "Amor", "Fuego"], ans: 2, time: 15, pts: 20 },
                 { type: "sequence", badge: "CÓDIGO", q: "Ordena los misterios del Rosario: Dolorosos, Gozosos, Gloriosos.", items: ["Gozosos", "Gloriosos", "Dolorosos"], ans: [0, 2, 1], pts: 30 },
@@ -451,7 +423,7 @@
                 { type: "dnd", badge: "LÓGICA", q: "Ordena los siguientes jueces de Israel:", items: ["Sansón", "Gedeón", "Otoniel"], ans: [2, 1, 0], pts: 30 },
                 { type: "text", badge: "ACERTIJO", q: "Derribé las murallas de Jericó tocando trompetas y dando gritos de fe. ¿Quién soy?", ans: ["josue", "josué"], pts: 25 },
                 { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos mientras declaran 'Dios es nuestro escudo'.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival!", pts: 10 },
                 { type: "motion", badge: "BATALLA", q: "¡Tapéa 40 veces rápido simulando la victoria de la fe!", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "CARTAS", q: "En Hebreos 11, 1 se define la fe como la garantía de lo que se...", opts: ["espera", "siente", "busca", "piensa"], ans: 0, time: 15, pts: 20 },
                 { type: "sequence", badge: "CÓDIGO", q: "Ordena las virtudes teologales: Caridad, Fe, Esperanza.", items: ["Fe", "Esperanza", "Caridad"], ans: [0, 1, 2], pts: 30 },
@@ -463,7 +435,7 @@
                 { type: "dnd", badge: "LÓGICA", q: "Ordena las etapas de la expansión de la Iglesia en Hechos:", items: ["Hasta los confines del mundo", "Jerusalén", "Judea y Samaria"], ans: [1, 2, 0], pts: 30 },
                 { type: "text", badge: "ACERTIJO", q: "Fui el primer mártir de la Iglesia apedreado por confesar a Jesús. ¿Quién soy?", ans: ["esteban", "san esteban"], pts: 25 },
                 { type: "hold", badge: "RESISTENCIA", q: "Mantén presionado el botón 7 segundos proclamando el Reino de Dios.", dur: 7000, pts: 35 },
-                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival congelando su pantalla!", pts: 10 },
+                { type: "sabotage", badge: "SABOTAJE RIVAL", q: "¡Lanza una Penitencia Física a un equipo rival!", pts: 10 },
                 { type: "motion", badge: "TESTIGO", q: "¡Tapéa 40 veces rápido cumpliendo la Gran Comisión!", taps: 40, time: 10, pts: 40 },
                 { type: "trivia", badge: "PROCLAMA", q: "Jesús dijo: 'Vayan por todo el mundo y...'", opts: ["Prediquen el Evangelio", "Hagan templos", "Enseñen historia", "Sanen enfermos"], ans: 0, time: 15, pts: 20 },
                 { type: "sequence", badge: "CÓDIGO", q: "Ordena las etapas del juicio de Jesús: Getsemaní, Calvario, Ante Pilato.", items: ["Getsemaní", "Ante Pilato", "Calvario"], ans: [0, 1, 2], pts: 30 },
@@ -499,7 +471,7 @@
 
             playSolo() {
                 AudioSys.init(); AudioSys.tick(); this.vibrate(50);
-                this.isSoloMode = true;
+                System.isSoloMode = true;
                 let randomId = "arena_solo_" + Math.random().toString(36).substr(2, 9);
                 gameRef = doc(db, "juego", randomId);
                 
@@ -507,48 +479,48 @@
                 document.getElementById('btn-ready-text').innerHTML = `<i class="fas fa-play"></i> INICIAR MARATÓN SOLITARIO`;
                 document.getElementById('lobby-waiting').classList.add('hidden');
                 
-                this.listenToFirebase();
-                this.nav('view-teams');
+                System.listenToFirebase();
+                System.nav('view-teams');
             },
 
             playMultiplayer() {
                 AudioSys.init(); AudioSys.tick(); this.vibrate(50);
-                this.isSoloMode = false;
-                gameRef = doc(db, "juego", "arena_engine_master_v10");
+                System.isSoloMode = false;
+                gameRef = doc(db, "juego", "arena_engine_master_v11"); // ID NUEVO Y LIMPIO
                 
                 document.getElementById('mode-badge').innerText = "COMPETICIÓN MULTIJUGADOR";
                 document.getElementById('btn-ready-text').innerHTML = `<i class="fas fa-satellite-dish"></i> ENLAZAR AL SERVIDOR`;
                 document.getElementById('lobby-waiting').classList.remove('hidden');
                 
-                this.listenToFirebase();
-                this.nav('view-teams');
+                System.listenToFirebase();
+                System.nav('view-teams');
             },
             
             selectTeam(tid) {
-                this.id = tid; AudioSys.tick(); this.vibrate(50);
+                System.id = tid; AudioSys.tick(); System.vibrate(50);
                 document.getElementById('custom-team-name').value = TeamMeta[tid].name;
                 document.getElementById('lobby-icon').innerHTML = `<i class="fas ${TeamMeta[tid].icon} ${TeamMeta[tid].color}"></i>`;
-                this.nav('view-lobby');
+                System.nav('view-lobby');
             },
 
             async commitLobby() {
                 const rawNames = document.getElementById('input-names').value;
-                this.names = rawNames.split(',').map(n=>n.trim()).filter(n=>n);
-                if(this.names.length < 1) return alert("Error: Escribe al menos un nombre de guerrero.");
+                System.names = rawNames.split(',').map(n=>n.trim()).filter(n=>n);
+                if(System.names.length < 1) return alert("Error: Escribe al menos un nombre de guerrero.");
                 
-                this.customName = document.getElementById('custom-team-name').value.trim() || TeamMeta[this.id].name;
+                System.customName = document.getElementById('custom-team-name').value.trim() || TeamMeta[System.id].name;
                 
-                AudioSys.success(); this.vibrate([100,50,100]);
+                AudioSys.success(); System.vibrate([100,50,100]);
                 document.getElementById('btn-ready').style.display = 'none';
                 document.getElementById('custom-team-name').disabled = true;
                 document.getElementById('input-names').disabled = true;
 
-                if (this.isSoloMode) {
+                if (System.isSoloMode) {
                     await setDoc(gameRef, {
                         fase: 1, end: false,
-                        [`g${this.id}_r`]: true,
-                        [`g${this.id}_s`]: 100,
-                        [`g${this.id}_cname`]: this.customName
+                        [`g${System.id}_r`]: true,
+                        [`g${System.id}_s`]: 100,
+                        [`g${System.id}_cname`]: System.customName
                     });
                 } else {
                     document.getElementById('lobby-waiting').classList.remove('hidden');
@@ -559,21 +531,21 @@
                         await setDoc(gameRef, baseData);
                     }
                     const upd = {}; 
-                    upd[`g${this.id}_r`] = true;
-                    upd[`g${this.id}_cname`] = this.customName;
+                    upd[`g${System.id}_r`] = true;
+                    upd[`g${System.id}_cname`] = System.customName;
                     await updateDoc(gameRef, upd);
                 }
             },
 
             runRoulette() {
-                this.nav('view-roulette');
+                System.nav('view-roulette');
                 const wheel = document.getElementById('roulette-wheel');
                 const btn = document.getElementById('btn-accept-mission');
                 wheel.innerHTML = ''; btn.classList.add('pointer-events-none', 'opacity-0');
                 
-                const targetName = this.names[this.missIdx % this.names.length];
+                const targetName = System.names[System.missIdx % System.names.length];
                 let pool = [];
-                for(let i=0; i<20; i++) pool.push(this.names[Math.floor(Math.random()*this.names.length)]);
+                for(let i=0; i<20; i++) pool.push(System.names[Math.floor(Math.random()*System.names.length)]);
                 pool[17] = targetName;
                 
                 pool.forEach(n => { let div = document.createElement('div'); div.className='roulette-item'; div.innerText=n; wheel.appendChild(div); });
@@ -584,10 +556,10 @@
                     const offset = -(17 * itemH) + (120/2) - (itemH/2);
                     wheel.style.transform = `translateY(${offset}px)`;
                     
-                    let t=0; let intv = setInterval(()=>{ AudioSys.tick(); this.vibrate(20); t+=200; if(t>3000) clearInterval(intv); }, 200);
+                    let t=0; let intv = setInterval(()=>{ AudioSys.tick(); System.vibrate(20); t+=200; if(t>3000) clearInterval(intv); }, 200);
 
                     setTimeout(() => {
-                        AudioSys.success(); this.vibrate([200, 100, 300]);
+                        AudioSys.success(); System.vibrate([200, 100, 300]);
                         wheel.children[17].classList.add('selected');
                         btn.classList.remove('pointer-events-none', 'opacity-0');
                     }, 4000);
@@ -595,35 +567,35 @@
             },
 
             renderArena() {
-                let maxMissions = this.isSoloMode ? 20 : 10;
-                if (this.missIdx >= maxMissions) return;
-                this.nav('view-arena');
+                let maxMissions = System.isSoloMode ? 20 : 10;
+                if (System.missIdx >= maxMissions) return;
+                System.nav('view-arena');
                 
-                let MisionsDB = TeamMisionsDB[this.id] || TeamMisionsDB[1];
+                let MisionsDB = TeamMisionsDB[System.id] || TeamMisionsDB[1];
                 let m;
-                if (this.missIdx < 10) { m = MisionsDB[this.missIdx]; } 
-                else { m = ExtraMissionsDB[this.missIdx - 10]; }
+                if (System.missIdx < 10) { m = MisionsDB[System.missIdx]; } 
+                else { m = ExtraMissionsDB[System.missIdx - 10]; }
 
-                if (m.type === "sabotage" && this.isSoloMode) {
+                if (m.type === "sabotage" && System.isSoloMode) {
                     m = { type: "text", badge: "BONUS SOLITARIO", q: "No hay rivales a quien sabotear. Escribe 'AMEN' para ganar 10 pts gratis.", ans: ["amen", "amén"], pts: 10 };
                 }
                 
-                document.getElementById('arena-counter').innerText = `${this.missIdx + 1}/${maxMissions}`;
+                document.getElementById('arena-counter').innerText = `${System.missIdx + 1}/${maxMissions}`;
                 document.getElementById('arena-badge').innerText = m.badge;
                 document.getElementById('arena-reward').innerText = m.pts;
-                document.getElementById('my-arena-score').innerText = this.score;
+                document.getElementById('my-arena-score').innerText = System.score;
                 document.getElementById('arena-q').innerText = m.q;
                 
                 const area = document.getElementById('arena-action');
-                area.innerHTML = ''; clearInterval(this.timerInt); document.getElementById('timer-ui').classList.add('hidden');
+                area.innerHTML = ''; clearInterval(System.timerInt); document.getElementById('timer-ui').classList.add('hidden');
 
                 if (m.type === "trivia") {
-                    this.startTimer(m.time, () => this.fail(m.opts[m.ans]));
+                    System.startTimer(m.time, () => System.fail(m.opts[m.ans]));
                     m.opts.forEach((o, i) => {
                         let btn = document.createElement('button');
                         btn.className = "w-full p-4 mb-2 bg-slate-800 border-2 border-slate-600 rounded-xl text-left font-bold text-white hover:border-cyan-400 hover:bg-slate-700 transition active:scale-95 shadow-md cursor-pointer";
                         btn.innerText = o;
-                        btn.onclick = () => { clearInterval(this.timerInt); i === m.ans ? this.win(m.pts) : this.fail(m.opts[m.ans]); };
+                        btn.onclick = () => { clearInterval(System.timerInt); i === m.ans ? System.win(m.pts) : System.fail(m.opts[m.ans]); };
                         area.appendChild(btn);
                     });
                 }
@@ -632,15 +604,15 @@
                 }
                 else if (m.type === "text") {
                     area.innerHTML = `<input type="text" id="ans-txt" class="cyber-input mb-4" placeholder="Escribe la respuesta..."><button onclick="System.valText()" class="btn-core btn-cyan w-full py-4 rounded-xl cursor-pointer">VALIDAR</button>`;
-                    this.valText = () => {
+                    System.valText = () => {
                         let v = document.getElementById('ans-txt').value.toLowerCase();
-                        m.ans.some(a => v.includes(a)) ? this.win(m.pts) : this.fail(m.ans[0]);
+                        m.ans.some(a => v.includes(a)) ? System.win(m.pts) : System.fail(m.ans[0]);
                     };
                 }
                 else if (m.type === "hold") {
                     area.innerHTML = `<button id="btn-hold" class="btn-core btn-danger w-full py-10 rounded-3xl text-xl flex-col cursor-pointer"><i class="fas fa-fingerprint text-5xl mb-2"></i><span>MANTÉN PRESIONADO ${m.dur/1000}s</span><div id="hold-bar" class="w-full h-2 bg-black/50 mt-4 rounded overflow-hidden hidden"><div id="hold-fill" class="h-full bg-white w-0"></div></div></button>`;
                     let btn = document.getElementById('btn-hold'), hBar = document.getElementById('hold-bar'), hFill = document.getElementById('hold-fill'), ht;
-                    const startH = (e) => { e.preventDefault(); AudioSys.tick(); hBar.classList.remove('hidden'); hFill.style.width = '100%'; hFill.style.transition = `all ${m.dur}ms linear`; ht = setTimeout(()=>this.win(m.pts), m.dur); };
+                    const startH = (e) => { e.preventDefault(); AudioSys.tick(); hBar.classList.remove('hidden'); hFill.style.width = '100%'; hFill.style.transition = `all ${m.dur}ms linear`; ht = setTimeout(()=>System.win(m.pts), m.dur); };
                     const stopH = (e) => { e.preventDefault(); clearTimeout(ht); hFill.style.transition='none'; hFill.style.width='0'; };
                     btn.addEventListener('touchstart', startH); btn.addEventListener('touchend', stopH);
                     btn.addEventListener('mousedown', startH); btn.addEventListener('mouseup', stopH); btn.addEventListener('mouseleave', stopH);
@@ -648,26 +620,28 @@
                 else if (m.type === "sabotage") {
                     let hasRivals = false;
                     [1,2,3,4,5].forEach(id => {
-                        if(id !== this.id && this.dbCache && this.dbCache[`g${id}_r`]) {
+                        if(id !== System.id && System.dbCache && System.dbCache[`g${id}_r`]) {
                             hasRivals = true;
-                            let tName = this.dbCache[`g${id}_cname`] || TeamMeta[id].name;
+                            let tName = System.dbCache[`g${id}_cname`] || TeamMeta[id].name;
                             let b = document.createElement('button');
                             b.className = "btn-core bg-cyan-900 border-2 border-cyan-400 text-white w-full py-4 rounded-xl mb-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer text-sm uppercase";
-                            b.innerHTML = `<i class="fas fa-bolt mr-2 text-xl text-yellow-400"></i> LANZAR PENITENCIA A: ${tName}`;
+                            b.innerHTML = `<i class="fas fa-bolt mr-2 text-xl text-yellow-400"></i> PENITENCIA A: ${tName}`;
                             b.onclick = async () => {
                                 const upd = {}; upd[`sab_${id}`] = Date.now();
-                                await updateDoc(gameRef, upd); this.win(m.pts);
+                                await updateDoc(gameRef, upd); System.win(m.pts);
                             }; area.appendChild(b);
                         }
                     });
-                    if(!hasRivals) { area.innerHTML = `<button onclick="System.win(${m.pts})" class="btn-core btn-cyan w-full py-4 rounded-xl cursor-pointer">CONTINUAR (NO HAY RIVALES)</button>`; }
+                    if(!hasRivals) {
+                        area.innerHTML = `<button onclick="System.win(${m.pts})" class="btn-core btn-cyan w-full py-4 rounded-xl cursor-pointer">CONTINUAR (NO HAY RIVALES)</button>`;
+                    }
                 }
                 else if (m.type === "motion") {
-                    let c = 0; this.startTimer(m.time, () => this.fail("¡Faltó energía!"));
+                    let c = 0; System.startTimer(m.time, () => System.fail("¡Faltó energía!"));
                     area.innerHTML = `<div class="text-center text-cyan-400 font-black text-3xl mb-4" id="tap-c">0 / ${m.taps}</div><button id="btn-mot" class="btn-core btn-gold w-full py-12 rounded-3xl text-2xl cursor-pointer"><i class="fas fa-hand-rock text-4xl mr-2"></i> ¡TAPEA RÁPIDO!</button>`;
                     document.getElementById('btn-mot').onclick = () => {
-                        c++; document.getElementById('tap-c').innerText = `${c} / ${m.taps}`; this.vibrate(20);
-                        if(c >= m.taps){ clearInterval(this.timerInt); this.win(m.pts); }
+                        c++; document.getElementById('tap-c').innerText = `${c} / ${m.taps}`; System.vibrate(20);
+                        if(c >= m.taps){ clearInterval(System.timerInt); System.win(m.pts); }
                     };
                 }
                 else if (m.type === "dnd") {
@@ -682,14 +656,11 @@
                         el.dataset.id = obj.i; box.appendChild(el);
                     });
                     
-                    new Sortable(box, {
-                        animation: 150, ghostClass: 'dragging',
-                        onEnd: () => { btn.classList.remove('hidden'); AudioSys.tick(); System.vibrate(20); }
-                    });
+                    new Sortable(box, { animation: 150, ghostClass: 'dragging', onEnd: () => { btn.classList.remove('hidden'); AudioSys.tick(); System.vibrate(20); } });
                     
                     btn.onclick = () => {
                         let currentOrder = [...box.children].map(el => parseInt(el.dataset.id));
-                        JSON.stringify(currentOrder) === JSON.stringify(m.ans) ? this.win(m.pts) : this.fail("Orden Incorrecto");
+                        JSON.stringify(currentOrder) === JSON.stringify(m.ans) ? System.win(m.pts) : System.fail("Orden Incorrecto");
                     };
                 }
                 else if (m.type === "sequence") {
@@ -700,10 +671,10 @@
                         b.className = "w-full p-4 mb-3 bg-slate-800 border-2 border-slate-500 rounded-xl text-white font-bold active:scale-95 transition cursor-pointer";
                         b.innerText = it;
                         b.onclick = () => {
-                            b.disabled = true; b.style.opacity = '0.4'; AudioSys.tick(); this.vibrate(20);
+                            b.disabled = true; b.style.opacity = '0.4'; AudioSys.tick(); System.vibrate(20);
                             userSeq.push(i); res.innerHTML += `<span class="bg-cyan-900 px-3 py-1 rounded text-cyan-200 text-xs font-bold border border-cyan-500">${it}</span>`;
                             if(userSeq.length === m.items.length) {
-                                JSON.stringify(userSeq) === JSON.stringify(m.ans) ? this.win(m.pts) : this.fail("Secuencia Errónea");
+                                JSON.stringify(userSeq) === JSON.stringify(m.ans) ? System.win(m.pts) : System.fail("Secuencia Errónea");
                             }
                         }; area.appendChild(b);
                     });
@@ -714,53 +685,53 @@
                 document.getElementById('timer-ui').classList.remove('hidden');
                 let bar = document.getElementById('timer-bar'), txt = document.getElementById('timer-text');
                 bar.className = "progress-fill w-full"; let left = sec;
-                this.timerInt = setInterval(() => {
+                System.timerInt = setInterval(() => {
                     left -= 0.1; let pct = (left/sec)*100; bar.style.width = `${pct}%`; txt.innerText = left.toFixed(1)+"s";
                     if(pct < 25 && !bar.classList.contains('danger')) { bar.classList.add('danger'); AudioSys.alarm(); }
-                    if(left <= 0) { clearInterval(this.timerInt); onEnd(); }
+                    if(left <= 0) { clearInterval(System.timerInt); onEnd(); }
                 }, 100);
             },
 
             async win(pts) {
-                this.score += pts; AudioSys.success(); this.vibrate([100,50,100,50,200]);
+                System.score += pts; AudioSys.success(); System.vibrate([100,50,100,50,200]);
                 document.getElementById('ov-pts').innerText = `+${pts} PTS`;
                 let ov = document.getElementById('ov-success'); ov.classList.add('show');
-                await this.syncDB();
-                setTimeout(() => { ov.classList.remove('show'); this.advance(); }, 2500);
+                await System.syncDB();
+                setTimeout(() => { ov.classList.remove('show'); System.advance(); }, 2500);
             },
             
             async fail(msg) {
-                this.score = Math.max(0, this.score - 10); AudioSys.error(); this.vibrate([300,100,300,100,400]);
+                System.score = Math.max(0, System.score - 10); AudioSys.error(); System.vibrate([300,100,300,100,400]);
                 document.getElementById('ov-err-msg').innerText = `Respuesta correcta:\n${msg}\n\n-10 PTS`;
                 let ov = document.getElementById('ov-error'); ov.classList.add('show');
-                await this.syncDB();
-                setTimeout(() => { ov.classList.remove('show'); this.advance(); }, 3500);
+                await System.syncDB();
+                setTimeout(() => { ov.classList.remove('show'); System.advance(); }, 3500);
             },
 
             async syncDB() {
-                const upd = {}; upd[`g${this.id}_s`] = this.score;
+                const upd = {}; upd[`g${System.id}_s`] = System.score;
                 await updateDoc(gameRef, upd);
             },
 
             async advance() {
-                this.missIdx++;
-                let maxMissions = this.isSoloMode ? 20 : 10;
-                if(this.missIdx >= maxMissions) {
+                System.missIdx++;
+                let maxMissions = System.isSoloMode ? 20 : 10;
+                if(System.missIdx >= maxMissions) {
                     await updateDoc(gameRef, { end: true });
                 } else {
-                    this.runRoulette(); 
+                    System.runRoulette(); 
                 }
             },
 
             showToast(msg) {
                 const t = document.getElementById('toast-live');
                 document.getElementById('toast-msg').innerText = msg;
-                t.classList.add('show'); AudioSys.alarm(); this.vibrate([50,50]);
+                t.classList.add('show'); AudioSys.alarm(); System.vibrate([50,50]);
                 setTimeout(()=>t.classList.remove('show'), 3500);
             },
 
             showPenalty() {
-                this.isFrozen = true; this.vibrate([500,200,500,200,500]); AudioSys.error();
+                System.isFrozen = true; System.vibrate([500,200,500,200,500]); AudioSys.error();
                 const penalties = [
                     "¡Todo el equipo debe dar 5 saltos y gritar AMÉN!",
                     "¡Canten el coro de una alabanza a todo pulmón!",
@@ -778,16 +749,15 @@
             },
             clearPenalty() {
                 document.getElementById('ov-penalty').classList.remove('show');
-                this.isFrozen = false; AudioSys.success();
+                System.isFrozen = false; AudioSys.success();
             },
 
-            // --- ADMIN ---
             loginAdmin() {
                 let pin = prompt("Introduce el PIN de Coordinador:");
                 if(pin === "777") {
-                    this.isSoloMode = false;
-                    gameRef = doc(db, "juego", "arena_engine_master_v10");
-                    this.listenToFirebase();
+                    System.isSoloMode = false;
+                    gameRef = doc(db, "juego", "arena_engine_master_v11");
+                    System.listenToFirebase();
                     
                     document.getElementById('admin-panel').style.display = 'flex';
                 } else {
@@ -795,26 +765,22 @@
                 }
             },
             async adminStartGame() {
-                if(!this.dbCache) return;
+                if(!System.dbCache) return;
                 let listos = 0;
-                for(let i=1; i<=5; i++) { if(this.dbCache[`g${i}_r`]) listos++; }
+                for(let i=1; i<=5; i++) { if(System.dbCache[`g${i}_r`]) listos++; }
                 
-                if(listos === 0) { alert("No hay equipos conectados en la sala de espera aún."); return; }
+                if(listos === 0) { alert("No hay equipos conectados en el Lobby aún."); return; }
                 
-                let msg = listos === 1 
-                    ? "Solo hay 1 equipo listo. ¿Forzar inicio para este único equipo?"
-                    : `Hay ${listos} equipos listos. ¿Deseas iniciar la maratón AHORA?`;
-
-                if(confirm(msg)) {
-                    await updateDoc(gameRef, { fase: 1 }); // Activa la cuenta regresiva para todos
+                if(confirm(`Hay ${listos} equipos listos. ¿Iniciar la maratón AHORA?`)) {
+                    await updateDoc(gameRef, { fase: 1 });
                     document.getElementById('admin-panel').style.display = 'none';
                 }
             },
             buildAdminControls() {
                 let html = "";
                 for(let i=1; i<=5; i++) {
-                    if(this.dbCache && this.dbCache[`g${i}_r`]) {
-                        let tName = this.dbCache[`g${i}_cname`] || TeamMeta[i].name;
+                    if(System.dbCache && System.dbCache[`g${i}_r`]) {
+                        let tName = System.dbCache[`g${i}_cname`] || TeamMeta[i].name;
                         html += `
                             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
                                 <h3 class="font-black mb-2 text-white uppercase"><i class="fas ${TeamMeta[i].icon} ${TeamMeta[i].color} mr-1"></i> ${tName}</h3>
@@ -829,8 +795,8 @@
                 document.getElementById('admin-teams-control').innerHTML = html || "<p class='text-slate-500 italic col-span-3 text-sm'>Nadie conectado aún.</p>";
             },
             async adminModScore(team, val) {
-                if(!this.dbCache) return;
-                const upd = {}; upd[`g${team}_s`] = Math.max(0, (this.dbCache[`g${team}_s`] || 0) + val);
+                if(!System.dbCache) return;
+                const upd = {}; upd[`g${team}_s`] = Math.max(0, (System.dbCache[`g${team}_s`] || 0) + val);
                 await updateDoc(gameRef, upd);
             },
             async adminForceEnd() {
@@ -859,7 +825,7 @@
                         await setDoc(gameRef, baseData);
                         return;
                     }
-                    const d = snap.data(); this.dbCache = d;
+                    const d = snap.data(); System.dbCache = d;
 
                     let hudHTML = ""; let sortedAdmin = [];
                     for(let i=1; i<=5; i++) {
@@ -886,24 +852,25 @@
                     });
                     document.getElementById('admin-live-podium').innerHTML = livePodHTML || '<span class="text-slate-500 text-xs">Sin datos...</span>';
 
-                    if (!this.isSoloMode && document.getElementById('view-lobby').classList.contains('active')) {
+                    if (!System.isSoloMode && document.getElementById('view-lobby').classList.contains('active')) {
                         let gridHTML = "";
                         for(let i=1; i<=5; i++) {
                             let r = d[`g${i}_r`] || false;
-                            gridHTML += `<div class="bg-slate-900 border ${r?'border-green-500 text-white':'border-slate-700 text-slate-500'} rounded p-1.5">${i}<br><span class="text-sm">${r ? '✅' : '❌'}</span></div>`;
+                            let color = r ? 'border-green-500 text-white' : 'border-slate-700 text-slate-500';
+                            let icon = r ? '✅' : '❌';
+                            gridHTML += `<div class="bg-slate-900 border ${color} rounded p-1.5 flex flex-col items-center justify-center">T${i}<br><span class="text-sm mt-1">${icon}</span></div>`;
                         }
                         document.getElementById('sync-grid').innerHTML = gridHTML;
                     }
 
-                    // FASE 1: CUENTA REGRESIVA DE 10 A 0
+                    // --- INICIO: CUENTA REGRESIVA GIGANTE ---
                     if(d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
-                        if(this.isCountingDown) return;
-                        this.isCountingDown = true;
+                        if(System.isCountingDown) return;
+                        System.isCountingDown = true;
                         
                         System.prevScores = {};
                         for(let i=1; i<=5; i++) System.prevScores[i] = d[`g${i}_s`] || 100;
                         
-                        // Lanzar Cuenta Regresiva Gigante
                         System.nav('view-countdown');
                         let t = 10;
                         document.getElementById('big-countdown').innerText = t;
@@ -923,7 +890,7 @@
                         }, 1000);
                     }
 
-                    if(d.fase >= 1 && System.prevScores && !this.isCountingDown) {
+                    if(d.fase >= 1 && System.prevScores && !System.isCountingDown) {
                         for(let i=1; i<=5; i++) {
                             if(i !== System.id && d[`g${i}_r`] && (d[`g${i}_s`] || 100) > System.prevScores[i]) {
                                 let tName = d[`g${i}_cname`] || TeamMeta[i].name;
