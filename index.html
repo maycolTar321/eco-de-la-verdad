@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>El Eco de la Verdad - Arena Suprema v8 (Modo Solitario & Multi)</title>
+    <title>El Eco de la Verdad - Arena Suprema v8 (Cuenta Regresiva Gigante)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
@@ -111,9 +111,10 @@
         <p id="ov-err-msg" class="text-xl font-bold text-red-300 text-center px-6 mt-4 uppercase">La respuesta era...</p>
     </div>
 
+    <!-- OVERLAY DE PENITENCIA -->
     <div id="ov-penalty" class="overlay-fx penalty-texture border-8 border-red-500">
         <i class="fas fa-bolt text-9xl text-yellow-400 mb-6 animate-pulse drop-shadow-[0_0_30px_#fbbf24]"></i>
-        <h2 class="font-epic text-5xl font-black text-white text-center drop-shadow-lg">¡ATAQUE RIVAL!</h2>
+        <h2 class="font-epic text-5xl font-black text-white text-center drop-shadow-lg">¡SABOTAJE RIVAL!</h2>
         <p class="text-xl font-bold text-red-200 text-center mt-2 uppercase tracking-widest">CUMPLE LA PENITENCIA PARA CONTINUAR:</p>
         <p id="penalty-text" class="text-3xl font-black text-white text-center mt-6 px-6 drop-shadow-md">...</p>
         
@@ -128,18 +129,16 @@
             <div class="relative mb-6">
                 <i class="fas fa-shield-cross text-8xl text-cyan-400 drop-shadow-[0_0_30px_#06b6d4] animate-divine"></i>
             </div>
-            <h1 class="text-5xl md:text-6xl font-black font-epic text-white mb-2 leading-tight tracking-wide">
+            <h1 id="god-mode-trigger" class="text-5xl md:text-6xl font-black font-epic text-white mb-2 leading-tight tracking-wide cursor-pointer">
                 EL ECO DE<br><span class="text-cyan-400">LA VERDAD</span>
             </h1>
             <p class="text-slate-400 text-sm tracking-[0.4em] uppercase mb-10 font-bold">Feria de Confirmación</p>
             
             <div class="flex flex-col gap-4 w-full max-w-sm">
-                <!-- BOTÓN MODO SOLITARIO -->
                 <button onclick="System.playSolo()" class="btn-core btn-gold py-5 rounded-2xl cursor-pointer shadow-[0_0_20px_rgba(251,191,36,0.4)]">
-                    <i class="fas fa-user-astronaut text-2xl"></i> <span class="flex flex-col items-start leading-tight"><b>JUGAR EN SOLITARIO</b><small class="text-[10px] font-normal tracking-widest">1 Equipo • 20 Misiones</small></span>
+                    <i class="fas fa-user-astronaut text-2xl"></i> <span class="flex flex-col items-start leading-tight"><b>JUGAR EN SOLITARIO</b><small class="text-[10px] font-normal tracking-widest">1 Equipo • 20 Misiones Seguidas</small></span>
                 </button>
 
-                <!-- BOTÓN MODO MULTIJUGADOR -->
                 <button onclick="System.playMultiplayer()" class="btn-core btn-cyan py-5 rounded-2xl cursor-pointer shadow-[0_0_20px_rgba(6,182,212,0.4)]">
                     <i class="fas fa-users text-2xl"></i> <span class="flex flex-col items-start leading-tight"><b>COMPETIR EN EQUIPOS</b><small class="text-[10px] font-normal tracking-widest">2 a 5 Equipos • Online</small></span>
                 </button>
@@ -222,9 +221,22 @@
                 
                 <div id="lobby-waiting" class="hidden mt-4">
                     <p id="lobby-waiting-text" class="text-yellow-400 font-bold uppercase text-center text-sm mb-4 animate-pulse"><i class="fas fa-satellite-dish mr-2"></i> ¡Conectado! Esperando al Coordinador...</p>
-                    <div id="sync-grid" class="grid grid-cols-5 gap-1.5 text-center text-[10px] font-black uppercase"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA NUEVA: CUENTA REGRESIVA GIGANTE -->
+    <div id="view-countdown" class="screen">
+        <div class="screen-content flex flex-col items-center justify-center h-full">
+            <h2 class="text-3xl md:text-5xl font-epic font-black text-cyan-400 mb-8 uppercase tracking-widest text-center">¡PREPÁRENSE!</h2>
+            
+            <div class="w-56 h-56 md:w-64 md:h-64 rounded-full border-4 border-cyan-500 flex items-center justify-center shadow-[0_0_60px_rgba(6,182,212,0.8)] bg-slate-900/90 mb-10 relative">
+                <div class="absolute inset-0 rounded-full border-t-8 border-white animate-spin" style="animation-duration: 1s;"></div>
+                <span id="big-countdown" class="text-8xl md:text-9xl font-black text-white font-mono drop-shadow-[0_0_20px_#fff]">10</span>
+            </div>
+            
+            <p class="text-yellow-400 font-bold uppercase tracking-widest text-lg animate-pulse text-center px-4">La Maratón va a comenzar</p>
         </div>
     </div>
 
@@ -301,7 +313,7 @@
         </div>
         
         <div class="bg-cyan-950/60 p-5 rounded-2xl border border-cyan-500 mb-6 shadow-[0_0_20px_rgba(6,182,212,0.2)] text-center">
-            <p class="text-cyan-200 font-bold mb-4 text-sm">Control de Partida. Inicia cuando los equipos que deseas participen estén listos (✅).</p>
+            <p class="text-cyan-200 font-bold mb-4 text-sm">Los equipos en el lobby esperan tu orden.</p>
             <button id="btn-admin-start" onclick="System.adminStartGame()" class="btn-core btn-cyan w-full py-4 text-lg rounded-xl shadow-lg cursor-pointer">
                 <i class="fas fa-rocket"></i> INICIAR MARATÓN AHORA
             </button>
@@ -336,7 +348,6 @@
         };
         const app = initializeApp(fbConfig);
         const db = getFirestore(app);
-        
         let gameRef = null; 
         let unsubscribeFB = null;
 
@@ -357,6 +368,37 @@
             error() { this.playTone(150, 'sawtooth', 0.4, 0.3); setTimeout(()=>this.playTone(100, 'sawtooth', 0.5, 0.3), 150); },
             alarm() { this.playTone(900, 'square', 0.2, 0.1); setTimeout(()=>this.playTone(700, 'square', 0.2, 0.1), 200); }
         };
+
+        const ParticleSys = {
+            canvas: document.getElementById('particle-canvas'),
+            ctx: null, particles: [], w: 0, h: 0,
+            init() {
+                this.ctx = this.canvas.getContext('2d');
+                this.resize(); window.addEventListener('resize', () => this.resize());
+                for(let i=0; i<50; i++) this.particles.push(this.createParticle());
+                this.animate();
+            },
+            resize() { this.w = this.canvas.width = window.innerWidth; this.h = this.canvas.height = window.innerHeight; },
+            createParticle() {
+                return {
+                    x: Math.random() * this.w, y: Math.random() * this.h + this.h,
+                    size: Math.random() * 3 + 1, speed: Math.random() * 2 + 0.5,
+                    opacity: Math.random() * 0.5 + 0.1,
+                    color: Math.random() > 0.5 ? '#06b6d4' : '#fbbf24'
+                };
+            },
+            animate() {
+                this.ctx.clearRect(0, 0, this.w, this.h);
+                this.particles.forEach(p => {
+                    p.y -= p.speed; p.x += Math.sin(p.y / 50) * 0.5;
+                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color; this.ctx.globalAlpha = p.opacity; this.ctx.fill();
+                    if (p.y < -10) { Object.assign(p, this.createParticle()); p.y = this.h + 10; }
+                });
+                requestAnimationFrame(() => this.animate());
+            }
+        };
+        ParticleSys.init();
 
         const TeamMeta = {
             1: { name: "Huellas de Fuego", icon: "fa-fire", color: "text-orange-500" },
@@ -429,7 +471,6 @@
             ]
         };
 
-        // EXTENSIÓN PARA MODO SOLITARIO (Misiones 11 al 20)
         const ExtraMissionsDB = [
             { type: "trivia", badge: "MANDAMIENTOS", q: "¿En qué monte recibió Moisés las Tablas de la Ley?", opts: ["Monte Carmelo", "Monte Sinaí", "Monte Sión", "Monte Tabor"], ans: 1, time: 15, pts: 20 },
             { type: "dnd", badge: "LÓGICA", q: "Ordena estos frutos del Espíritu Santo:", items: ["Paz", "Gozo", "Amor"], ans: [2, 1, 0], pts: 30 },
@@ -446,7 +487,7 @@
         const System = {
             id: 0, score: 100, missIdx: 0, names: [], customName: "",
             dbCache: null, isFrozen: false, timerInt: null, lastSabotageTime: 0,
-            isSoloMode: false,
+            isSoloMode: false, isCountingDown: false,
             
             nav(toId) {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -456,7 +497,6 @@
             
             initAudioAndStart() { AudioSys.init(); },
 
-            // MODOS DE JUEGO SEPARADOS
             playSolo() {
                 AudioSys.init(); AudioSys.tick(); this.vibrate(50);
                 this.isSoloMode = true;
@@ -465,7 +505,7 @@
                 
                 document.getElementById('mode-badge').innerText = "MODO SOLITARIO (20 MISIONES)";
                 document.getElementById('btn-ready-text').innerHTML = `<i class="fas fa-play"></i> INICIAR MARATÓN SOLITARIO`;
-                document.getElementById('lobby-waiting-text').innerText = "Generando Arena Solitaria...";
+                document.getElementById('lobby-waiting').classList.add('hidden');
                 
                 this.listenToFirebase();
                 this.nav('view-teams');
@@ -474,11 +514,11 @@
             playMultiplayer() {
                 AudioSys.init(); AudioSys.tick(); this.vibrate(50);
                 this.isSoloMode = false;
-                gameRef = doc(db, "juego", "arena_engine_master_v9"); // ID Oficial Competición
+                gameRef = doc(db, "juego", "arena_engine_master_v10");
                 
                 document.getElementById('mode-badge').innerText = "COMPETICIÓN MULTIJUGADOR";
                 document.getElementById('btn-ready-text').innerHTML = `<i class="fas fa-satellite-dish"></i> ENLAZAR AL SERVIDOR`;
-                document.getElementById('lobby-waiting-text').innerText = "¡Conectado! Esperando al Coordinador...";
+                document.getElementById('lobby-waiting').classList.remove('hidden');
                 
                 this.listenToFirebase();
                 this.nav('view-teams');
@@ -502,17 +542,22 @@
                 document.getElementById('btn-ready').style.display = 'none';
                 document.getElementById('custom-team-name').disabled = true;
                 document.getElementById('input-names').disabled = true;
-                document.getElementById('lobby-waiting').classList.remove('hidden');
 
                 if (this.isSoloMode) {
-                    // Modo solitario: Inicia inmediatamente, no espera a nadie
-                    const upd = {}; 
-                    upd[`g${this.id}_r`] = true;
-                    upd[`g${this.id}_cname`] = this.customName;
-                    upd[`fase`] = 1;
-                    await updateDoc(gameRef, upd);
+                    await setDoc(gameRef, {
+                        fase: 1, end: false,
+                        [`g${this.id}_r`]: true,
+                        [`g${this.id}_s`]: 100,
+                        [`g${this.id}_cname`]: this.customName
+                    });
                 } else {
-                    // Modo Multijugador: Espera al Admin
+                    document.getElementById('lobby-waiting').classList.remove('hidden');
+                    const snap = await getDoc(gameRef);
+                    if (!snap.exists()) {
+                        let baseData = { fase: 0, end: false };
+                        for(let i=1; i<=5; i++) { baseData[`g${i}_r`] = false; baseData[`g${i}_s`] = 100; baseData[`g${i}_cname`] = ""; }
+                        await setDoc(gameRef, baseData);
+                    }
                     const upd = {}; 
                     upd[`g${this.id}_r`] = true;
                     upd[`g${this.id}_cname`] = this.customName;
@@ -556,13 +601,9 @@
                 
                 let MisionsDB = TeamMisionsDB[this.id] || TeamMisionsDB[1];
                 let m;
-                if (this.missIdx < 10) {
-                    m = MisionsDB[this.missIdx];
-                } else {
-                    m = ExtraMissionsDB[this.missIdx - 10];
-                }
+                if (this.missIdx < 10) { m = MisionsDB[this.missIdx]; } 
+                else { m = ExtraMissionsDB[this.missIdx - 10]; }
 
-                // SI ESTÁ EN SOLITARIO, CONVERTIMOS EL SABOTAJE EN BONO
                 if (m.type === "sabotage" && this.isSoloMode) {
                     m = { type: "text", badge: "BONUS SOLITARIO", q: "No hay rivales a quien sabotear. Escribe 'AMEN' para ganar 10 pts gratis.", ans: ["amen", "amén"], pts: 10 };
                 }
@@ -619,9 +660,7 @@
                             }; area.appendChild(b);
                         }
                     });
-                    if(!hasRivals) {
-                        area.innerHTML = `<button onclick="System.win(${m.pts})" class="btn-core btn-cyan w-full py-4 rounded-xl cursor-pointer">CONTINUAR (NO HAY RIVALES)</button>`;
-                    }
+                    if(!hasRivals) { area.innerHTML = `<button onclick="System.win(${m.pts})" class="btn-core btn-cyan w-full py-4 rounded-xl cursor-pointer">CONTINUAR (NO HAY RIVALES)</button>`; }
                 }
                 else if (m.type === "motion") {
                     let c = 0; this.startTimer(m.time, () => this.fail("¡Faltó energía!"));
@@ -638,21 +677,14 @@
                     let shuffled = m.items.map((it, i) => ({it, i})).sort(()=>Math.random()-0.5);
                     
                     shuffled.forEach(obj => {
-                        let el = document.createElement('div'); 
-                        el.className = 'dnd-item shadow-md'; 
+                        let el = document.createElement('div'); el.className = 'dnd-item shadow-md'; 
                         el.innerHTML = `<i class="fas fa-grip-lines text-slate-500 mr-3"></i> <span>${obj.it}</span>`;
-                        el.dataset.id = obj.i;
-                        box.appendChild(el);
+                        el.dataset.id = obj.i; box.appendChild(el);
                     });
                     
                     new Sortable(box, {
-                        animation: 150,
-                        ghostClass: 'dragging',
-                        onEnd: () => {
-                            btn.classList.remove('hidden');
-                            AudioSys.tick();
-                            System.vibrate(20);
-                        }
+                        animation: 150, ghostClass: 'dragging',
+                        onEnd: () => { btn.classList.remove('hidden'); AudioSys.tick(); System.vibrate(20); }
                     });
                     
                     btn.onclick = () => {
@@ -727,7 +759,6 @@
                 setTimeout(()=>t.classList.remove('show'), 3500);
             },
 
-            // --- LÓGICA DE PENITENCIA FÍSICA ---
             showPenalty() {
                 this.isFrozen = true; this.vibrate([500,200,500,200,500]); AudioSys.error();
                 const penalties = [
@@ -741,30 +772,24 @@
                 
                 const ov = document.getElementById('ov-penalty');
                 const btn = document.getElementById('btn-clear-penalty');
-                btn.classList.add('hidden');
-                ov.classList.add('show');
+                btn.classList.add('hidden'); ov.classList.add('show');
                 
-                setTimeout(() => {
-                    btn.classList.remove('hidden');
-                    AudioSys.tick();
-                }, 5000);
+                setTimeout(() => { btn.classList.remove('hidden'); AudioSys.tick(); }, 5000);
             },
             clearPenalty() {
                 document.getElementById('ov-penalty').classList.remove('show');
-                this.isFrozen = false;
-                AudioSys.success();
+                this.isFrozen = false; AudioSys.success();
             },
 
-            // --- ACCESO ADMIN ---
+            // --- ADMIN ---
             loginAdmin() {
                 let pin = prompt("Introduce el PIN de Coordinador:");
                 if(pin === "777") {
                     this.isSoloMode = false;
-                    gameRef = doc(db, "juego", "arena_engine_master_v9");
+                    gameRef = doc(db, "juego", "arena_engine_master_v10");
                     this.listenToFirebase();
                     
                     document.getElementById('admin-panel').style.display = 'flex';
-                    setTimeout(() => this.buildAdminControls(), 1000);
                 } else {
                     alert("PIN incorrecto. Acceso denegado.");
                 }
@@ -774,10 +799,14 @@
                 let listos = 0;
                 for(let i=1; i<=5; i++) { if(this.dbCache[`g${i}_r`]) listos++; }
                 
-                if(listos === 0) { alert("No hay equipos conectados en el Lobby aún."); return; }
+                if(listos === 0) { alert("No hay equipos conectados en la sala de espera aún."); return; }
                 
-                if(confirm(`Hay ${listos} equipos listos. ¿Deseas iniciar la maratón para ellos AHORA?`)) {
-                    await updateDoc(gameRef, { fase: 1 });
+                let msg = listos === 1 
+                    ? "Solo hay 1 equipo listo. ¿Forzar inicio para este único equipo?"
+                    : `Hay ${listos} equipos listos. ¿Deseas iniciar la maratón AHORA?`;
+
+                if(confirm(msg)) {
+                    await updateDoc(gameRef, { fase: 1 }); // Activa la cuenta regresiva para todos
                     document.getElementById('admin-panel').style.display = 'none';
                 }
             },
@@ -832,9 +861,7 @@
                     }
                     const d = snap.data(); this.dbCache = d;
 
-                    let hudHTML = "";
-                    let sortedAdmin = [];
-                    
+                    let hudHTML = ""; let sortedAdmin = [];
                     for(let i=1; i<=5; i++) {
                         let score = d[`g${i}_s`] || 0;
                         let isReady = d[`g${i}_r`] || false;
@@ -849,9 +876,7 @@
                     if(hudHTML) hudHTML = hudHTML.slice(0, -42);
                     document.getElementById('hud-scores').innerHTML = hudHTML || '<span class="text-slate-500">Esperando...</span>';
 
-                    if(document.getElementById('admin-panel').style.display === 'flex') {
-                        System.buildAdminControls();
-                    }
+                    if(document.getElementById('admin-panel').style.display === 'flex') { System.buildAdminControls(); }
 
                     sortedAdmin.sort((a,b) => b.s - a.s);
                     let livePodHTML = "";
@@ -870,14 +895,35 @@
                         document.getElementById('sync-grid').innerHTML = gridHTML;
                     }
 
-                    // INICIO MODO MULTIJUGADOR DIRIGIDO POR EL ADMIN
-                    if(!this.isSoloMode && d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
+                    // FASE 1: CUENTA REGRESIVA DE 10 A 0
+                    if(d.fase === 1 && document.getElementById('view-lobby').classList.contains('active')) {
+                        if(this.isCountingDown) return;
+                        this.isCountingDown = true;
+                        
                         System.prevScores = {};
                         for(let i=1; i<=5; i++) System.prevScores[i] = d[`g${i}_s`] || 100;
-                        System.runRoulette();
+                        
+                        // Lanzar Cuenta Regresiva Gigante
+                        System.nav('view-countdown');
+                        let t = 10;
+                        document.getElementById('big-countdown').innerText = t;
+                        AudioSys.alarm(); 
+                        
+                        let cdInt = setInterval(() => {
+                            t--;
+                            document.getElementById('big-countdown').innerText = t;
+                            System.vibrate(50);
+                            if (t > 0 && t <= 3) { AudioSys.tick(); }
+                            
+                            if(t <= 0) {
+                                clearInterval(cdInt);
+                                AudioSys.success();
+                                System.runRoulette();
+                            }
+                        }, 1000);
                     }
 
-                    if(d.fase >= 1 && System.prevScores) {
+                    if(d.fase >= 1 && System.prevScores && !this.isCountingDown) {
                         for(let i=1; i<=5; i++) {
                             if(i !== System.id && d[`g${i}_r`] && (d[`g${i}_s`] || 100) > System.prevScores[i]) {
                                 let tName = d[`g${i}_cname`] || TeamMeta[i].name;
@@ -887,15 +933,11 @@
                         }
                     }
 
-                    // DETECCIÓN DE PENITENCIA DE SABOTAJE
                     if(d.fase >= 1 && d[`sab_${System.id}`] > System.lastSabotageTime) {
                         System.lastSabotageTime = d[`sab_${System.id}`];
-                        if(!System.isFrozen) {
-                            System.showPenalty();
-                        }
+                        if(!System.isFrozen) { System.showPenalty(); }
                     }
 
-                    // FINAL
                     if(d.end === true) {
                         if(document.getElementById('view-podium').classList.contains('active')) return;
                         clearInterval(System.timerInt); AudioSys.success(); System.vibrate([1000]);
